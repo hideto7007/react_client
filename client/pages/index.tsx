@@ -9,6 +9,7 @@ const Home: React.FC = () => {
         <ul>
           <li><Link href="/about">About</Link></li>
           <li><Link href="/posts/1">Post 1</Link></li>
+          <li><Link href="/table">table</Link></li>
         </ul>
       </nav>
     </div>
