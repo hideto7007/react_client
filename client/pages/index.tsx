@@ -10,6 +10,7 @@ const Home: React.FC = () => {
           <li><Link href="/about">About</Link></li>
           <li><Link href="/posts/1">Post 1</Link></li>
           <li><Link href="/table">table</Link></li>
+          <li><Link href="/table1">table1</Link></li>
         </ul>
       </nav>
     </div>

@@ -24,36 +24,40 @@ import { Mockresponse } from '@/common/data'
 let serverErrorFlag: boolean = false;
 
 const columns: readonly Column[] = [
-  { id: KeyConst.PaymentDate, label: LabelConst.PaymentDate, minWidth: 170, required: true },
-  { id: KeyConst.Age, label: LabelConst.Age, minWidth: 100, required: true },
-  { id: KeyConst.Industry, label: LabelConst.Industry, minWidth: 100, required: true },
+  { id: KeyConst.PaymentDate, label: LabelConst.PaymentDate, minWidth: 170, required: true, disablePadding: true },
+  { id: KeyConst.Age, label: LabelConst.Age, minWidth: 100, required: true, disablePadding: false },
+  { id: KeyConst.Industry, label: LabelConst.Industry, minWidth: 100, required: true, disablePadding: false },
   {
     id: KeyConst.TotalAmount,
     label: LabelConst.TotalAmount,
     minWidth: 170,
     align: Align.Right,
-    required: true
+    required: true,
+    disablePadding: false
   },
   {
     id: KeyConst.DeductionAmount,
     label: LabelConst.DeductionAmount,
     minWidth: 170,
     align: Align.Right,
-    required: true
+    required: true,
+    disablePadding: false
   },
   {
     id: KeyConst.TakeHomeAmount,
     label: LabelConst.TakeHomeAmount,
     minWidth: 170,
     align: Align.Right,
-    required: true
+    required: true,
+    disablePadding: false
   },
   {
     id: KeyConst.Edit,
     label: LabelConst.Edit,
     minWidth: 100,
     align: Align.Right,
-    required: false
+    required: false,
+    disablePadding: false
   }
 ];
 
@@ -69,7 +73,8 @@ const getIncomeDataFetchData = async(startDate: string, endDate: string, userId:
       const response = Mockresponse
       const dataList = response.data.result // レスポンスからデータを取得
   
-      const res: AnnualIncomeManagementData[] = dataList.map((data: any) => ({
+      const res: AnnualIncomeManagementData[] = dataList.map((data: any, idx: number) => ({
+        id: idx + 1,
         income_forecast_id: data.IncomeForecastID,
         payment_date: data.PaymentDate.slice(0, 10),
         age: data.Age,
@@ -89,6 +94,14 @@ const getIncomeDataFetchData = async(startDate: string, endDate: string, userId:
       console.error('Error fetching data:', error)
     }
   }
+
+const create = async(row: AnnualIncomeManagementData): Promise<void> => {
+    await console.log("create", row)
+}
+
+const deleteData = async(row: AnnualIncomeManagementData): Promise<void> => {
+    await console.log("delete", row)
+}
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
@@ -111,6 +124,20 @@ export default function StickyHeadTable() {
     setPage(0);
   };
 
+  // 現像だとどこの列のレコード情報を受け取ったかわからないから、onClickからindex取得できないか確認する
+  const createHandleChange = async(row: AnnualIncomeManagementData) => {
+    await create(row)
+  };
+
+  const deleteDataHandleChange = async(row: AnnualIncomeManagementData) => {
+    await deleteData(row)
+  };
+
+
+  // TODO
+  // 複数選択で削除
+  // 編集アイコン押したらそのテーブルだけテキストにする
+
   React.useEffect(() => {
     (async() => {
         console.log("loaded");
@@ -121,17 +148,6 @@ export default function StickyHeadTable() {
         }
     })()
   }, [])
-
-  const testData = Mockresponse.data.result
-
-  const ageArray = testData.slice(0, 5).map((row) => {
-    return Number(row.Age)
-  })
-
-  columns.map((column) => {
-    console.log(column.required)
-  }
-  )
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -172,17 +188,27 @@ export default function StickyHeadTable() {
                     if (column.id === KeyConst.Edit && checkedFlag) {
                       value = (
                         <>
-                          <IconButton aria-label={KeyConst.Edit} size={Size.Small}>
+                          <IconButton
+                            onClick={() => createHandleChange(row)}
+                            aria-label={KeyConst.Edit}
+                            size={Size.Small}
+                          >
                             <EditIcon />
                           </IconButton>
-                          <IconButton aria-label={KeyConst.Delete} size={Size.Small}>
+                          <IconButton
+                            onClick={() => deleteDataHandleChange(row)}
+                            aria-label={KeyConst.Delete}
+                            size={Size.Small}
+                          >
                             <DeleteIcon />
                           </IconButton>
                         </>
                       );
                     }
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell
+                          key={column.id}
+                          align={column.align}>
                           {value}
                         </TableCell>
                       );
