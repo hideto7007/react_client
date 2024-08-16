@@ -79,6 +79,18 @@ interface EnhancedTableToolbarProps {
     selected: readonly number[];  // 選択された行のIDを含む配列
     data: AnnualIncomeManagementDeleteData[];  // 選択された行のデータ
     onDelete: (data: AnnualIncomeManagementDeleteData[], selected: readonly number[]) => void;  // 削除時に呼ばれる関数
+    checkboxLabel: string;
+    checked: boolean;
+    onCheckBox: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    // onCheckBox: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+  }
+
+interface editDialogProps {
+    editDialogLabel: string;
+    // checked: boolean;
+    dialogOpen: boolean;
+    row: AnnualIncomeManagementDeleteData | null;
+    handleClose: () => void;
   }
 
 export type {
@@ -92,5 +104,6 @@ export type {
     EnhancedTableProps,
     AnnualIncomeManagementDeleteData,
     EnhancedTableToolbarProps,
+    editDialogProps,
     Order
 }  

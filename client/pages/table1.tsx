@@ -20,6 +20,13 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import EditIcon from '@mui/icons-material/Edit';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import ApiEndpoint from '@/common/apiEndpoint'
 import { 
@@ -29,9 +36,10 @@ import {
 import {
   ColumnNotEdit, AnnualIncomeManagementData,
   EnhancedTableProps, Order, AnnualIncomeManagementKeyNotEdit,
-  AnnualIncomeManagementDeleteData, EnhancedTableToolbarProps } from '@/common/types'
+  AnnualIncomeManagementDeleteData, EnhancedTableToolbarProps, editDialogProps } from '@/common/types'
 import { Mockresponse } from '@/common/data'
-import { TextField } from '@mui/material';
+import { FilledInput, FormControl, FormHelperText, Input, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
+import { Check, DateRange } from '@mui/icons-material';
 
 
 const useFetchIncomeData = (startDate: string, endDate: string, userId: number) => {
@@ -172,7 +180,22 @@ const deleteData = async(data: AnnualIncomeManagementData[], indexList: readonly
   await console.log("delete", dataList)
 }
 
-// テーブルヘッダーコンポーネント
+/**
+ * EnhancedTableHeadコンポーネント
+ * 
+ * テーブルのヘッダーを表示するコンポーネントです。カラムごとのソート機能や全選択機能を提供します。
+ * 
+ * @param {EnhancedTableProps} props - コンポーネントが受け取るprops
+ * @param {(event: React.ChangeEvent<HTMLInputElement>) => void} props.onSelectAllClick - 全選択チェックボックスのクリックイベントハンドラ
+ * @param {Order} props.order - 現在のソート順（'asc' または 'desc'）
+ * @param {keyof AnnualIncomeManagementKeyNotEdit} props.orderBy - ソートの基準となるカラムのキー
+ * @param {number} props.numSelected - 選択された行の数
+ * @param {number} props.rowCount - 全行数
+ * @param {(event: React.MouseEvent<unknown>, property: keyof AnnualIncomeManagementKeyNotEdit) => void} props.onRequestSort - ソートリクエスト時のイベントハンドラ
+ * 
+ * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
+ */
+
 const EnhancedTableHead: React.FC<EnhancedTableProps> = (props) => {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler =
@@ -220,9 +243,29 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props) => {
   );
 }
 
-// テーブルツールバーコンポーネント
+/**
+ * EnhancedTableToolbarコンポーネント
+ * 
+ * テーブルのツールバーを表示するコンポーネントです。選択された行の数を表示し、削除ボタンやフィルターボタンを提供します。
+ * 
+ * @param {EnhancedTableToolbarProps} props - コンポーネントが受け取るprops
+ * @param {number} props.numSelected - 選択された行の数
+ * @param {readonly number[]} props.selected - 選択された行のIDを含む配列
+ * @param {AnnualIncomeManagementDeleteData[]} props.data - テーブルの行データ
+ * @param {(data: AnnualIncomeManagementDeleteData[], selected: readonly number[]) => void} props.onDelete - 削除時に呼ばれる関数
+ * @param {string} props.checkboxLabel - チェックボックスのラベル
+ * @param {boolean} props.checked - チェックボックスが選択されているかどうかのフラグ
+ * @param {(event: React.ChangeEvent<HTMLInputElement>) => void} props.onCheckBox - チェックボックスの変更時に呼ばれる関数
+ * 
+ * @returns {JSX.Element} - テーブルのツールバーを表すJSX要素を返します
+ */
 const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
-  const { numSelected, selected, data, onDelete } = props;
+  const {
+    numSelected, selected, data, onDelete, checkboxLabel,
+    checked, onCheckBox } = props;
+  // const {
+  //   numSelected, selected, data, onDelete, checkboxLabel,
+  //   onCheckBox } = props;
 
   return (
     <Toolbar
@@ -254,6 +297,11 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
           Nutrition
         </Typography>
       )}
+        <FormControlLabel
+          control={<Checkbox checked={checked} onChange={onCheckBox} />}
+          // control={<Checkbox onChange={onCheckBox} />}
+          label={checkboxLabel}
+        />
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton
@@ -272,6 +320,123 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
   );
 }
 
+/**
+ * EditDialogコンポーネント
+ * 
+ * @param {editDialogProps} props - コンポーネントが受け取るprops
+ * @param {string} props.editDialogLabel - ダイアログのタイトルラベル
+ * @param {boolean} props.dialogOpen - ダイアログが開いているかどうかのフラグ
+ * @param {AnnualIncomeManagementData | null} props.row - 編集する行のデータ
+ * @param {() => void} props.handleClose - ダイアログを閉じるための関数
+ * 
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const EditDialog: React.FC<editDialogProps> = (props) => {
+  const { editDialogLabel, dialogOpen, row, handleClose } = props;
+
+  // let editRow: Partial<AnnualIncomeManagementData | null> = {};
+  const [editRow, setEditRow] = React.useState<AnnualIncomeManagementData | null>(row);
+
+  React.useEffect(() => {
+    if (row) {
+      setEditRow(row);
+    }
+  }, [row]);
+
+  /**
+   * createHandleChange - 行データを処理する非同期関数
+   * 
+   * @param {AnnualIncomeManagementData | null} row - 編集する行データ
+   */
+  const createHandleChange = async(row: AnnualIncomeManagementData | null) => {
+    if (row) {
+      setEditRow(row)
+      await create(row);
+    }
+    handleClose(); // ダイアログを閉じる
+  };
+
+  /**
+   * createHandleChange - 行データを処理する非同期関数
+   * 
+   * @param {AnnualIncomeManagementData} row - 編集する行データ
+   */
+  const editCancel = (row: AnnualIncomeManagementData | null) => {
+    setEditRow(row)
+    console.log(row)
+    handleClose(); // ダイアログを閉じる
+  };
+
+  /**
+   * handleDateChange - 日付の変更を処理する関数
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 日付が変更された時のイベント
+   */
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editRow) {
+      setEditRow({ ...editRow, payment_date: event.target.value });
+    }
+  };
+
+  return (
+    <React.Fragment>
+      <Dialog
+        open={dialogOpen}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+        {editDialogLabel}
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+            <div>
+            <TextField
+                label={LabelConst.PaymentDate}
+                type="date"
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.payment_date || ''}
+                onChange={handleDateChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              {/* {年齢以降も同じように作成する} */}
+              <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                <OutlinedInput
+                  id="outlined-adornment-weight"
+                  endAdornment={<InputAdornment position="end">kg</InputAdornment>}
+                  aria-describedby="outlined-weight-helper-text"
+                  inputProps={{
+                    'aria-label': 'weight',
+                  }}
+                />
+                <FormHelperText id="outlined-weight-helper-text">Weight</FormHelperText>
+              </FormControl>
+              <FormControl fullWidth sx={{ m: 1 }}>
+                <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-amount"
+                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                  label="Amount"
+                />
+              </FormControl>
+            </div>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => editCancel(row)}>キャンセル</Button>
+          <Button onClick={() => createHandleChange(editRow)} autoFocus>
+            変更
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  );
+}
+
+
 // テーブルコンポーネント
 const EnhancedTable: React.FC = () => {
   const [order, setOrder] = React.useState<Order>('asc');
@@ -280,6 +445,11 @@ const EnhancedTable: React.FC = () => {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [checkboxLabel, setCheckLabel] = React.useState<string>('off');
+  const [checkedFlag, setCheckedFlag] = React.useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
+  const [selectedRow, setSelectedRow] = React.useState<AnnualIncomeManagementData | null>(null);
+  // const [eventProps, setEventProps] = React.useState<React.SyntheticEvent | undefined>();
   // const [data, setData] = React.useState<AnnualIncomeManagementData[]>([]);
 
  // 編集されたデータを管理するための state
@@ -288,6 +458,28 @@ const EnhancedTable: React.FC = () => {
   // カスタムフックを利用した例
   const data = useFetchIncomeData('2024-01-10', '2024-07-22', 1);
 
+
+  // テーブルツールバーprops
+  const handleDeleteChange = async(data: AnnualIncomeManagementDeleteData[], selected: readonly number[]) => {
+    await deleteData(data, selected)
+  };
+
+  const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+    setCheckLabel(checked ? 'on' : 'off');
+    setCheckedFlag(checked);
+  };
+
+
+  // テーブルヘッダーprops
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = data.map((n) => n.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -298,15 +490,19 @@ const EnhancedTable: React.FC = () => {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = data.map((n) => n.id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
+
+  // ダイアログprops
+  const dialogHandleChange = (row: AnnualIncomeManagementData) => {
+    setSelectedRow(row);
+    setDialogOpen(true)
+  }
+
+  const handleClose = () => {
+    setDialogOpen(false);  // ダイアログを閉じるために使用
   };
 
+
+  // テーブルprops
   const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly number[] = [];
@@ -330,9 +526,6 @@ const EnhancedTable: React.FC = () => {
     setPage(newPage);
   };
 
-  const createHandleChange = async(row: AnnualIncomeManagementData) => {
-    await create(row)
-  };
 
   // const handleEditChange = (id: number, field: keyof AnnualIncomeManagementData, value: any) => {
   //   setEditData({
@@ -343,10 +536,6 @@ const EnhancedTable: React.FC = () => {
   //     },
   //   });
   // };
-
-  const handleDeleteChange = async(data: AnnualIncomeManagementDeleteData[], selected: readonly number[]) => {
-    await deleteData(data, selected)
-  };
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -389,6 +578,9 @@ const EnhancedTable: React.FC = () => {
           selected={selected}
           data={data}
           onDelete={handleDeleteChange}
+          checkboxLabel={checkboxLabel}
+          checked={checkedFlag}
+          onCheckBox={handleCheckBoxChange}
         />
         <TableContainer>
           <Table
@@ -421,15 +613,28 @@ const EnhancedTable: React.FC = () => {
                     selected={isItemSelected}
                     sx={{ cursor: 'pointer' }}
                   >
-                    <TableCell padding="checkbox">
+                  <TableCell padding="checkbox">
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <Checkbox
                         color="primary"
                         checked={isItemSelected}
                         inputProps={{
                           'aria-labelledby': labelId,
                         }}
-                      />
-                    </TableCell>
+                        />
+                      {checkedFlag ? <IconButton
+                        onClick={(event) => {
+                          event.stopPropagation(); // イベントの伝播を停止
+                          dialogHandleChange(row);
+                        }}
+                        aria-label={KeyConst.Edit}
+                        size={Size.Small}
+                        sx={{ marginRight: 3 }} // ここで隙間を設定
+                      >
+                        <EditIcon />
+                      </IconButton> : null}
+                    </Box>
+                  </TableCell>
                     <TableCell
                       component="th"
                       id={labelId}
@@ -466,6 +671,13 @@ const EnhancedTable: React.FC = () => {
                 </TableRow>
               )}
             </TableBody>
+              {/* ダイアログの表示 */}
+              <EditDialog
+                editDialogLabel={LabelConst.Edit}
+                dialogOpen={dialogOpen}
+                row={selectedRow}
+                handleClose={handleClose}
+              />
           </Table>
         </TableContainer>
         <TablePagination
