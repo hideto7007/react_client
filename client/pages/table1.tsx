@@ -342,11 +342,15 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
     }
   }, [row]);
 
+  /**
+   * 総支給額 - 差引額で手取り額を算出
+   * 総支給額又は差引額の状態が変更されるたびに再レンダリングする
+   */
   React.useEffect(() => {
     if (editRow) {
-      const takeHomeAmount = (editRow.total_amount || 0) - (editRow.deduction_amount || 0);
-      if (editRow.take_home_amount !== takeHomeAmount) {
-        setEditRow((prev) => prev ? { ...prev, take_home_amount: takeHomeAmount } : null);
+      const takeHomeAmount = editRow.total_amount - editRow.deduction_amount
+      if (takeHomeAmount !== editRow.take_home_amount) {
+        setEditRow({ ...editRow, take_home_amount: takeHomeAmount});
       }
     }
   }, [editRow]);
