@@ -343,6 +343,13 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
     }
   }, [row]);
 
+  React.useEffect(() => {
+    if (editRow) {
+      const takeHomeAmount = (editRow.total_amount || 0) - (editRow.deduction_amount || 0)
+      setEditRow((prev) => prev ? { ...prev, take_home_amount: takeHomeAmount } : null);
+    }
+  }, [editRow]);
+
   /**
    * createHandleChange - 行データを処理する非同期関数
    * 
@@ -350,20 +357,19 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
    */
   const createHandleChange = async(row: AnnualIncomeManagementData | null) => {
     if (row) {
-      setEditRow(row)
       await create(row);
     }
     handleClose(); // ダイアログを閉じる
   };
 
   /**
-   * createHandleChange - 行データを処理する非同期関数
+   * editCancel - 編集データをキャンセルして元に戻す
    * 
    * @param {AnnualIncomeManagementData} row - 編集する行データ
    */
   const editCancel = (row: AnnualIncomeManagementData | null) => {
-    setEditRow(row)
-    console.log(row)
+    setEditRow(row);
+    console.log(row);
     handleClose(); // ダイアログを閉じる
   };
 
@@ -375,6 +381,61 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (editRow) {
       setEditRow({ ...editRow, payment_date: event.target.value });
+    }
+  };
+
+  /**
+   * handleAgeChange - 年齢の変更を処理する関数
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 年齢が変更された時のイベント
+   */
+  const handleAgeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editRow) {
+      setEditRow({ ...editRow, age: event.target.valueAsNumber });
+    }
+  };
+
+  /**
+   * handleIndustryChange - 業界の変更を処理する関数
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 業界が変更された時のイベント
+   */
+  const handleIndustryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editRow) {
+      setEditRow({ ...editRow, industry: event.target.value });
+    }
+  };
+
+  /**
+   * handleTotalAmountChange - 総支給の変更を処理する関数
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 総支給が変更された時のイベント
+   */
+  const handleTotalAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editRow) {
+      setEditRow({ ...editRow, total_amount: event.target.valueAsNumber });
+    }
+  };
+
+  /**
+   * handleDeductionAmountChange - 差引額の変更を処理する関数
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 差引額が変更された時のイベント
+   */
+  const handleDeductionAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editRow) {
+      setEditRow({ ...editRow, deduction_amount: event.target.valueAsNumber });
+    }
+  };
+
+  /**
+   * handleTakeHomeAmountChange - 手取り額の変更を処理する関数
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 手取り額が変更された時のイベント
+   */
+  const handleTakeHomeAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editRow) {
+      setEditRow({ ...editRow, take_home_amount: event.target.valueAsNumber });
     }
   };
 
@@ -392,7 +453,7 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
         <DialogContent>
           <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
             <div>
-            <TextField
+              <TextField
                 label={LabelConst.PaymentDate}
                 type="date"
                 sx={{ m: 1, width: '25ch' }}
@@ -402,26 +463,56 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
                   shrink: true,
                 }}
               />
-              {/* {年齢以降も同じように作成する} */}
-              <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-                <OutlinedInput
-                  id="outlined-adornment-weight"
-                  endAdornment={<InputAdornment position="end">kg</InputAdornment>}
-                  aria-describedby="outlined-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight',
-                  }}
-                />
-                <FormHelperText id="outlined-weight-helper-text">Weight</FormHelperText>
-              </FormControl>
-              <FormControl fullWidth sx={{ m: 1 }}>
-                <InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-amount"
-                  startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                  label="Amount"
-                />
-              </FormControl>
+              <TextField
+                label={LabelConst.Age}
+                type="number"
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.age || ''}
+                onChange={handleAgeChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                label={LabelConst.Industry}
+                type="string"
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.industry || ''}
+                onChange={handleIndustryChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                label={LabelConst.TotalAmount}
+                type="number"
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.total_amount || ''}
+                onChange={handleTotalAmountChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                label={LabelConst.DeductionAmount}
+                type="number"
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.deduction_amount || ''}
+                onChange={handleDeductionAmountChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+              <TextField
+                label={LabelConst.TakeHomeAmount}
+                type="number"
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.take_home_amount || ''}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                disabled 
+              />
             </div>
           </Box>
         </DialogContent>
