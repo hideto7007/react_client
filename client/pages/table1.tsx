@@ -334,7 +334,6 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
 const EditDialog: React.FC<editDialogProps> = (props) => {
   const { editDialogLabel, dialogOpen, row, handleClose } = props;
 
-  // let editRow: Partial<AnnualIncomeManagementData | null> = {};
   const [editRow, setEditRow] = React.useState<AnnualIncomeManagementData | null>(row);
 
   React.useEffect(() => {
@@ -345,8 +344,10 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
 
   React.useEffect(() => {
     if (editRow) {
-      const takeHomeAmount = (editRow.total_amount || 0) - (editRow.deduction_amount || 0)
-      setEditRow((prev) => prev ? { ...prev, take_home_amount: takeHomeAmount } : null);
+      const takeHomeAmount = (editRow.total_amount || 0) - (editRow.deduction_amount || 0);
+      if (editRow.take_home_amount !== takeHomeAmount) {
+        setEditRow((prev) => prev ? { ...prev, take_home_amount: takeHomeAmount } : null);
+      }
     }
   }, [editRow]);
 
