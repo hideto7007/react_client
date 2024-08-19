@@ -196,7 +196,7 @@ const deleteData = async(data: AnnualIncomeManagementData[], indexList: readonly
  * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
  */
 
-const EnhancedTableHead: React.FC<EnhancedTableProps> = (props) => {
+const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTableProps) => {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler =
     (property: keyof AnnualIncomeManagementKeyNotEdit) => (event: React.MouseEvent<unknown>) => {
@@ -259,7 +259,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props) => {
  * 
  * @returns {JSX.Element} - テーブルのツールバーを表すJSX要素を返します
  */
-const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
+const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props: EnhancedTableToolbarProps) => {
   const {
     numSelected, selected, data, onDelete, checkboxLabel,
     checked, onCheckBox } = props;
@@ -331,7 +331,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
  * 
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const EditDialog: React.FC<editDialogProps> = (props) => {
+const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   const { editDialogLabel, dialogOpen, row, handleClose } = props;
 
   const [editRow, setEditRow] = React.useState<AnnualIncomeManagementData | null>(row);
@@ -348,7 +348,7 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
    */
   React.useEffect(() => {
     if (editRow) {
-      const takeHomeAmount = editRow.total_amount - editRow.deduction_amount
+      const takeHomeAmount = (editRow.total_amount | 0) - (editRow.deduction_amount | 0)
       if (takeHomeAmount !== editRow.take_home_amount) {
         setEditRow({ ...editRow, take_home_amount: takeHomeAmount});
       }
@@ -430,17 +430,6 @@ const EditDialog: React.FC<editDialogProps> = (props) => {
   const handleDeductionAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (editRow) {
       setEditRow({ ...editRow, deduction_amount: event.target.valueAsNumber });
-    }
-  };
-
-  /**
-   * handleTakeHomeAmountChange - 手取り額の変更を処理する関数
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} event - 手取り額が変更された時のイベント
-   */
-  const handleTakeHomeAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (editRow) {
-      setEditRow({ ...editRow, take_home_amount: event.target.valueAsNumber });
     }
   };
 
@@ -560,12 +549,12 @@ const EnhancedTable: React.FC = () => {
     await deleteData(data, selected)
   };
 
-  const handleCheckBoxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // レンダリングされても値の受け渡しがないため、useCallbackを使って関数の状態を保持しておく
+  const handleCheckBoxChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked;
     setCheckLabel(checked ? 'on' : 'off');
     setCheckedFlag(checked);
-  };
-
+  }, []);
 
   // テーブルヘッダーprops
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
