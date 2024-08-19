@@ -38,7 +38,7 @@ import {
   EnhancedTableProps, Order, AnnualIncomeManagementKeyNotEdit,
   AnnualIncomeManagementDeleteData, EnhancedTableToolbarProps, editDialogProps } from '@/common/types'
 import { Mockresponse } from '@/common/data'
-import { FilledInput, FormControl, FormHelperText, Input, InputAdornment, InputLabel, OutlinedInput, TextField } from '@mui/material';
+import { FilledInput, FormControl, FormHelperText, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, TextField } from '@mui/material';
 import { Check, DateRange } from '@mui/icons-material';
 
 
@@ -433,6 +433,17 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
     }
   };
 
+  /**
+   * handleClassificationChange - 分類の変更を処理する関数
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 分類が変更された時のイベント
+   */
+  const handleClassificationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editRow) {
+      setEditRow({ ...editRow, classification: event.target.value });
+    }
+  };
+
   return (
     <React.Fragment>
       <Dialog
@@ -507,6 +518,19 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
                 }}
                 disabled 
               />
+              <TextField
+                label={LabelConst.Classification}
+                select
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.classification || ''}
+                onChange={handleClassificationChange}          
+              >
+                {classificationListConst.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
             </div>
           </Box>
         </DialogContent>
