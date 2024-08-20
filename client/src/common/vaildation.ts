@@ -13,11 +13,9 @@ class Validation {
         return true
             
     }
-    ageValid = (value: string): string | boolean => {
-        if (value === "") {
+    ageValid = (value: number): string | boolean => {
+        if (value === null) {
             return '必須入力項目です'
-        } else if (!this.regexp.test(value)) {
-            return '整数の値のみで入力して下さい'
         } else if (Number(value) <= 15) {
             return '15歳未満は入力出来ません'
         } else {
@@ -51,9 +49,8 @@ class Validation {
             return true
         }   
     }
-    takeHomeAmountValid = (value: string): string | boolean => {
-        const num = Number(value)
-        if (num < 0) {
+    takeHomeAmountValid = (value: number): string | boolean => {
+        if (value < 0) {
             return '総支給と差引額が逆転してます。'
         } 
         return true

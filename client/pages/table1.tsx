@@ -40,6 +40,7 @@ import {
 import { Mockresponse } from '@/common/data'
 import { FilledInput, FormControl, FormHelperText, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, TextField } from '@mui/material';
 import { Check, DateRange } from '@mui/icons-material';
+import Validation from '@/common/vaildation';
 
 
 const useFetchIncomeData = (startDate: string, endDate: string, userId: number) => {
@@ -335,12 +336,109 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   const { editDialogLabel, dialogOpen, row, handleClose } = props;
 
   const [editRow, setEditRow] = React.useState<AnnualIncomeManagementData | null>(row);
+  const [errors, setErrors] = React.useState<{ [key: string]: string | null }>({});
+  const [submitFlag, setSubmitFlag] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     if (row) {
       setEditRow(row);
     }
   }, [row]);
+
+  // TODO
+  // useEffectで都度更新があったら検知→バリデーション違反をしてたら動的に表示→バリデーションフラグをfalse→
+  // 全て入力及びバリデーションに引っ掛からなかったらバリデーションフラグをtrue→送信ボタンがアクティブになって送信
+
+  // React.useEffect(() => {
+  //   if (editRow) {
+  //     console.log(editRow?.payment_date)
+  //     // setEditRow({ ...editRow, payment_date: editRow.payment_date});
+  //   }
+  // }, [editRow]);
+
+  /**
+   * フィールドのバリデーションと更新
+   */
+  const handleFieldChange = (field: keyof AnnualIncomeManagementData, value: any) => {
+    setEditRow((prev) => prev ? { ...prev, [field]: value } : prev);
+    validateField(field, value);
+  };
+
+  /**
+   * 各入力フォームのバリデーションチェック
+   */
+  const validateField = (field: string, value: string | number | Date) => {
+    let validationError: string | boolean = true;
+
+    switch (field) {
+      case 'payment_date':
+        validationError = Validation.dateValid(new Date(value as string));
+        break;
+      case 'age':
+        validationError = Validation.ageValid(value as number);
+        break;
+      case 'industry':
+        validationError = Validation.industryValid(value as string);
+        break;
+      case 'total_amount':
+        validationError = Validation.incomeAmountValid(value as string);
+        break;
+      case 'deduction_amount':
+        validationError = Validation.incomeAmountValid(value as string);
+        break;
+      case 'take_home_amount':
+        validationError = Validation.takeHomeAmountValid(value as number);
+        break;
+      case 'classification':
+        validationError = Validation.classificationValid(value as string);
+        break;
+      default:
+        break;
+    }
+
+    console.log(validationError)
+
+    setErrors((prev) => ({ ...prev, [field]: validationError === true ? null : validationError || null }));
+  };
+
+  /**
+   * フォーム送信時にすべてのフィールドをチェック
+   */
+  const handleSubmit = async(editRow: AnnualIncomeManagementData) => {
+    const validationResults = [
+      Validation.dateValid(new Date(editRow?.payment_date)),
+      Validation.ageValid(editRow?.age),
+      Validation.industryValid(editRow?.industry as string),
+      Validation.incomeAmountValid(String(editRow?.total_amount)),
+      Validation.incomeAmountValid(String(editRow?.deduction_amount)),
+      Validation.takeHomeAmountValid(editRow?.take_home_amount),
+      Validation.classificationValid(editRow?.classification),
+    ];
+
+  // エラーメッセージを表示
+  let errorsObj: { [key: string]: string | null } = {}
+
+  for (const idx in keyListConst) {
+    errorsObj[keyListConst[idx]] = validationResults[idx] === true ? null : validationResults[idx] as string
+  }
+
+  const errorsFound = Object.values(errorsObj).some(error => error !== null);
+
+  console.log(errorsFound)
+
+  if (errorsFound) {
+      setErrors(errorsObj);
+      console.log(false, submitFlag)
+      setSubmitFlag(false);
+      return;
+    }
+
+    setSubmitFlag(true);
+    
+    // バリデーションに成功した場合
+    await createHandleChange(editRow);
+    handleClose();
+  };
 
   /**
    * 総支給額 - 差引額で手取り額を算出
@@ -351,6 +449,8 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
       const takeHomeAmount = (editRow.total_amount | 0) - (editRow.deduction_amount | 0)
       if (takeHomeAmount !== editRow.take_home_amount) {
         setEditRow({ ...editRow, take_home_amount: takeHomeAmount});
+        const validationError = Validation.takeHomeAmountValid(takeHomeAmount);
+        setErrors((prev) => ({ ...prev, take_home_amount: validationError === true ? null : validationError || null }));
       }
     }
   }, [editRow]);
@@ -376,6 +476,22 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
     setEditRow(row);
     console.log(row);
     handleClose(); // ダイアログを閉じる
+  };
+
+  /**
+   * handleFromChange - 入力値を変更を処理する関数
+   * 
+   * @param {string} field - 年齢が変更された時のイベント
+   * @param {React.ChangeEvent<HTMLInputElement>} event - 入力フォームの値が変更された時のイベント
+   */
+  const handleFromChange = (field: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    if (editRow) {
+      if (field === 'age' || field === 'total_amount' || field === 'deduction_amount') {
+        setEditRow({ ...editRow, [field]: event.target.valueAsNumber });
+      } else {
+        setEditRow({ ...editRow, [field]: event.target.value });
+      }
+    }
   };
 
   /**
@@ -463,59 +579,61 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
                 type="date"
                 sx={{ m: 1, width: '25ch' }}
                 value={editRow?.payment_date || ''}
-                onChange={handleDateChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                onChange={(e) => handleFieldChange('payment_date', e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                error={!!errors.payment_date}
+                helperText={errors.payment_date}
               />
               <TextField
                 label={LabelConst.Age}
                 type="number"
                 sx={{ m: 1, width: '25ch' }}
                 value={editRow?.age || ''}
-                onChange={handleAgeChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                onChange={(e) => handleFieldChange('age', e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                error={!!errors.age}
+                helperText={errors.age}
               />
               <TextField
                 label={LabelConst.Industry}
                 type="string"
                 sx={{ m: 1, width: '25ch' }}
                 value={editRow?.industry || ''}
-                onChange={handleIndustryChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                onChange={(e) => handleFieldChange('industry', e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                error={!!errors.industry}
+                helperText={errors.industry}
               />
               <TextField
                 label={LabelConst.TotalAmount}
                 type="number"
                 sx={{ m: 1, width: '25ch' }}
                 value={editRow?.total_amount || ''}
-                onChange={handleTotalAmountChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                onChange={(e) => handleFieldChange('total_amount', e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                error={!!errors.total_amount}
+                helperText={errors.total_amount}
               />
               <TextField
                 label={LabelConst.DeductionAmount}
                 type="number"
                 sx={{ m: 1, width: '25ch' }}
                 value={editRow?.deduction_amount || ''}
-                onChange={handleDeductionAmountChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                onChange={(e) => handleFieldChange('deduction_amount', e.target.value)}
+                InputLabelProps={{ shrink: true }}
+                error={!!errors.deduction_amount}
+                helperText={errors.deduction_amount}
               />
               <TextField
                 label={LabelConst.TakeHomeAmount}
                 type="number"
                 sx={{ m: 1, width: '25ch' }}
                 value={editRow?.take_home_amount || ''}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+                // onChange={(e) => handleFieldChange('take_home_amount', e.target.value)}
+                onBlur={() => handleFieldChange('take_home_amount', editRow?.take_home_amount)}
+                InputLabelProps={{ shrink: true }}
+                error={!!errors.take_home_amount}
+                helperText={errors.take_home_amount}
                 disabled 
               />
               <TextField
@@ -523,7 +641,9 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
                 select
                 sx={{ m: 1, width: '25ch' }}
                 value={editRow?.classification || ''}
-                onChange={handleClassificationChange}          
+                onChange={(e) => handleFieldChange('classification', e.target.value)} 
+                error={!!errors.classification}
+                helperText={errors.classification}     
               >
                 {classificationListConst.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -536,8 +656,8 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => editCancel(row)}>キャンセル</Button>
-          <Button onClick={() => createHandleChange(editRow)} autoFocus>
-            変更
+          <Button onClick={() => handleSubmit} autoFocus disabled={!submitFlag}>
+            変更 {submitFlag ? "true" : "false"}
           </Button>
         </DialogActions>
       </Dialog>

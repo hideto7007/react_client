@@ -45,6 +45,16 @@ interface AnnualIncomeManagementDeleteData extends AnnualIncomeManagementData {}
 
 type Order = 'asc' | 'desc';
 
+interface Validate {
+    payment_date: Date;
+    age: number;
+    industry: string;
+    total_amount: string;
+    deduction_amount: string;
+    take_home_amount: number;
+    classification: string;
+  }
+
 interface Column {
     id: keyof AnnualIncomeManagementKey; // AnnualIncomeManagementData のプロパティ名のいずれか
     label: string;
@@ -98,6 +108,7 @@ export type {
     AnnualIncomeManagementData,
     AnnualIncomeManagementCreateData,
     AnnualIncomeManagementUpdateData,
+    Validate,
     Column,
     ColumnNotEdit,
     AnnualIncomeManagementKeyNotEdit,
