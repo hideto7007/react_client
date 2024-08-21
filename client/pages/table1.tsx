@@ -362,8 +362,6 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
    */
   React.useEffect(() => {
     const allValuesAreNull = Object.values(validationCheck).every(value => value === null);
-    console.log(Object.values(validationCheck))
-    console.log("----------------")
     if (allValuesAreNull) {
       setSubmitFlag(true);
     } else {
@@ -412,7 +410,9 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
     }
 
     const validationErrorResult = validationError === true ? null : validationError || null;
-    setValidationCheck(prev => ({...prev, field: validationErrorResult}));
+    // []付けづにキー名を渡すと、'field'という文字列で渡してしまう
+    // []をつければ動的なキー名で渡すことができる
+    setValidationCheck(prev => ({...prev, [field]: validationErrorResult}));
 
     setErrors((prev) => ({ ...prev, [field]: validationErrorResult}));
   };
@@ -438,8 +438,11 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
    * フォーム送信
    */
   const handleSubmit = async(editRow: AnnualIncomeManagementData | null) => {
-    await create(editRow);
-    handleClose(); // ダイアログを閉じる
+    const allValuesAreNull = Object.values(validationCheck).every(value => value === null);
+    if (allValuesAreNull) {
+      await create(editRow);
+      handleClose(); // ダイアログを閉じる
+    }
   };
 
   /**
@@ -576,7 +579,7 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
         <DialogActions>
           <Button onClick={() => editCancel(row)}>キャンセル</Button>
           <Button onClick={() => handleSubmit(editRow)} autoFocus disabled={!submitFlag}>
-            変更 {submitFlag ? "true" : "false"}
+            変更
           </Button>
         </DialogActions>
       </Dialog>
