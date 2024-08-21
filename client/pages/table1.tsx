@@ -36,7 +36,8 @@ import {
 import {
   ColumnNotEdit, AnnualIncomeManagementData,
   EnhancedTableProps, Order, AnnualIncomeManagementKeyNotEdit,
-  AnnualIncomeManagementDeleteData, EnhancedTableToolbarProps, editDialogProps } from '@/common/types'
+  AnnualIncomeManagementDeleteData, EnhancedTableToolbarProps, editDialogProps,
+  Validate } from '@/common/types'
 import { Mockresponse } from '@/common/data'
 import { FilledInput, FormControl, FormHelperText, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, TextField } from '@mui/material';
 import { Check, DateRange } from '@mui/icons-material';
@@ -170,7 +171,7 @@ const getIncomeDataFetchData = async(startDate: string, endDate: string, userId:
   }
 }
 
-const create = async(row: AnnualIncomeManagementData): Promise<void> => {
+const create = async(row: AnnualIncomeManagementData | null): Promise<void> => {
   await console.log("create", row)
 }
 
@@ -336,7 +337,18 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   const { editDialogLabel, dialogOpen, row, handleClose } = props;
 
   const [editRow, setEditRow] = React.useState<AnnualIncomeManagementData | null>(row);
+  // 個々でバリデーションエラーを表示させるための状態管理
   const [errors, setErrors] = React.useState<{ [key: string]: string | null }>({});
+  // バリデーションエラーを格納させる状態管理
+  const [validationCheck, setValidationCheck] = React.useState<Validate>({
+    payment_date: null,
+    age: null,
+    industry: null,
+    total_amount: null,
+    deduction_amount: null,
+    take_home_amount: null,
+    classification: null
+  });
   const [submitFlag, setSubmitFlag] = React.useState<boolean>(true);
 
   React.useEffect(() => {
@@ -345,16 +357,19 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
     }
   }, [row]);
 
-  // TODO
-  // useEffectで都度更新があったら検知→バリデーション違反をしてたら動的に表示→バリデーションフラグをfalse→
-  // 全て入力及びバリデーションに引っ掛からなかったらバリデーションフラグをtrue→送信ボタンがアクティブになって送信
-
-  // React.useEffect(() => {
-  //   if (editRow) {
-  //     console.log(editRow?.payment_date)
-  //     // setEditRow({ ...editRow, payment_date: editRow.payment_date});
-  //   }
-  // }, [editRow]);
+  /**
+   * 都度レンダリングしてバリデーションチェックを行う
+   */
+  React.useEffect(() => {
+    const allValuesAreNull = Object.values(validationCheck).every(value => value === null);
+    console.log(Object.values(validationCheck))
+    console.log("----------------")
+    if (allValuesAreNull) {
+      setSubmitFlag(true);
+    } else {
+      setSubmitFlag(false);
+    }
+  }, [validationCheck]);
 
   /**
    * フィールドのバリデーションと更新
@@ -396,48 +411,10 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
         break;
     }
 
-    console.log(validationError)
+    const validationErrorResult = validationError === true ? null : validationError || null;
+    setValidationCheck(prev => ({...prev, field: validationErrorResult}));
 
-    setErrors((prev) => ({ ...prev, [field]: validationError === true ? null : validationError || null }));
-  };
-
-  /**
-   * フォーム送信時にすべてのフィールドをチェック
-   */
-  const handleSubmit = async(editRow: AnnualIncomeManagementData) => {
-    const validationResults = [
-      Validation.dateValid(new Date(editRow?.payment_date)),
-      Validation.ageValid(editRow?.age),
-      Validation.industryValid(editRow?.industry as string),
-      Validation.incomeAmountValid(String(editRow?.total_amount)),
-      Validation.incomeAmountValid(String(editRow?.deduction_amount)),
-      Validation.takeHomeAmountValid(editRow?.take_home_amount),
-      Validation.classificationValid(editRow?.classification),
-    ];
-
-  // エラーメッセージを表示
-  let errorsObj: { [key: string]: string | null } = {}
-
-  for (const idx in keyListConst) {
-    errorsObj[keyListConst[idx]] = validationResults[idx] === true ? null : validationResults[idx] as string
-  }
-
-  const errorsFound = Object.values(errorsObj).some(error => error !== null);
-
-  console.log(errorsFound)
-
-  if (errorsFound) {
-      setErrors(errorsObj);
-      console.log(false, submitFlag)
-      setSubmitFlag(false);
-      return;
-    }
-
-    setSubmitFlag(true);
-    
-    // バリデーションに成功した場合
-    await createHandleChange(editRow);
-    handleClose();
+    setErrors((prev) => ({ ...prev, [field]: validationErrorResult}));
   };
 
   /**
@@ -446,14 +423,24 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
    */
   React.useEffect(() => {
     if (editRow) {
-      const takeHomeAmount = (editRow.total_amount | 0) - (editRow.deduction_amount | 0)
-      if (takeHomeAmount !== editRow.take_home_amount) {
+      const takeHomeAmount: number = Number(editRow.total_amount | 0) - Number(editRow.deduction_amount | 0)
+      if (takeHomeAmount !== Number(editRow.take_home_amount)) {
         setEditRow({ ...editRow, take_home_amount: takeHomeAmount});
         const validationError = Validation.takeHomeAmountValid(takeHomeAmount);
-        setErrors((prev) => ({ ...prev, take_home_amount: validationError === true ? null : validationError || null }));
+        const validationErrorResult = validationError === true ? null : validationError || null;
+        setValidationCheck(prev => ({...prev, take_home_amount: validationErrorResult}));
+        setErrors((prev) => ({ ...prev, take_home_amount: validationErrorResult }));
       }
     }
   }, [editRow]);
+
+  /**
+   * フォーム送信
+   */
+  const handleSubmit = async(editRow: AnnualIncomeManagementData | null) => {
+    await create(editRow);
+    handleClose(); // ダイアログを閉じる
+  };
 
   /**
    * createHandleChange - 行データを処理する非同期関数
@@ -491,72 +478,6 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
       } else {
         setEditRow({ ...editRow, [field]: event.target.value });
       }
-    }
-  };
-
-  /**
-   * handleDateChange - 日付の変更を処理する関数
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} event - 日付が変更された時のイベント
-   */
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (editRow) {
-      setEditRow({ ...editRow, payment_date: event.target.value });
-    }
-  };
-
-  /**
-   * handleAgeChange - 年齢の変更を処理する関数
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} event - 年齢が変更された時のイベント
-   */
-  const handleAgeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (editRow) {
-      setEditRow({ ...editRow, age: event.target.valueAsNumber });
-    }
-  };
-
-  /**
-   * handleIndustryChange - 業界の変更を処理する関数
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} event - 業界が変更された時のイベント
-   */
-  const handleIndustryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (editRow) {
-      setEditRow({ ...editRow, industry: event.target.value });
-    }
-  };
-
-  /**
-   * handleTotalAmountChange - 総支給の変更を処理する関数
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} event - 総支給が変更された時のイベント
-   */
-  const handleTotalAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (editRow) {
-      setEditRow({ ...editRow, total_amount: event.target.valueAsNumber });
-    }
-  };
-
-  /**
-   * handleDeductionAmountChange - 差引額の変更を処理する関数
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} event - 差引額が変更された時のイベント
-   */
-  const handleDeductionAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (editRow) {
-      setEditRow({ ...editRow, deduction_amount: event.target.valueAsNumber });
-    }
-  };
-
-  /**
-   * handleClassificationChange - 分類の変更を処理する関数
-   * 
-   * @param {React.ChangeEvent<HTMLInputElement>} event - 分類が変更された時のイベント
-   */
-  const handleClassificationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (editRow) {
-      setEditRow({ ...editRow, classification: event.target.value });
     }
   };
 
@@ -629,8 +550,6 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
                 type="number"
                 sx={{ m: 1, width: '25ch' }}
                 value={editRow?.take_home_amount || ''}
-                // onChange={(e) => handleFieldChange('take_home_amount', e.target.value)}
-                onBlur={() => handleFieldChange('take_home_amount', editRow?.take_home_amount)}
                 InputLabelProps={{ shrink: true }}
                 error={!!errors.take_home_amount}
                 helperText={errors.take_home_amount}
@@ -656,7 +575,7 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => editCancel(row)}>キャンセル</Button>
-          <Button onClick={() => handleSubmit} autoFocus disabled={!submitFlag}>
+          <Button onClick={() => handleSubmit(editRow)} autoFocus disabled={!submitFlag}>
             変更 {submitFlag ? "true" : "false"}
           </Button>
         </DialogActions>

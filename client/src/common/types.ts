@@ -46,13 +46,13 @@ interface AnnualIncomeManagementDeleteData extends AnnualIncomeManagementData {}
 type Order = 'asc' | 'desc';
 
 interface Validate {
-    payment_date: Date;
-    age: number;
-    industry: string;
-    total_amount: string;
-    deduction_amount: string;
-    take_home_amount: number;
-    classification: string;
+    payment_date: string | boolean | null;
+    age: string | boolean | null;
+    industry: string | boolean | null;
+    total_amount: string | boolean | null;
+    deduction_amount: string | boolean | null;
+    take_home_amount: string | boolean | null;
+    classification: string | boolean | null;
   }
 
 interface Column {
