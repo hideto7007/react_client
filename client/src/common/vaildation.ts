@@ -31,11 +31,9 @@ class Validation {
             return true
         }
     }
-    incomeAmountValid = (value: string): string | boolean => {
-        if (value === "") {
-            return '必須入力項目です'
-        } else if (!this.regexp.test(value)) {
-            return '整数の値のみで入力して下さい'
+    incomeAmountValid = (value: number): string | boolean => {
+        if (!this.regexp.test(String(value))) {
+            return '整数値のみで入力または必須項目なのに値がありません'
         } else {
             return true
         } 

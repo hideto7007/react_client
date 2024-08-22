@@ -351,6 +351,9 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   });
   const [submitFlag, setSubmitFlag] = React.useState<boolean>(true);
 
+  /**
+   * 都度レンダリングして行データをセットする
+   */
   React.useEffect(() => {
     if (row) {
       setEditRow(row);
@@ -370,7 +373,27 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   }, [validationCheck]);
 
   /**
+   * 総支給額 - 差引額で手取り額を算出
+   * 総支給額又は差引額の状態が変更されるたびに再レンダリングする
+   */
+  React.useEffect(() => {
+    if (editRow) {
+      const takeHomeAmount: number = Number(editRow.total_amount | 0) - Number(editRow.deduction_amount | 0)
+      if (takeHomeAmount !== Number(editRow.take_home_amount)) {
+        setEditRow({ ...editRow, take_home_amount: takeHomeAmount});
+        const validationError = Validation.takeHomeAmountValid(takeHomeAmount);
+        const validationErrorResult = validationError === true ? null : validationError || null;
+        setValidationCheck(prev => ({...prev, take_home_amount: validationErrorResult}));
+        setErrors((prev) => ({ ...prev, take_home_amount: validationErrorResult }));
+      }
+    }
+  }, [editRow]);
+
+  /**
    * フィールドのバリデーションと更新
+   * 
+ * @param {keyof AnnualIncomeManagementData} field - カラム名を表す。これは、`AnnualIncomeManagementData`型のキーのいずれかです。
+ * @param {string | number | Date} value - 各入力値を表す。
    */
   const handleFieldChange = (field: keyof AnnualIncomeManagementData, value: any) => {
     setEditRow((prev) => prev ? { ...prev, [field]: value } : prev);
@@ -379,8 +402,11 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
 
   /**
    * 各入力フォームのバリデーションチェック
+   * 
+   * @param {keyof AnnualIncomeManagementData} field - カラム名を表す。これは、`AnnualIncomeManagementData`型のキーのいずれかです。
+   * @param {string | number | Date} value - 各入力値を表す。
    */
-  const validateField = (field: string, value: string | number | Date) => {
+  const validateField = (field: keyof AnnualIncomeManagementData, value: string | number | Date) => {
     let validationError: string | boolean = true;
 
     switch (field) {
@@ -394,10 +420,10 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
         validationError = Validation.industryValid(value as string);
         break;
       case 'total_amount':
-        validationError = Validation.incomeAmountValid(value as string);
+        validationError = Validation.incomeAmountValid(value as number);
         break;
       case 'deduction_amount':
-        validationError = Validation.incomeAmountValid(value as string);
+        validationError = Validation.incomeAmountValid(value as number);
         break;
       case 'take_home_amount':
         validationError = Validation.takeHomeAmountValid(value as number);
@@ -418,24 +444,9 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   };
 
   /**
-   * 総支給額 - 差引額で手取り額を算出
-   * 総支給額又は差引額の状態が変更されるたびに再レンダリングする
-   */
-  React.useEffect(() => {
-    if (editRow) {
-      const takeHomeAmount: number = Number(editRow.total_amount | 0) - Number(editRow.deduction_amount | 0)
-      if (takeHomeAmount !== Number(editRow.take_home_amount)) {
-        setEditRow({ ...editRow, take_home_amount: takeHomeAmount});
-        const validationError = Validation.takeHomeAmountValid(takeHomeAmount);
-        const validationErrorResult = validationError === true ? null : validationError || null;
-        setValidationCheck(prev => ({...prev, take_home_amount: validationErrorResult}));
-        setErrors((prev) => ({ ...prev, take_home_amount: validationErrorResult }));
-      }
-    }
-  }, [editRow]);
-
-  /**
    * フォーム送信
+   * 
+   * @param {AnnualIncomeManagementData | null} editRow - 編集する行データ
    */
   const handleSubmit = async(editRow: AnnualIncomeManagementData | null) => {
     const allValuesAreNull = Object.values(validationCheck).every(value => value === null);
@@ -610,19 +621,35 @@ const EnhancedTable: React.FC = () => {
   const data = useFetchIncomeData('2024-01-10', '2024-07-22', 1);
 
 
-  // テーブルツールバーprops
+  /**
+   * 削除イベントハンドラー
+   * 
+   * @param {AnnualIncomeManagementDeleteData[]} data - 削除行をリストで渡す
+   * @param {readonly number[]} selected - 削除行のインデックスをリストで渡す
+   */
   const handleDeleteChange = async(data: AnnualIncomeManagementDeleteData[], selected: readonly number[]) => {
     await deleteData(data, selected)
   };
 
-  // レンダリングされても値の受け渡しがないため、useCallbackを使って関数の状態を保持しておく
+  /**
+   * チェックボックスラベル
+   * - レンダリングされても値の受け渡しがないため、useCallbackを使って関数の状態を保持しておく
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - `event`オブジェクトは、Reactのフォーム要素（`<input>`要素など）の状態が変更されたときに発生するイベントを表します。
+   * このイベントオブジェクトには、ユーザーの入力に関する情報（例: 入力された値、変更の種類）や、イベントをトリガーした要素に関する情報が含まれています。
+   */
   const handleCheckBoxChange = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     const checked = event.target.checked;
     setCheckLabel(checked ? 'on' : 'off');
     setCheckedFlag(checked);
   }, []);
 
-  // テーブルヘッダーprops
+  /**
+   * テーブルヘッダーprops
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - `event`オブジェクトは、Reactのフォーム要素（`<input>`要素など）の状態が変更されたときに発生するイベントを表します。
+   * このイベントオブジェクトには、ユーザーの入力に関する情報（例: 入力された値、変更の種類）や、イベントをトリガーした要素に関する情報が含まれています。
+   */
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelected = data.map((n) => n.id);
@@ -632,6 +659,13 @@ const EnhancedTable: React.FC = () => {
     setSelected([]);
   };
 
+  /**
+   * テーブルの降順及び昇順ハンドラー
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - `event`オブジェクトは、Reactのフォーム要素（`<input>`要素など）の状態が変更されたときに発生するイベントを表します。
+   * このイベントオブジェクトには、ユーザーの入力に関する情報（例: 入力された値、変更の種類）や、イベントをトリガーした要素に関する情報が含まれています。
+   * @param {AnnualIncomeManagementKeyNotEdit} property - ソート対象のカラム名
+   */
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof AnnualIncomeManagementKeyNotEdit,
@@ -642,19 +676,33 @@ const EnhancedTable: React.FC = () => {
   };
 
 
-  // ダイアログprops
+  /**
+   * ダイアログイベントハンドラー
+   * 
+   * @param {AnnualIncomeManagementData} row - 編集行のデータ。
+   */
   const dialogHandleChange = (row: AnnualIncomeManagementData) => {
     setSelectedRow(row);
     setDialogOpen(true)
   }
 
+  /**
+   * クローズダイアログ
+   * 
+   */
   const handleClose = () => {
     setDialogOpen(false);  // ダイアログを閉じるために使用
   };
 
-
-  // テーブルprops
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  /**
+   * 各行に設置されたチェックボックスをクリックした分だけ削除される
+   * 
+   * @param {React.MouseEvent<unknown>} event - `event`オブジェクトは、Reactのフォーム要素（`<input>`要素など）の状態が変更されたときに発生するイベントを表します。
+   * このオブジェクトは`unknown`の為、使用しない
+   * @param {number} id - 行のインデックス
+   * 
+   */
+  const handleDeleteClick = (event: React.MouseEvent<unknown>, id: number) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly number[] = [];
 
@@ -673,6 +721,13 @@ const EnhancedTable: React.FC = () => {
     setSelected(newSelected);
   };
 
+  /**
+   * 次ページへの切り替え
+   * 
+   * @param {unknown} event - このオブジェクトは`unknown`の為、使用しない
+   * @param {number} newPage - 新しいページのid
+   * 
+   */
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -688,11 +743,24 @@ const EnhancedTable: React.FC = () => {
   //   });
   // };
 
+  /**
+   * ページネーションの行数変更ハンドラー
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - `event`オブジェクトは、Reactのフォーム要素（`<input>`要素など）の状態が変更されたときに発生するイベントを表します。
+   * このイベントオブジェクトには、ユーザーの入力に関する情報（例: 入力された値、変更の種類）や、イベントをトリガーした要素に関する情報が含まれています。
+   * 
+   */
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+  /**
+   * テーブルの行間を切り替える（通常と密集のレイアウトを切り替える）
+   * 
+   * @param {React.ChangeEvent<HTMLInputElement>} event - チェックボックスがクリックされた際のイベント。
+   * このイベントオブジェクトには、チェックボックスの状態（チェックされているかどうか）が含まれています。
+   */
   const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDense(event.target.checked);
   };
@@ -712,6 +780,24 @@ const EnhancedTable: React.FC = () => {
   //   fetchData();
   // }, []);
   
+  /**
+   * visibleRowsは、現在のページに表示されるテーブルの行を計算します。
+   * 
+   * @returns {Array} - 現在のページに表示される行のリスト。
+   * 
+   * - `React.useMemo`は、特定の依存関係が変わらない限り、計算結果を再利用するために使用されます。
+   *   これにより、パフォーマンスの最適化が図られます。
+   * 
+   * - `stableSort`は、`data`配列をソートして、その順序を安定的に保ちながら新しい配列を返します。
+   *   `getComparator`関数は、`order`（'asc' または 'desc'）と`orderBy`に基づいて比較関数を生成します。
+   * 
+   * - `slice`は、ソートされたデータから現在のページに表示する部分を抽出します。
+   *   `page * rowsPerPage`は、表示を開始するインデックスを計算し、
+   *   `page * rowsPerPage + rowsPerPage`は、表示を終了するインデックスを計算します。
+   * 
+   * 依存配列 `[data, order, orderBy, page, rowsPerPage]` が変更されたときに、
+   * この計算が再度行われます。
+   */
   const visibleRows = React.useMemo(
     () =>
       stableSort(data, getComparator(order, orderBy)).slice(
@@ -756,7 +842,7 @@ const EnhancedTable: React.FC = () => {
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
+                    onClick={(event) => handleDeleteClick(event, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
