@@ -395,8 +395,8 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
  * @param {keyof AnnualIncomeManagementData} field - カラム名を表す。これは、`AnnualIncomeManagementData`型のキーのいずれかです。
  * @param {string | number | Date} value - 各入力値を表す。
    */
-  const handleFieldChange = (field: keyof AnnualIncomeManagementData, value: any) => {
-    let convertedValue: any = value;
+  const handleFieldChange = (field: keyof AnnualIncomeManagementData, value: string | number | Date) => {
+    let convertedValue: string | number | Date = value;
   
     // If the field is total_amount or deduction_amount, convert the value to a number
     if (field === 'total_amount' || field === 'deduction_amount' || field === 'age' || field === 'take_home_amount') {
@@ -456,7 +456,15 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
    */
   const handleSubmit = async(editRow: AnnualIncomeManagementData | null) => {
     const allValuesAreNull = Object.values(validationCheck).every(value => value === null);
-    if (allValuesAreNull) {
+    if (allValuesAreNull && editRow) {
+      // 念の為送信前も型チェック
+      Object.entries(editRow).forEach(([key, val]) => {
+        if (key === 'total_amount' || key === 'deduction_amount' || key === 'age' || key === 'take_home_amount') {
+          if (typeof val === "string") {
+            (editRow as any)[key] = Number(val);
+          }
+        }
+      });
       await create(editRow);
       handleClose(); // ダイアログを閉じる
     }
