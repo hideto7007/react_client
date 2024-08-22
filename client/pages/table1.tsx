@@ -396,8 +396,14 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
  * @param {string | number | Date} value - 各入力値を表す。
    */
   const handleFieldChange = (field: keyof AnnualIncomeManagementData, value: any) => {
-    setEditRow((prev) => prev ? { ...prev, [field]: value } : prev);
-    validateField(field, value);
+    let convertedValue: any = value;
+  
+    // If the field is total_amount or deduction_amount, convert the value to a number
+    if (field === 'total_amount' || field === 'deduction_amount' || field === 'age' || field === 'take_home_amount') {
+      convertedValue = Number(value);
+    }
+    setEditRow((prev) => prev ? { ...prev, [field]: convertedValue } : prev);
+    validateField(field, convertedValue);
   };
 
   /**
@@ -420,10 +426,10 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
         validationError = Validation.industryValid(value as string);
         break;
       case 'total_amount':
-        validationError = Validation.incomeAmountValid(value as number);
+        validationError = Validation.incomeAmountValid(value as string);
         break;
       case 'deduction_amount':
-        validationError = Validation.incomeAmountValid(value as number);
+        validationError = Validation.incomeAmountValid(value as string);
         break;
       case 'take_home_amount':
         validationError = Validation.takeHomeAmountValid(value as number);
