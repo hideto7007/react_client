@@ -1,3 +1,4 @@
+import { AnnualIncomeManagementData } from "./types"
 
 class Validation {
     private regexp: RegExp
@@ -55,8 +56,45 @@ class Validation {
         } 
         return true
     }
-
 }
-  
-export default new Validation();
+
+
+class ValidationCheck extends Validation {
+    private validationError: string | boolean = true;
+
+    check = (field: keyof AnnualIncomeManagementData, value: string | number | Date) => {
+
+        switch (field) {
+          case 'payment_date':
+            this.validationError = this.dateValid(new Date(value as string));
+            break;
+          case 'age':
+            this.validationError = this.ageValid(value as number);
+            break;
+          case 'industry':
+            this.validationError = this.industryValid(value as string);
+            break;
+          case 'total_amount':
+            this.validationError = this.incomeAmountValid(value as string);
+            break;
+          case 'deduction_amount':
+            this.validationError = this.incomeAmountValid(value as string);
+            break;
+          case 'take_home_amount':
+            this.validationError = this.takeHomeAmountValid(value as number);
+            break;
+          case 'classification':
+            this.validationError = this.classificationValid(value as string);
+            break;
+          default:
+            break;
+        }
+
+        return this.validationError;
+    }
+}
+
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default new ValidationCheck();
   

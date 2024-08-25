@@ -41,7 +41,7 @@ import {
 import { Mockresponse } from '@/common/data'
 import { FilledInput, FormControl, FormHelperText, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, TextField } from '@mui/material';
 import { Check, DateRange } from '@mui/icons-material';
-import Validation from '@/common/vaildation';
+import ValidationCheck from '@/common/vaildation';
 
 
 const useFetchIncomeData = (startDate: string, endDate: string, userId: number) => {
@@ -336,11 +336,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props: Enhanc
 const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   const { editDialogLabel, dialogOpen, row, handleClose } = props;
 
-  const [editRow, setEditRow] = React.useState<AnnualIncomeManagementData | null>(row);
-  // 個々でバリデーションエラーを表示させるための状態管理
-  const [errors, setErrors] = React.useState<{ [key: string]: string | null }>({});
-  // バリデーションエラーを格納させる状態管理
-  const [validationCheck, setValidationCheck] = React.useState<Validate>({
+  const errorObj = {
     payment_date: null,
     age: null,
     industry: null,
@@ -348,7 +344,12 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
     deduction_amount: null,
     take_home_amount: null,
     classification: null
-  });
+  };
+
+  const [editRow, setEditRow] = React.useState<AnnualIncomeManagementData | null>(row);
+  // 個々でバリデーションエラーを表示させるための状態管理
+  const [errors, setErrors] = React.useState<Validate>(errorObj);
+  // バリデーションエラーを格納させる状態管理
   const [submitFlag, setSubmitFlag] = React.useState<boolean>(true);
 
   /**
@@ -364,13 +365,13 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
    * 都度レンダリングしてバリデーションチェックを行う
    */
   React.useEffect(() => {
-    const allValuesAreNull = Object.values(validationCheck).every(value => value === null);
+    const allValuesAreNull = Object.values(errors).every(value => value === null);
     if (allValuesAreNull) {
       setSubmitFlag(true);
     } else {
       setSubmitFlag(false);
     }
-  }, [validationCheck]);
+  }, [errors]);
 
   /**
    * 総支給額 - 差引額で手取り額を算出
@@ -381,9 +382,8 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
       const takeHomeAmount: number = Number(editRow.total_amount | 0) - Number(editRow.deduction_amount | 0)
       if (takeHomeAmount !== Number(editRow.take_home_amount)) {
         setEditRow({ ...editRow, take_home_amount: takeHomeAmount});
-        const validationError = Validation.takeHomeAmountValid(takeHomeAmount);
+        const validationError = ValidationCheck.check('take_home_amount', takeHomeAmount);
         const validationErrorResult = validationError === true ? null : validationError || null;
-        setValidationCheck(prev => ({...prev, take_home_amount: validationErrorResult}));
         setErrors((prev) => ({ ...prev, take_home_amount: validationErrorResult }));
       }
     }
@@ -415,36 +415,11 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   const validateField = (field: keyof AnnualIncomeManagementData, value: string | number | Date) => {
     let validationError: string | boolean = true;
 
-    switch (field) {
-      case 'payment_date':
-        validationError = Validation.dateValid(new Date(value as string));
-        break;
-      case 'age':
-        validationError = Validation.ageValid(value as number);
-        break;
-      case 'industry':
-        validationError = Validation.industryValid(value as string);
-        break;
-      case 'total_amount':
-        validationError = Validation.incomeAmountValid(value as string);
-        break;
-      case 'deduction_amount':
-        validationError = Validation.incomeAmountValid(value as string);
-        break;
-      case 'take_home_amount':
-        validationError = Validation.takeHomeAmountValid(value as number);
-        break;
-      case 'classification':
-        validationError = Validation.classificationValid(value as string);
-        break;
-      default:
-        break;
-    }
+    validationError = ValidationCheck.check(field, value);
 
     const validationErrorResult = validationError === true ? null : validationError || null;
     // []付けづにキー名を渡すと、'field'という文字列で渡してしまう
     // []をつければ動的なキー名で渡すことができる
-    setValidationCheck(prev => ({...prev, [field]: validationErrorResult}));
 
     setErrors((prev) => ({ ...prev, [field]: validationErrorResult}));
   };
@@ -455,7 +430,7 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
    * @param {AnnualIncomeManagementData | null} editRow - 編集する行データ
    */
   const handleSubmit = async(editRow: AnnualIncomeManagementData | null) => {
-    const allValuesAreNull = Object.values(validationCheck).every(value => value === null);
+    const allValuesAreNull = Object.values(errors).every(value => value === null);
     if (allValuesAreNull && editRow) {
       // 念の為送信前も型チェック
       Object.entries(editRow).forEach(([key, val]) => {
@@ -490,6 +465,7 @@ const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
   const editCancel = (row: AnnualIncomeManagementData | null) => {
     setEditRow(row);
     console.log(row);
+    setErrors(errorObj);
     handleClose(); // ダイアログを閉じる
   };
 
