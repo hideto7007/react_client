@@ -19,6 +19,7 @@ import {
 } from '@/common/const'
 import { Column, AnnualIncomeManagementData } from '@/common/types'
 import { Mockresponse } from '@/common/data'
+import { Breadcrumbs } from '@/common/component';
 
 
 let serverErrorFlag: boolean = false;
@@ -151,6 +152,7 @@ export default function StickyHeadTable() {
 
   return (
     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <Breadcrumbs />  {/* Include Breadcrumbs at the top */}
       <FormGroup>
         <FormControlLabel
           control={<Checkbox />}

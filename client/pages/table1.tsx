@@ -27,7 +27,8 @@ import {
   getIncomeDataFetchData,
   EnhancedTableHead,
   EnhancedTableToolbar,
-  EditDialog
+  EditDialog,
+  Breadcrumbs
 } from '@/common/component'
 
 
@@ -297,6 +298,7 @@ const EnhancedTable: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
+      <Breadcrumbs />  {/* Include Breadcrumbs at the top */}
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar
           numSelected={selected.length}

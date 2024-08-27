@@ -19,6 +19,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 
 import {
@@ -87,7 +89,7 @@ const getIncomeDataFetchData = async(startDate: string, endDate: string, userId:
  * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
  */
 
-const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTableProps) => {
+const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTableProps): JSX.Element => {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     const createSortHandler =
       (property: keyof AnnualIncomeManagementKeyNotEdit) => (event: React.MouseEvent<unknown>) => {
@@ -150,7 +152,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
    * 
    * @returns {JSX.Element} - テーブルのツールバーを表すJSX要素を返します
    */
-  const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props: EnhancedTableToolbarProps) => {
+  const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props: EnhancedTableToolbarProps): JSX.Element => {
     const {
       numSelected, selected, data, onDelete, checkboxLabel,
       checked, onCheckBox } = props;
@@ -222,7 +224,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
    * 
    * @returns {JSX.Element} - ダイアログのJSX要素を返す
    */
-  const EditDialog: React.FC<editDialogProps> = (props: editDialogProps) => {
+  const EditDialog: React.FC<editDialogProps> = (props: editDialogProps): JSX.Element => {
     const { editDialogLabel, dialogOpen, row, handleClose } = props;
   
     const errorObj = {
@@ -477,6 +479,42 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
     );
   }
 
+  /**
+   * Breadcrumbsコンポーネント
+   * 
+   * 
+   * @returns {JSX.Element} - ダイアログのJSX要素を返す
+   */
+  const Breadcrumbs: React.FC = (): JSX.Element => {
+      // 現在のルート（URL）に関する情報を取得
+      const router = useRouter();
+      // 各パスセグメントを結合するための変数
+      let joinedPath = "";
+  
+      return (
+          <div className="flex items-center text-sm px-4 w-full">
+              {/* ホームアイコンとして "/" へのリンクを表示 */}
+              <Link href="/">home</Link>
+              {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
+              {router.asPath.split("/").map((path, index) => {
+                  // パスが空でない場合のみ処理
+                  if (path) {
+                      // 現在のパスセグメントを joinedPath に追加
+                      joinedPath += path + "/";
+                      return (
+                        <span key={index} className="flex items-center">
+                          <span className="mx-1">{" > "}</span>
+                            <Link href={`/${joinedPath}`}>
+                              <span className="text-gray-500 hover:text-gray-600 no-underline">{path}</span>
+                            </Link>
+                      </span>
+                      );
+                  }
+              })}
+          </div>
+      );
+  };
+
 
 export { 
     getIncomeDataFetchData,
@@ -484,4 +522,5 @@ export {
     EnhancedTableHead,
     EnhancedTableToolbar,
     EditDialog,
+    Breadcrumbs
 };
