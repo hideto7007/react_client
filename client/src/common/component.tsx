@@ -493,8 +493,8 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
   
       return (
           <div className="flex items-center text-sm px-4 w-full">
-              {/* ホームアイコンとして "/" へのリンクを表示 */}
-              <Link href="/">home</Link>
+              {/* ホームページにいない場合のみHomeを表示 */}
+              {router.pathname !== '/' ? (<Link href="/">home</Link>) : null}
               {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
               {router.asPath.split("/").map((path, index) => {
                   // パスが空でない場合のみ処理
