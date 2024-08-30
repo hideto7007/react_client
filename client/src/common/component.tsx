@@ -492,26 +492,26 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
       let joinedPath = "";
   
       return (
-          <div className="flex items-center text-sm px-4 w-full">
-              {/* ホームページにいない場合のみHomeを表示 */}
-              {router.pathname !== '/' ? (<Link href="/">home</Link>) : null}
-              {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
-              {router.asPath.split("/").map((path, index) => {
-                  // パスが空でない場合のみ処理
-                  if (path) {
-                      // 現在のパスセグメントを joinedPath に追加
-                      joinedPath += path + "/";
-                      return (
-                        <span key={index} className="flex items-center">
-                          <span className="mx-1">{" > "}</span>
-                            <Link href={`/${joinedPath}`}>
-                              <span className="text-gray-500 hover:text-gray-600 no-underline">{path}</span>
-                            </Link>
-                      </span>
-                      );
-                  }
-              })}
-          </div>
+        <div className="flex items-center text-sm px-4 w-full">
+          {/* ホームページにいない場合のみHomeを表示 */}
+          {router.pathname !== '/' ? (<Link href="/">home</Link>) : null}
+            {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
+            {router.asPath.split("/").map((path, index) => {
+              // パスが空でない場合のみ処理
+              if (path) {
+                // 現在のパスセグメントを joinedPath に追加
+                joinedPath += path + "/";
+                return (
+                  <span key={index} className="flex items-center">
+                    <span className="mx-1">{" > "}</span>
+                      <Link href={`/${joinedPath}`}>
+                        <span className="text-gray-500 hover:text-gray-600 no-underline">{path}</span>
+                      </Link>
+                  </span>
+                );
+              }
+          })}
+        </div>
       );
   };
 
