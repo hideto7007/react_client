@@ -23,12 +23,12 @@ npm install @mui/material @emotion/react @emotion/styled
 
 
 ### UnitTest
-- 1. jest install
+1. jest install
 ```bash
 npm install --save-dev jest @testing-library/react @testing-library/jest-dom @testing-library/user-event babel-jest ts-node jest-environment-jsdom next
 ```
 
-- 2. jest.config.ts
+2. jest.config.ts
 ```typescript
 module.exports = {
     preset: 'ts-jest',
