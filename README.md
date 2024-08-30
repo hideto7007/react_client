@@ -6,7 +6,12 @@ make Annual income management and stock price prediction web front application.
 
 ### Environment
 ```bash
-1. docker exec
+1. docker build
+docker build -t react_client .
+docker run -it -v $(pwd):/react_client --network finance -p 3000:3000 --name react_client react_client
+
+2. docker exec
+docker start react_client
 docker container exec -it react_client /bin/bash
 cd ./react_client
 
