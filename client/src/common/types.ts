@@ -1,3 +1,5 @@
+import { Control, FieldErrors, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
+
 // インターフェース定義
 interface AnnualIncomeManagementKey {
     payment_date: string;
@@ -103,6 +105,21 @@ interface editDialogProps {
     handleClose: () => void;
   }
 
+interface CsvFileSetting {
+  file: File | null;
+}
+
+interface FileSelectProps {
+  setValue: UseFormSetValue<CsvFileSetting>;
+  register: UseFormRegister<CsvFileSetting>;
+  control: Control<CsvFileSetting, any>;
+  errors: FieldErrors<CsvFileSetting>;
+  setError: UseFormSetError<CsvFileSetting>;
+  clearErrors: UseFormClearErrors<CsvFileSetting>;
+};
+
+interface CsvImportMainProps {};
+
 export type {
     AnnualIncomeManagementKey,
     AnnualIncomeManagementData,
@@ -116,5 +133,8 @@ export type {
     AnnualIncomeManagementDeleteData,
     EnhancedTableToolbarProps,
     editDialogProps,
-    Order
+    Order,
+    CsvFileSetting,
+    FileSelectProps,
+    CsvImportMainProps
 }
