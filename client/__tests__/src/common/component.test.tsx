@@ -8,6 +8,7 @@ import {
     EnhancedTableToolbar,
     EditDialog } from '../../../src/common/component';
 import { LabelConst } from '../../../src/common/const';
+import test from 'node:test';
 
 
 describe('component.tsx', () => {
@@ -145,3 +146,7 @@ describe('component.tsx', () => {
         expect(ageInput).toHaveValue(35);
       });
 })
+function expect(length: number) {
+  throw new Error('Function not implemented.');
+}
+

@@ -479,41 +479,41 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
     );
   }
 
-  /**
-   * Breadcrumbsコンポーネント
-   * 
-   * 
-   * @returns {JSX.Element} - ダイアログのJSX要素を返す
-   */
-  const Breadcrumbs: React.FC = (): JSX.Element => {
-      // 現在のルート（URL）に関する情報を取得
-      const router = useRouter();
-      // 各パスセグメントを結合するための変数
-      let joinedPath = "";
-  
-      return (
-        <div className="flex items-center text-sm px-4 w-full">
-          {/* ホームページにいない場合のみHomeを表示 */}
-          {router.pathname !== '/' ? (<Link href="/">home</Link>) : null}
-            {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
-            {router.asPath.split("/").map((path, index) => {
-              // パスが空でない場合のみ処理
-              if (path) {
-                // 現在のパスセグメントを joinedPath に追加
-                joinedPath += path + "/";
-                return (
-                  <span key={index} className="flex items-center">
-                    <span className="mx-1">{" > "}</span>
-                      <Link href={`/${joinedPath}`}>
-                        <span className="text-gray-500 hover:text-gray-600 no-underline">{path}</span>
-                      </Link>
-                  </span>
-                );
-              }
-          })}
-        </div>
-      );
-  };
+/**
+ * Breadcrumbsコンポーネント
+ * 
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const Breadcrumbs: React.FC = (): JSX.Element => {
+  // 現在のルート（URL）に関する情報を取得
+  const router = useRouter();
+  // 各パスセグメントを結合するための変数
+  let joinedPath = "";
+
+  return (
+    <div className="flex items-center text-sm px-4 w-full">
+      {/* ホームページにいない場合のみHomeを表示 */}
+      {router.pathname !== '/money_management' ? (<Link href="/money_management">money_management</Link>) : null}
+      {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
+      {router.asPath.split("/").filter(path => path !== "money_management").map((path, index) => {
+        // パスが空でない場合のみ処理
+        if (path) {
+          // 現在のパスセグメントを joinedPath に追加
+          joinedPath += path + "/";
+          return (
+            <span key={index} className="flex items-center">
+              <span className="mx-1">{" > "}</span>
+              <Link href={`/${joinedPath}`}>
+                <span className="text-gray-500 hover:text-gray-600 no-underline">{path}</span>
+              </Link>
+            </span>
+          );
+        }
+        return null;
+      })}
+    </div>
+  );
+};
 
 
 export { 
