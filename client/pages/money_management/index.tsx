@@ -11,6 +11,8 @@ const Home: React.FC = () => {
       <h1>お金管理アプリ</h1>
       <nav>
         <ul>
+          <li><Link href={`${MONEY_MANAGEMENT}/signin`}>サインイン</Link></li>
+          <li><Link href={`${MONEY_MANAGEMENT}/signup`}>サインアップ</Link></li>
           <li><Link href={`${MONEY_MANAGEMENT}/about`}>About</Link></li>
           <li><Link href={`${MONEY_MANAGEMENT}/Sample`}>Sample</Link></li>
           <li><Link href={`${MONEY_MANAGEMENT}/posts/1`}>Post 1</Link></li>

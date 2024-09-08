@@ -118,6 +118,11 @@ interface FileSelectProps {
   clearErrors: UseFormClearErrors<CsvFileSetting>;
 };
 
+interface Signin {
+  email: string;
+  password: string;
+};
+
 interface CsvImportMainProps {};
 
 export type {
@@ -136,5 +141,6 @@ export type {
     Order,
     CsvFileSetting,
     FileSelectProps,
-    CsvImportMainProps
+    CsvImportMainProps,
+    Signin
 }
