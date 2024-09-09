@@ -118,10 +118,20 @@ interface FileSelectProps {
   clearErrors: UseFormClearErrors<CsvFileSetting>;
 };
 
-interface SigninProps {
+interface AuthFormProps {
   email: string;
   password: string;
-};
+  confirmPassword?: string;  // Sign Upの場合のみ必要
+}
+
+interface PasswordFormProps {
+  name: keyof AuthFormProps;
+  label: string;
+  control: Control<AuthFormProps>;  // Tに依存するControl型
+  rules?: Omit<RegisterOptions<AuthFormProps>, "disabled" | "valueAsNumber" | "valueAsDate" | "setValueAs"> | undefined;
+  fieldState?: ControllerFieldState;
+  fullWidth?: boolean;
+}
 
 interface TextFormProps<T extends FieldValues> {
   name: Path<T>;
@@ -151,6 +161,7 @@ export type {
     CsvFileSetting,
     FileSelectProps,
     CsvImportMainProps,
-    SigninProps,
-    TextFormProps
+    TextFormProps,
+    PasswordFormProps,
+    AuthFormProps
 }

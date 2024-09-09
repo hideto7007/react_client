@@ -99,7 +99,7 @@ const REQUIRED_MSG: string = '必須入力です。'
 // Validation rules for login form
 export const validationRules = {
     email: {
-        required: REQUIRED_MSG,
+        required: `メールアドレスは${REQUIRED_MSG}`,
         pattern: {
         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
         message: 'メールアドレス形式が間違っています',
@@ -107,13 +107,22 @@ export const validationRules = {
         maxLength: { value: 254, message: 'メールアドレスが長すぎます' },
     },
     password: {
-        required: REQUIRED_MSG,
+        required: `パスワードは${REQUIRED_MSG}`,
         // minLength: { value: 6, message: 'パスワードが短すぎます' },
         pattern: {
             value: /^(?=.*[A-Z])(?=.*[.!?/-])[a-zA-Z0-9.!?/-]{8,24}$/i,
             message: 'パスワードは8文字以上24文字以下、大文字、記号(ビックリマーク(!)、ピリオド(.)、スラッシュ(/)、クエスチョンマーク(?)、ハイフン(-))を含めてください',
         },
     },
+    confirmPassword: (password: string) => ({
+        required: `確認用パスワードは${REQUIRED_MSG}`,
+        // minLength: { value: 6, message: 'パスワードが短すぎます' },
+        pattern: {
+            value: /^(?=.*[A-Z])(?=.*[.!?/-])[a-zA-Z0-9.!?/-]{8,24}$/i,
+            message: 'パスワードは8文字以上24文字以下、大文字、記号(ビックリマーク(!)、ピリオド(.)、スラッシュ(/)、クエスチョンマーク(?)、ハイフン(-))を含めてください',
+        },
+        validate: (value: string | undefined) => value === password || 'パスワードが一致しません。'
+    }),
 };
 
 

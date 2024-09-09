@@ -118,6 +118,10 @@ const keyListConst = [
   KeyConst.Classification
 ] as const;
 
+enum Auth {
+  AuthToken = 'auth_token'
+}
+
 
 export { 
   PriceManagementConst,
@@ -129,5 +133,6 @@ export {
   classificationListConst,
   labelListConst,
   keyListConst,
-  LabelConst
+  LabelConst,
+  Auth
 };
