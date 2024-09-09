@@ -1,14 +1,14 @@
 import Link from 'next/link';
 import React from 'react';
-import { Breadcrumbs } from '@/common/component';
+import { Breadcrumbs, TextForm } from '@/common/component';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { Signin } from '@/common/types';
+import { SigninProps } from '@/common/types';
 import { Avatar, Box, Button, Container, CssBaseline, TextField, Typography, Link as MuiLink } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { validationRules } from '@/common/vaildation';
 
 const Sinin: React.FC = () => {
-    const { control, handleSubmit, formState: { isValid } } = useForm<Signin>({
+    const { control, handleSubmit, formState: { isValid } } = useForm<SigninProps>({
         mode: 'onChange', // ユーザーが入力するたびにバリデーション
         // mode: 'onBlur', // 入力フィールドがフォーカスを失ったときにバリデーション
         defaultValues: {
@@ -17,7 +17,7 @@ const Sinin: React.FC = () => {
         },
     });
 
-    const onSubmit: SubmitHandler<Signin> = (data: Signin) => {
+    const onSubmit: SubmitHandler<SigninProps> = (data: SigninProps) => {
         console.log(`data: ${JSON.stringify(data)}`);
     };
 
@@ -51,41 +51,24 @@ const Sinin: React.FC = () => {
               gap: 2, // 各要素間のスペースを追加
             }}
           >
-            {/* EmailフィールドのController */}
-            <Controller
+            {/* Emailフィールド */}
+            <TextForm<SigninProps>
               name="email"
+              label="メールアドレス"
               control={control}
               rules={validationRules.email}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  label="Email Address"
-                  error={!!error}
-                  helperText={error ? error.message : null}
-                  fullWidth
-                />
-              )}
             />
 
-            {/* PasswordフィールドのController */}
-            <Controller
+            {/* Passwordフィールド */}
+            <TextForm<SigninProps>
               name="password"
+              label="パスワード"
               control={control}
               rules={validationRules.password}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  label="Password"
-                  error={!!error}
-                  autoComplete="current-password"
-                  helperText={error ? error.message : null}
-                  fullWidth
-                />
-              )}
             />
             <Typography>
-            サインアップがまだの場合は
-            <Link href="/money_management/signup">こちら</Link>
+                サインアップがまだの場合は
+                <Link href="/money_management/signup">こちら</Link>
             </Typography>
             <Button
               type="submit"

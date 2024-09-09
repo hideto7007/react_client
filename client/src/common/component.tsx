@@ -27,12 +27,13 @@ import {
   AnnualIncomeManagementData,
   EnhancedTableProps, AnnualIncomeManagementKeyNotEdit,
   EnhancedTableToolbarProps, editDialogProps,
-  Validate } from '@/common/types'
+  Validate, TextFormProps } from '@/common/types'
 import { columns } from '@/common/columns';
 import ValidationCheck from '@/common/vaildation';
 import { Mockresponse } from '@/common/data';
 import { classificationListConst, LabelConst } from '@/common/const';
 import { MenuItem, TextField } from '@mui/material';
+import { Controller, FieldValues } from 'react-hook-form';
 // import ApiEndpoint from '@/common/apiEndpoint'
 
 
@@ -516,11 +517,37 @@ const Breadcrumbs: React.FC = (): JSX.Element => {
 };
 
 
+/**
+ * テキストフォームコンポーネント
+ * 
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const TextForm = <T extends FieldValues,>({ name, label, control, rules, fullWidth }: TextFormProps<T>): JSX.Element => {
+  return (
+    <Controller
+      name={name}
+      control={control}
+      rules={rules}
+      render={({ field, fieldState }) => (
+        <TextField
+          {...field}
+          label={label}
+          error={!!fieldState.error}
+          helperText={fieldState.error ? fieldState.error.message : null}
+          fullWidth={fullWidth}
+        />
+      )}
+    />
+  );
+}
+
+
 export { 
     getIncomeDataFetchData,
     create,
     EnhancedTableHead,
     EnhancedTableToolbar,
     EditDialog,
-    Breadcrumbs
+    Breadcrumbs,
+    TextForm
 };

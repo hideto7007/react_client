@@ -1,4 +1,4 @@
-import { Control, FieldErrors, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
+import { Control, ControllerFieldState, FieldError, FieldErrors, FieldValues, Path, RegisterOptions, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
 
 // インターフェース定義
 interface AnnualIncomeManagementKey {
@@ -118,10 +118,19 @@ interface FileSelectProps {
   clearErrors: UseFormClearErrors<CsvFileSetting>;
 };
 
-interface Signin {
+interface SigninProps {
   email: string;
   password: string;
 };
+
+interface TextFormProps<T extends FieldValues> {
+  name: Path<T>;
+  label: string;
+  control: Control<T>;  // Tに依存するControl型
+  rules?: Omit<RegisterOptions<T>, "disabled" | "valueAsNumber" | "valueAsDate" | "setValueAs"> | undefined;
+  fieldState?: ControllerFieldState;
+  fullWidth?: boolean;
+}
 
 interface CsvImportMainProps {};
 
@@ -142,5 +151,6 @@ export type {
     CsvFileSetting,
     FileSelectProps,
     CsvImportMainProps,
-    Signin
+    SigninProps,
+    TextFormProps
 }

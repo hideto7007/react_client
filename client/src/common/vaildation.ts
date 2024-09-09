@@ -94,21 +94,27 @@ class ValidationCheck extends Validation {
     }
 }
 
+const REQUIRED_MSG: string = '必須入力です。'
+
 // Validation rules for login form
 export const validationRules = {
     email: {
-        required: 'Email is required',
+        required: REQUIRED_MSG,
         pattern: {
         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-        message: 'Please enter a valid email',
+        message: 'メールアドレス形式が間違っています',
         },
-        maxLength: { value: 254, message: 'Email is too long' },
+        maxLength: { value: 254, message: 'メールアドレスが長すぎます' },
     },
     password: {
-        required: 'Password is required',
-        minLength: { value: 6, message: 'Password is too short' },
+        required: REQUIRED_MSG,
+        // minLength: { value: 6, message: 'パスワードが短すぎます' },
+        pattern: {
+            value: /^(?=.*[A-Z])(?=.*[.!?/-])[a-zA-Z0-9.!?/-]{8,24}$/i,
+            message: 'パスワードは8文字以上24文字以下、大文字、記号(ビックリマーク(!)、ピリオド(.)、スラッシュ(/)、クエスチョンマーク(?)、ハイフン(-))を含めてください',
+        },
     },
-    };
+};
 
 
 // eslint-disable-next-line import/no-anonymous-default-export
