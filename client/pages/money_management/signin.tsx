@@ -1,23 +1,25 @@
-import { useRouter } from 'next/router';
+import Link from 'next/link';
 import React from 'react';
 import { Breadcrumbs } from '@/common/component';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { Signin } from '@/common/types';
-import { Avatar, Box, Button, Container, CssBaseline, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Container, CssBaseline, TextField, Typography, Link as MuiLink } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { validationRules } from '@/common/vaildation';
 
 const Sinin: React.FC = () => {
-    const { control, setError, setValue, register, handleSubmit, formState: { errors }, clearErrors } = useForm<Signin>({
+    const { control, handleSubmit, formState: { isValid } } = useForm<Signin>({
+        mode: 'onChange', // ユーザーが入力するたびにバリデーション
+        // mode: 'onBlur', // 入力フィールドがフォーカスを失ったときにバリデーション
         defaultValues: {
             email: '',
             password: '',
         },
     });
 
-  const onSubmit: SubmitHandler<Signin> = (data: Signin) => {
-    console.log(`data: ${JSON.stringify(data)}`);
-  };
+    const onSubmit: SubmitHandler<Signin> = (data: Signin) => {
+        console.log(`data: ${JSON.stringify(data)}`);
+    };
 
   return (
     <div>
@@ -60,8 +62,6 @@ const Sinin: React.FC = () => {
                   label="Email Address"
                   error={!!error}
                   helperText={error ? error.message : null}
-                  autoComplete="email"
-                  autoFocus
                   fullWidth
                 />
               )}
@@ -83,8 +83,13 @@ const Sinin: React.FC = () => {
                 />
               )}
             />
+            <Typography>
+            サインアップがまだの場合は
+            <Link href="/money_management/signup">こちら</Link>
+            </Typography>
             <Button
               type="submit"
+              disabled={!isValid}
               fullWidth
               variant='contained'
               sx={{ mt: 3, mb: 2 }}
