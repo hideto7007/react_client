@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Control, ControllerFieldState, FieldError, FieldErrors, FieldValues, Path, RegisterOptions, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
 
 // インターフェース定義
@@ -142,6 +143,26 @@ interface TextFormProps<T extends FieldValues> {
   fullWidth?: boolean;
 }
 
+interface SideBarProps {
+  name: string
+  link: string
+}
+
+interface BoxProps {
+  children: ReactNode;
+  direction?: "row" | "column";
+  wrap?: "wrap" | "nowrap";
+  gap?: "none" | "narrow" | "medium" | "wide";
+  width?: string;
+  bordered?: boolean;
+  valign?: "top" | "bottom" | "center";
+  halign?: "left" | "right" | "center";
+  itemValign?: "top" | "bottom" | "center" | "stretch";
+  itemHalign?: "left" | "right" | "center" | "stretch";
+  marginBottom?: string;
+  display?: string;
+}
+
 interface CsvImportMainProps {};
 
 export type {
@@ -163,5 +184,7 @@ export type {
     CsvImportMainProps,
     TextFormProps,
     PasswordFormProps,
-    AuthFormProps
+    AuthFormProps,
+    SideBarProps,
+    BoxProps
 }

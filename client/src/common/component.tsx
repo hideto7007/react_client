@@ -28,12 +28,14 @@ import {
   EnhancedTableProps, AnnualIncomeManagementKeyNotEdit,
   EnhancedTableToolbarProps, editDialogProps,
   Validate, TextFormProps, 
-  PasswordFormProps} from '@/common/types'
+  PasswordFormProps,
+  SideBarProps,
+  BoxProps} from '@/common/types'
 import { columns } from '@/common/columns';
 import ValidationCheck from '@/common/vaildation';
 import { Mockresponse } from '@/common/data';
 import { classificationListConst, LabelConst } from '@/common/const';
-import { FormControl, FormHelperText, InputAdornment, InputLabel, MenuItem, OutlinedInput, TextField } from '@mui/material';
+import { FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, TextField } from '@mui/material';
 import { Controller, FieldValues } from 'react-hook-form';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 // import ApiEndpoint from '@/common/apiEndpoint'
@@ -493,21 +495,35 @@ const Breadcrumbs: React.FC = (): JSX.Element => {
   // 各パスセグメントを結合するための変数
   let joinedPath = "";
 
+  // パス名とタイトルのマッピングを定義
+  const pathMap: { [key: string]: string } = {
+    "": "ホーム",
+    "about": "アバウト",
+    "posts": "ポスト",
+    "signup": "サインアップ",
+    "signin": "サインイン",
+    "table": "テーブル",
+    "table1": "テーブル1",
+    "csvimport": "CSVインポート",
+  };
+
   return (
     <div className="flex items-center text-sm px-4 w-full">
       {/* ホームページにいない場合のみHomeを表示 */}
-      {router.pathname !== '/money_management' ? (<Link href="/money_management">money_management</Link>) : null}
+      {router.pathname !== '/money_management' ? (<Link href="/money_management">お金管理</Link>) : null}
       {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
       {router.asPath.split("/").filter(path => path !== "money_management").map((path, index) => {
         // パスが空でない場合のみ処理
         if (path) {
           // 現在のパスセグメントを joinedPath に追加
           joinedPath += path + "/";
+          // パス名に対応するタイトルを取得（無ければそのままパスを表示）
+          const title = pathMap[path] || path;
           return (
             <span key={index} className="flex items-center">
               <span className="mx-1">{" > "}</span>
               <Link href={`/${joinedPath}`}>
-                <span className="text-gray-500 hover:text-gray-600 no-underline">{path}</span>
+                <span className="text-gray-500 hover:text-gray-600 no-underline">{title}</span>
               </Link>
             </span>
           );
@@ -598,6 +614,43 @@ const PasswordTextForm: React.FC<PasswordFormProps> = (props): JSX.Element => {
   );
 }
 
+/**
+ * リンク用のコンポーネント
+ * 
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
+  const { name, link } = props;
+
+  return (
+    <Link href={link} className={link}>
+      <ListItem button>
+        <ListItemIcon>
+        </ListItemIcon>
+        <ListItemText primary={name} />
+      </ListItem>
+    </Link>
+  )
+}
+
+/**
+ * Box下側幅固定コンポーネント
+ * 
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const BoxUnderPadding: React.FC<BoxProps> = (props) => {
+  // const underPadding: string = "50px";
+
+  return (
+    <Box
+      sx={{ display: "flex", flexDirection: "column" }}
+      {...props}
+    >
+      {props.children} {/* ここでchildrenを表示 */}
+    </Box>
+  );
+};
+
 
 export { 
     getIncomeDataFetchData,
@@ -607,5 +660,7 @@ export {
     EditDialog,
     Breadcrumbs,
     TextForm,
-    PasswordTextForm
+    PasswordTextForm,
+    LinkBar,
+    BoxUnderPadding
 };

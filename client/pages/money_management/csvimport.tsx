@@ -6,6 +6,7 @@ import {
   CsvImportMainProps
 } from '@/common/types';
 import { Box, Button, Typography } from '@mui/material';
+import { BoxUnderPadding, Breadcrumbs } from "@/common/component";
 
 
 const ERROR_MESSAGE = 'ファイルを選択してください';
@@ -98,6 +99,9 @@ const CsvImportMain: FC<CsvImportMainProps> = (props) => {
   );
 
   return (
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Breadcrumbs /> {/* パンくずを表示する */}
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
     <form
       noValidate
       onSubmit={onSubmit}
@@ -122,6 +126,8 @@ const CsvImportMain: FC<CsvImportMainProps> = (props) => {
         </Button>
       </Box>
     </form>
+    </Box>
+    </Box>
   );
 };
 
