@@ -30,11 +30,12 @@ import {
   Validate, TextFormProps, 
   PasswordFormProps,
   SideBarProps,
-  BoxProps} from '@/common/types'
+  BoxProps,
+  BreadcrumbsProps} from '@/common/types'
 import { columns } from '@/common/columns';
 import ValidationCheck from '@/common/vaildation';
 import { Mockresponse } from '@/common/data';
-import { classificationListConst, LabelConst } from '@/common/const';
+import { classificationListConst, LabelConst, pathMap } from '@/common/const';
 import { FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, TextField } from '@mui/material';
 import { Controller, FieldValues } from 'react-hook-form';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -489,23 +490,11 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
  * 
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const Breadcrumbs: React.FC = (): JSX.Element => {
+const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
   // 現在のルート（URL）に関する情報を取得
   const router = useRouter();
   // 各パスセグメントを結合するための変数
   let joinedPath = "";
-
-  // パス名とタイトルのマッピングを定義
-  const pathMap: { [key: string]: string } = {
-    "": "ホーム",
-    "about": "アバウト",
-    "posts": "ポスト",
-    "signup": "サインアップ",
-    "signin": "サインイン",
-    "table": "テーブル",
-    "table1": "テーブル1",
-    "csvimport": "CSVインポート",
-  };
 
   return (
     <div className="flex items-center text-sm px-4 w-full">
@@ -530,6 +519,7 @@ const Breadcrumbs: React.FC = (): JSX.Element => {
         }
         return null;
       })}
+      <Box sx={{ marginBottom: props.marginBottom }} /> 
     </div>
   );
 };
@@ -638,15 +628,14 @@ const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
  * 
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const BoxUnderPadding: React.FC<BoxProps> = (props) => {
+const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
   // const underPadding: string = "50px";
 
   return (
     <Box
-      sx={{ display: "flex", flexDirection: "column" }}
       {...props}
     >
-      {props.children} {/* ここでchildrenを表示 */}
+      {props.children} {/* 子要素を表示 */}
     </Box>
   );
 };
@@ -662,5 +651,5 @@ export {
     TextForm,
     PasswordTextForm,
     LinkBar,
-    BoxUnderPadding
+    BoxLayoutPadding
 };

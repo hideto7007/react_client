@@ -6,7 +6,7 @@ import { Breadcrumbs } from '@/common/component';
 const About: React.FC = () => {
   return (
     <div>
-      <Breadcrumbs /> {/* パンくずを表示する */}
+      <Breadcrumbs marginBottom='5px'/> {/* パンくずを表示する */}
       <h1>about Child</h1>
       <AboutChild
         name='hideto'

@@ -38,7 +38,6 @@ const SignIn: React.FC = () => {
 
   return (
     <div>
-      <Breadcrumbs />  {/* Include Breadcrumbs at the top */}
       <Container component='main' maxWidth='xs'>
         <CssBaseline />
         <Box

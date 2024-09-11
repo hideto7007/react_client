@@ -6,7 +6,7 @@ import {
   CsvImportMainProps
 } from '@/common/types';
 import { Box, Button, Typography } from '@mui/material';
-import { BoxUnderPadding, Breadcrumbs } from "@/common/component";
+import { BoxLayoutPadding, Breadcrumbs } from "@/common/component";
 
 
 const ERROR_MESSAGE = 'ファイルを選択してください';
@@ -99,35 +99,34 @@ const CsvImportMain: FC<CsvImportMainProps> = (props) => {
   );
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-      <Breadcrumbs /> {/* パンくずを表示する */}
-    <Box sx={{ display: "flex", flexDirection: "column" }}>
-    <form
-      noValidate
-      onSubmit={onSubmit}
-      style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-    >
-      <Box display="flex" flexDirection="column">
-        <FileSelect
-          control={control}
-          errors={errors}
-          setValue={setValue}
-          register={register}
-          setError={setError}
-          clearErrors={clearErrors}
-        />
-      </Box>
-      <Box display="flex">
-        <Button
-          onClick={handleSubmit(onUploadClick)}
-          variant="contained"
-        >
-          アップロード
-        </Button>
-      </Box>
-    </form>
-    </Box>
-    </Box>
+    <BoxLayoutPadding>
+        <Breadcrumbs
+          marginBottom="12px"/> {/* パンくずを表示する */}
+      <form
+        noValidate
+        onSubmit={onSubmit}
+        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+      >
+        <Box display="flex" flexDirection="column">
+          <FileSelect
+            control={control}
+            errors={errors}
+            setValue={setValue}
+            register={register}
+            setError={setError}
+            clearErrors={clearErrors}
+          />
+        </Box>
+        <Box display="flex">
+          <Button
+            onClick={handleSubmit(onUploadClick)}
+            variant="contained"
+          >
+            アップロード
+          </Button>
+        </Box>
+      </form>
+    </BoxLayoutPadding>
   );
 };
 

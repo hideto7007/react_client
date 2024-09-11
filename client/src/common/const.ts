@@ -1,3 +1,6 @@
+import { PathMapProps } from '@/common/types'
+
+
 // 貯金額計算固定値
 enum PriceManagementConst {
   SavingsPeriod = '貯蓄期間',
@@ -122,6 +125,17 @@ enum Auth {
   AuthToken = 'auth_token'
 }
 
+// パス名とタイトルのマッピングを定義
+const pathMap: { [key: string]: string } = {
+  about: "アバウト",
+  posts: "ポスト",
+  signup: "サインアップ",
+  signin: "サインイン",
+  table: "テーブル",
+  table1: "テーブル1",
+  csvimport: "CSVインポート",
+};
+
 
 export { 
   PriceManagementConst,
@@ -134,5 +148,6 @@ export {
   labelListConst,
   keyListConst,
   LabelConst,
-  Auth
+  Auth,
+  pathMap
 };

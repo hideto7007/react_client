@@ -163,6 +163,20 @@ interface BoxProps {
   display?: string;
 }
 
+interface BreadcrumbsProps {
+  marginBottom: string
+}
+
+interface PathMapProps {
+  about: string;
+  posts: string;
+  signup: string;
+  signin: string;
+  table: string;
+  table1: string;
+  csvimport: string;
+}
+
 interface CsvImportMainProps {};
 
 export type {
@@ -186,5 +200,7 @@ export type {
     PasswordFormProps,
     AuthFormProps,
     SideBarProps,
-    BoxProps
+    BoxProps,
+    PathMapProps,
+    BreadcrumbsProps
 }

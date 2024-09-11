@@ -298,7 +298,7 @@ const EnhancedTable: React.FC = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Breadcrumbs />  {/* Include Breadcrumbs at the top */}
+      <Breadcrumbs marginBottom='5px'/>  {/* Include Breadcrumbs at the top */}
       <Paper sx={{ width: '100%', mb: 2 }}>
         <EnhancedTableToolbar
           numSelected={selected.length}
