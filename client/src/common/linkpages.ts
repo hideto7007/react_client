@@ -1,7 +1,7 @@
-import { SideBarProps, ClassesProps } from '@/common/types'
+import { SideBarProps } from '@/common/types';
 
-const MONEY_MANAGEMENT = '/money_management'; // ベースパスを定義
-const MYPAGE = '/mypages'
+const MONEY_MANAGEMENT = '/money_management';
+const MYPAGE = '/mypages';
 
 const money_management_classes: SideBarProps[] = [
     {
@@ -20,7 +20,7 @@ const money_management_classes: SideBarProps[] = [
         name: "テーブル1",
         link: `${MONEY_MANAGEMENT}/table1`
     },
-]
+];
 
 const mypage_classes: SideBarProps[] = [
     {
@@ -31,9 +31,11 @@ const mypage_classes: SideBarProps[] = [
         name: "バージョン",
         link: `${MONEY_MANAGEMENT}${MYPAGE}/version`
     },
-]
+];
 
 export {
     money_management_classes,
-    mypage_classes
-}
+    mypage_classes,
+    MONEY_MANAGEMENT,
+    MYPAGE
+};
