@@ -148,6 +148,10 @@ interface SideBarProps {
   link: string
 }
 
+interface ClassesProps {
+  classes: SideBarProps[]
+}
+
 interface BoxProps {
   children: ReactNode;
   direction?: "row" | "column";
@@ -202,5 +206,6 @@ export type {
     SideBarProps,
     BoxProps,
     PathMapProps,
-    BreadcrumbsProps
+    BreadcrumbsProps,
+    ClassesProps
 }

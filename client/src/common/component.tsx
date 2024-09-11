@@ -499,19 +499,23 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
   return (
     <div className="flex items-center text-sm px-4 w-full">
       {/* ホームページにいない場合のみHomeを表示 */}
-      {router.pathname !== '/money_management' ? (<Link href="/money_management">お金管理</Link>) : null}
+      {router.pathname !== '/money_management' ? (
+        <Link href="/money_management">お金管理</Link>
+      ) : null}
+
       {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
       {router.asPath.split("/").filter(path => path !== "money_management").map((path, index) => {
-        // パスが空でない場合のみ処理
         if (path) {
-          // 現在のパスセグメントを joinedPath に追加
           joinedPath += path + "/";
-          // パス名に対応するタイトルを取得（無ければそのままパスを表示）
-          const title = pathMap[path] || path;
+
+          // パス名に対応する表示用タイトルを取得
+          const title = path === "mypages" ? "マイページ" : path;  // パスに対してカスタム名を定義
+
           return (
             <span key={index} className="flex items-center">
               <span className="mx-1">{" > "}</span>
-              <Link href={`/${joinedPath}`}>
+              {/* 修正：相対パスにする */}
+              <Link href={`/money_management/${joinedPath}`}>
                 <span className="text-gray-500 hover:text-gray-600 no-underline">{title}</span>
               </Link>
             </span>
@@ -629,7 +633,6 @@ const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
-  // const underPadding: string = "50px";
 
   return (
     <Box
