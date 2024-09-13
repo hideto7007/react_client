@@ -617,15 +617,15 @@ const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
   const { name, link } = props;
 
   return (
-    <Link href={link} className={link}>
-      <ListItem button>
-        <ListItemIcon>
-        </ListItemIcon>
+    <Link href={link} passHref>
+      <ListItem button component="div">
+        <ListItemIcon />
         <ListItemText primary={name} />
       </ListItem>
     </Link>
-  )
-}
+  );
+};
+
 
 /**
  * Box下側幅固定コンポーネント

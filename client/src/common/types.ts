@@ -144,12 +144,18 @@ interface TextFormProps<T extends FieldValues> {
 }
 
 interface SideBarProps {
-  name: string
-  link: string
+  name: string;
+  link: string;
 }
 
 interface ClassesProps {
-  classes: SideBarProps[]
+  classes: SideBarProps[];
+  open: boolean; // サイドバーの開閉状態
+  toggleDrawer: (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => void;
+}
+
+interface ToolbarProps {
+  disabled: boolean;
 }
 
 interface BoxProps {
@@ -168,7 +174,7 @@ interface BoxProps {
 }
 
 interface BreadcrumbsProps {
-  marginBottom: string
+  marginBottom: string;
 }
 
 interface PathMapProps {
@@ -207,5 +213,6 @@ export type {
     BoxProps,
     PathMapProps,
     BreadcrumbsProps,
-    ClassesProps
+    ClassesProps,
+    ToolbarProps
 }
