@@ -13,7 +13,7 @@ export const SideBar: React.FC<ClassesProps> = (props) => {
   return (
     <>
       <Drawer
-        anchor="left" // 左側に表示
+        anchor={props.anchor}
         open={props.open}
         onClose={props.toggleDrawer(false)} // サイドバー外をクリックしたら閉じる
       >

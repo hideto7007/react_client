@@ -149,6 +149,7 @@ interface SideBarProps {
 }
 
 interface ClassesProps {
+  anchor: "bottom"| "left" | "right" | "top";
   classes: SideBarProps[];
   open: boolean; // サイドバーの開閉状態
   toggleDrawer: (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => void;
