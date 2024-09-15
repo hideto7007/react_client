@@ -1,11 +1,14 @@
-import { Drawer, List, ListItem, MenuItem, MenuList, Paper, Stack, styled} from '@mui/material';
+import { Divider, Drawer, List } from '@mui/material';
 import Box from '@mui/material/Box';
 import React from 'react';
 import { ClassesProps } from '@/common/types'
 import { LinkBar } from '@/common/component';
 
 
-const SideBar: React.FC<ClassesProps> = (props) => {
+export const SIDEBARWIDTH: number = 140;
+
+
+export const SideBar: React.FC<ClassesProps> = (props) => {
 
   return (
     <>
@@ -15,7 +18,7 @@ const SideBar: React.FC<ClassesProps> = (props) => {
         onClose={props.toggleDrawer(false)} // サイドバー外をクリックしたら閉じる
       >
         <Box
-          sx={{ width: 250 }}
+          sx={{ width: SIDEBARWIDTH }}
           role="presentation"
           onClick={props.toggleDrawer(false)}
           onKeyDown={props.toggleDrawer(false)}
@@ -32,24 +35,22 @@ const SideBar: React.FC<ClassesProps> = (props) => {
             }
           )}
           </List>
+          {/* TODO:今後各カテゴリ毎にリンクを分ける際に Divider を使用してアンダーラインを引いて分ける */}
+          {/* <Divider /> */}
+          {/* <List>
+            {props.classes.map((val, idx) => {
+              return (
+                <LinkBar
+                  key={idx}
+                  name={val.name}
+                  link={val.link}
+                ></LinkBar>
+              );
+            }
+          )}
+          </List> */}
         </Box>
       </Drawer>
     </>
   );
 };
-
-export default SideBar;
-
-
-// <List>
-    //   {props.classes.map((val, idx) => {
-    //     return (
-    //       <LinkBar
-    //         key={idx}
-    //         name={val.name}
-    //         link={val.link}
-    //       ></LinkBar>
-    //     );
-    //   }
-    // )}
-    // </List>

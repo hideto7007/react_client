@@ -36,7 +36,7 @@ import { columns } from '@/common/columns';
 import ValidationCheck from '@/common/vaildation';
 import { Mockresponse } from '@/common/data';
 import { classificationListConst, LabelConst, pathMap } from '@/common/const';
-import { FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, TextField } from '@mui/material';
+import { Divider, FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, TextField } from '@mui/material';
 import { Controller, FieldValues } from 'react-hook-form';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 // import ApiEndpoint from '@/common/apiEndpoint'
@@ -618,9 +618,10 @@ const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
 
   return (
     <Link href={link} passHref>
-      <ListItem button component="div">
-        <ListItemIcon />
-        <ListItemText primary={name} />
+      <ListItem>
+        <ListItemText
+          primary={name}
+        />
       </ListItem>
     </Link>
   );
