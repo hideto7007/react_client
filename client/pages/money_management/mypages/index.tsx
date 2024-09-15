@@ -1,5 +1,4 @@
 import React from 'react';
-import { mypage_classes } from '@/common/linkpages'
 import { BoxLayoutPadding, Breadcrumbs } from '@/common/component';
 
 

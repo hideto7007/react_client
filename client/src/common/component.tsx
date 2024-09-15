@@ -31,12 +31,13 @@ import {
   PasswordFormProps,
   SideBarProps,
   BoxProps,
-  BreadcrumbsProps} from '@/common/types'
+  BreadcrumbsProps,
+  ToastProps} from '@/common/types'
 import { columns } from '@/common/columns';
 import ValidationCheck from '@/common/vaildation';
 import { Mockresponse } from '@/common/data';
 import { classificationListConst, LabelConst, pathMap } from '@/common/const';
-import { Divider, FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, TextField } from '@mui/material';
+import { Alert, Divider, FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, Snackbar, TextField } from '@mui/material';
 import { Controller, FieldValues } from 'react-hook-form';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 // import ApiEndpoint from '@/common/apiEndpoint'
@@ -644,6 +645,31 @@ const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
   );
 };
 
+/**
+ * トーストコンポーネント
+ * 
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const Toast: React.FC<ToastProps> = (props): JSX.Element => {
+
+  const { open, handleClose, vertical, horizontal, severity, message } = props;
+
+  return (
+    <>
+      {/* Snackbar コンポーネントでトーストを実装 */}
+      <Snackbar
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
+      >
+      <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
+        <span dangerouslySetInnerHTML={{ __html: message }} />
+      </Alert>
+      </Snackbar>
+    </>
+  );
+};
+
 
 export { 
     getIncomeDataFetchData,
@@ -655,5 +681,6 @@ export {
     TextForm,
     PasswordTextForm,
     LinkBar,
-    BoxLayoutPadding
+    BoxLayoutPadding,
+    Toast
 };

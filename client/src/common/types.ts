@@ -190,6 +190,16 @@ interface PathMapProps {
 
 interface CsvImportMainProps {};
 
+interface ToastProps {
+  open: boolean;
+  handleClose: () => void;
+  vertical: 'top' | 'bottom';
+  horizontal: 'center' | 'right' | 'left';
+  severity: 'success' | 'info' | 'warning' | 'error';
+  message: string;
+
+}
+
 export type {
     AnnualIncomeManagementKey,
     AnnualIncomeManagementData,
@@ -215,5 +225,6 @@ export type {
     PathMapProps,
     BreadcrumbsProps,
     ClassesProps,
-    ToolbarProps
+    ToolbarProps,
+    ToastProps
 }
