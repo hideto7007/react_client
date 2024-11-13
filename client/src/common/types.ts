@@ -1,3 +1,4 @@
+import { AxiosError, AxiosResponse } from "axios";
 import { ReactNode } from "react";
 import { Control, ControllerFieldState, FieldError, FieldErrors, FieldValues, Path, RegisterOptions, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
 
@@ -120,10 +121,33 @@ interface FileSelectProps {
 };
 
 interface AuthFormProps {
-  email: string;
-  password: string;
+  user_name: string;
+  user_password: string;
   confirmPassword?: string;  // Sign Upの場合のみ必要
 }
+
+interface SinginResProps {
+  data: AuthFormProps[]
+}
+
+interface Response<T> {
+  recode_rows?: number;
+  Token: string;
+  result: T | T[];
+  error_msg? :string;
+}
+
+interface errorField {
+  field: string;
+  message: string;
+}
+
+interface ErrorResponse {
+  status: number;
+  data: unknown | any;
+}
+
+interface OkResponse extends AxiosResponse<any, any>{}
 
 interface PasswordFormProps {
   name: keyof AuthFormProps;
@@ -226,5 +250,9 @@ export type {
     BreadcrumbsProps,
     ClassesProps,
     ToolbarProps,
-    ToastProps
+    ToastProps,
+    SinginResProps,
+    Response,
+    ErrorResponse,
+    OkResponse
 }
