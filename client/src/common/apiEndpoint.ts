@@ -29,21 +29,25 @@ class ApiEndpoint {
     return http.delete(`/api/income_delete/?income_forecast_id=${id}`);
   }
 
-  // get(id: any): Promise<any> {
-  //   return http.get(`/api/books/${id}`);
-  // }
+  singin(data: any): Promise<any> {
+    return http.post(`api/singin`, data);
+  }
 
-  // create(data: any): Promise<any> {
-  //   return http.post("/api/books", data);
-  // }
+  refreshToken(params: any): Promise<any> {
+    return http.get(`api/refresh_token/` + params);
+  }
 
-  // update(id: any, data: any): Promise<any> {
-  //   return http.put(`/api/books/${id}`, data);
-  // }
+  singup(data: any): Promise<any> {
+    return http.post(`api/singup`, data);
+  }
 
-  // delete(id: any): Promise<any> {
-  //   return http.delete(`/api/books/${id}`);
-  // }
+  singinEdit(data: any): Promise<any> {
+    return http.put(`/api/singin_edit`, data);
+  }
+
+  singinDelete(data: any): Promise<any> {
+    return http.delete(`/api/books/`, data);
+  }
 
   // deleteAll(): Promise<any> {
   //   return http.delete(`/api/books`);
