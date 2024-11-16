@@ -17,7 +17,7 @@ import {
     ErrorConst, Type, classificationListConst, KeyConst,
     Align, Size, labelListConst, keyListConst, LabelConst
 } from '@/common/const'
-import { Column, AnnualIncomeManagementData } from '@/common/types'
+import { Column, AnnualIncomeManagementData } from '@/common/entity'
 import { Mockresponse } from '@/common/data'
 import { Breadcrumbs } from '@/common/component';
 

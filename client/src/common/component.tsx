@@ -32,7 +32,7 @@ import {
   SideBarProps,
   BoxProps,
   BreadcrumbsProps,
-  ToastProps} from '@/common/types'
+  ToastProps} from '@/common/entity'
 import { columns } from '@/common/columns';
 import ValidationCheck from '@/common/vaildation';
 import { Mockresponse } from '@/common/data';

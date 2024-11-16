@@ -1,4 +1,4 @@
-import { AnnualIncomeManagementData } from "./types"
+import { AnnualIncomeManagementData } from "./entity"
 
 class Validation {
     private regexp: RegExp

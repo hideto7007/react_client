@@ -1,6 +1,5 @@
-import { AxiosError, AxiosResponse } from "axios";
 import { ReactNode } from "react";
-import { Control, ControllerFieldState, FieldError, FieldErrors, FieldValues, Path, RegisterOptions, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
+import { Control, ControllerFieldState, FieldErrors, FieldValues, Path, RegisterOptions, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
 
 // インターフェース定義
 interface AnnualIncomeManagementKey {
@@ -130,25 +129,6 @@ interface SinginResProps {
   data: AuthFormProps[]
 }
 
-interface Response<T> {
-  recode_rows?: number;
-  Token: string;
-  result: T | T[];
-  error_msg? :string;
-}
-
-interface errorField {
-  field: string;
-  message: string;
-}
-
-interface ErrorResponse {
-  status: number;
-  data: unknown | any;
-}
-
-interface OkResponse extends AxiosResponse<any, any>{}
-
 interface PasswordFormProps {
   name: keyof AuthFormProps;
   label: string;
@@ -252,7 +232,4 @@ export type {
     ToolbarProps,
     ToastProps,
     SinginResProps,
-    Response,
-    ErrorResponse,
-    OkResponse
 }

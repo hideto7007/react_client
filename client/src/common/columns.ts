@@ -1,5 +1,5 @@
 import { Align, KeyConst, LabelConst } from "./const";
-import { ColumnNotEdit } from "./types";
+import { ColumnNotEdit } from "./entity";
 
 export const columns: readonly ColumnNotEdit[] = [
     {

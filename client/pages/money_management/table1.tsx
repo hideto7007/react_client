@@ -22,7 +22,7 @@ import {
   AnnualIncomeManagementData,
   Order, AnnualIncomeManagementKeyNotEdit,
   AnnualIncomeManagementDeleteData
-} from '@/common/types'
+} from '@/common/entity'
 import {
   getIncomeDataFetchData,
   EnhancedTableHead,

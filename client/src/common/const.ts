@@ -1,4 +1,4 @@
-import { PathMapProps } from '@/common/types'
+import { PathMapProps } from '@/common/entity'
 
 
 // 貯金額計算固定値

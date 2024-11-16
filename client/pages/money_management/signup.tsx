@@ -1,7 +1,7 @@
 import React from 'react';
 import { Breadcrumbs, TextForm, PasswordTextForm } from '@/common/component';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { AuthFormProps } from '@/common/types';
+import { AuthFormProps } from '@/common/entity';
 import { Avatar, Box, Button, Container, CssBaseline, Typography } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { validationRules } from '@/common/vaildation';
