@@ -1,46 +1,76 @@
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/router'; // useRouterをインポート
-import { Breadcrumbs, TextForm, PasswordTextForm } from '@/common/component';
+import {
+  FATextForm,
+  PasswordTextForm,
+  FAToast,
+  FABackDrop,
+  FAContainer,
+  FACssBaseline,
+  FABox,
+  FAAvatar,
+  FATypography,
+  FAButton } from '@/common/component';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { AuthFormProps } from '@/common/types';
-import { Avatar, Box, Button, Container, CssBaseline, Typography } from '@mui/material';
+import { AuthFormProps, SinginResProps } from '@/common/entity';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { validationRules } from '@/common/vaildation';
 import { Auth } from '@/common/const';
+import ApiClient from '@/common/apiClient';
+import Common from '@/common/common';
 
 const SignIn: React.FC = () => {
     const { control, handleSubmit, formState: { isValid } } = useForm<AuthFormProps>({
         mode: 'onChange', // ユーザーが入力するたびにバリデーション
         // mode: 'onBlur', // 入力フィールドがフォーカスを失ったときにバリデーション
         defaultValues: {
-            email: '',
-            password: '',
+            user_name: '',
+            user_password: '',
         },
     });
     const router = useRouter();
+    const [errorMsg, setErrorMsg] = useState<string>('')
+    const [open, setOpen] = useState(false);
+    const [overlayOpen, setOverlayOpen] = useState(false);
+    var errorMsgInfo: string;
 
-    const res = {
-        // "status": 200,
-        "status_code": 200,
-        "message": "アカウントかパスワードが違います"
-    }
-
-    const onSubmit: SubmitHandler<AuthFormProps> = (data: AuthFormProps) => {
-        console.log(`data: ${JSON.stringify(data)}`);
-        if (res.status_code !== 200) {
-            alert(res.message)
+    const onSubmit: SubmitHandler<AuthFormProps> = async(data: AuthFormProps) => {
+      const dataRes: SinginResProps = {
+        data: [data]
+      }
+      const api = new ApiClient()
+      const res = await api.callApi("/api/singin", "post", dataRes);
+      if (res.status !== 200) {
+        console.log(res)
+        if (res.data.error_msg) {
+          errorMsgInfo = Common.ErrorMsgInfo(true, res.data.error_msg);
+          setErrorMsg(errorMsgInfo);
         } else {
-            localStorage.setItem(Auth.AuthToken, 'dummy_token');
-            router.push('/money_management');
+          const msg = res.data.result[0]
+          errorMsgInfo = Common.ErrorMsgInfo(true, msg.field, msg.message);
+          setErrorMsg(errorMsgInfo);
         }
+        setOpen(true);
+        setOverlayOpen(true);
+      } else {
+        localStorage.setItem(Auth.UserId, res.data.result[0].user_id)
+        localStorage.setItem(Auth.UserName, res.data.result[0].user_name)
+        router.push('/money_management');
+      }
+    };
+
+    // トーストを閉じる処理
+    const handleClose = () => {
+      setOpen(false);
+      setOverlayOpen(false);
     };
 
   return (
     <div>
-      <Container component='main' maxWidth='xs'>
-        <CssBaseline />
-        <Box
+      <FAContainer component='main' maxWidth='xs'>
+        <FACssBaseline />
+        <FABox
           sx={{
             marginTop: 8,
             display: 'flex',
@@ -48,13 +78,13 @@ const SignIn: React.FC = () => {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <FAAvatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
-          </Avatar>
-          <Typography component='h1' variant='h5'>
+          </FAAvatar>
+          <FATypography component='h1' variant='h5'>
             Sign In
-          </Typography>
-          <Box
+          </FATypography>
+          <FABox
             component='form'
             noValidate
             onSubmit={handleSubmit(onSubmit)}
@@ -66,8 +96,8 @@ const SignIn: React.FC = () => {
             }}
           >
             {/* Emailフィールド */}
-            <TextForm<AuthFormProps>
-              name="email"
+            <FATextForm<AuthFormProps>
+              name="user_name"
               label="メールアドレス"
               control={control}
               rules={validationRules.email}
@@ -75,16 +105,16 @@ const SignIn: React.FC = () => {
 
             {/* Passwordフィールド */}
             <PasswordTextForm
-              name="password"
+              name="user_password"
               label="パスワード"
               control={control}
               rules={validationRules.password}
             />
-            <Typography>
+            <FATypography>
                 サインアップがまだの場合は
                 <Link href="/money_management/signup">こちら</Link>
-            </Typography>
-            <Button
+            </FATypography>
+            <FAButton
               type="submit"
               disabled={!isValid}
               fullWidth
@@ -92,10 +122,25 @@ const SignIn: React.FC = () => {
               sx={{ mt: 3, mb: 2 }}
             >
               SIGN IN
-            </Button>
-          </Box>
-        </Box>
-      </Container>
+            </FAButton>
+          </FABox>
+        </FABox>
+      </FAContainer>
+      <>
+        <FABox sx={{ width: 500 }}>
+            <FABackDrop
+              overlayOpen={overlayOpen}
+            />
+            <FAToast
+              open={open}
+              handleClose={handleClose}
+              vertical={'top'}
+              horizontal={'center'}
+              severity={'error'}
+              message={errorMsg}              
+            />
+        </FABox>
+      </>
     </div>
   );
 };

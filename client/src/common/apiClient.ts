@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, Method } from "axios";
-import { ErrorResponse, OkResponse } from "@/common/types";
+import { ErrorResponse, OkResponse } from "@/common/presenter";
 
 const BASE_URL: string | undefined = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'
 // const BASE_URL: string | undefined = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://host.docker.internal:8080'
@@ -16,7 +16,7 @@ class ApiClient {
     });
   }
 
-  public async callApi(endpoint: string, method: Method = "get", data?: any,): Promise<OkResponse | ErrorResponse> {
+  public async callApi(endpoint: string, method: Method = "get", data?: any): Promise<OkResponse | ErrorResponse> {
     try {
         // APIリクエストを実行（methodに応じてリクエスト）
         const res = await this.apiInstance.request({
@@ -44,7 +44,9 @@ class ApiClient {
     } else {
       return {
         status: 500,
-        data: "予期しないエラーが発生しました",
+        data: {
+          'error_msg': "予期しないエラーが発生しました",
+        }
       } as ErrorResponse;
     }
   }

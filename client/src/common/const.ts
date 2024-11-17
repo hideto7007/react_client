@@ -122,7 +122,11 @@ const keyListConst = [
 ] as const;
 
 enum Auth {
-  AuthToken = 'auth_token'
+  AuthToken = 'AuthToken',
+  RefreshAuthToken = 'RefreshAuthToken',
+  UserId = 'user_id',
+  UserName = 'user_name',
+  UserPassword = 'user_password'
 }
 
 // パス名とタイトルのマッピングを定義

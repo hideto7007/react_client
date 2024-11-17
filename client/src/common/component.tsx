@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
+import { AvatarProps, Box, BoxProps, CssBaselineProps } from '@mui/material';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
+import Typography, { TypographyProps } from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
@@ -14,7 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import Button from '@mui/material/Button';
+import Button, { ButtonProps } from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -30,14 +30,15 @@ import {
   Validate, TextFormProps, 
   PasswordFormProps,
   SideBarProps,
-  BoxProps,
   BreadcrumbsProps,
-  ToastProps} from '@/common/entity'
+  FAToastProps,
+  FABackdropProps,
+  FABoxProps} from '@/common/entity'
 import { columns } from '@/common/columns';
 import ValidationCheck from '@/common/vaildation';
 import { Mockresponse } from '@/common/data';
 import { classificationListConst, LabelConst, pathMap } from '@/common/const';
-import { Alert, Divider, FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, Snackbar, TextField } from '@mui/material';
+import { Alert, Avatar, Backdrop, Container, ContainerProps, CssBaseline, Divider, FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, Snackbar, TextField } from '@mui/material';
 import { Controller, FieldValues } from 'react-hook-form';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 // import ApiEndpoint from '@/common/apiEndpoint'
@@ -78,6 +79,37 @@ const getIncomeDataFetchData = async(startDate: string, endDate: string, userId:
   const create = async(row: AnnualIncomeManagementData | null): Promise<void> => {
     await console.log("create", row)
   }
+
+
+  /**
+   * reactコンポーネントラップ
+   * 
+   * できる範囲でラップしバージョンアップした際にメンテナンスがしやすくするため
+   * 
+   */
+  const FABox: React.FC<FABoxProps> = (props) => {
+    return <Box {...props} />;
+  };
+  
+  const FAButton: React.FC<ButtonProps> = (props) => {
+    return <Button {...props} />;
+  };
+  
+  const FACssBaseline: React.FC<CssBaselineProps> = (props) => {
+    return <CssBaseline {...props} />;
+  };
+  
+  const FATypography: React.FC<TypographyProps> = (props) => {
+    return <Typography {...props} />;
+  };
+  
+  const FAAvatar: React.FC<AvatarProps> = (props) => {
+    return <Avatar {...props} />;
+  };
+
+  const FAContainer: React.FC<ContainerProps> = (props) => {
+    return <Container {...props} />;
+  };
 
 
 /**
@@ -131,9 +163,9 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
               >
                 {column.label}
                 {orderBy === column.id ? (
-                  <Box component="span" sx={visuallyHidden}>
+                  <FABox component="span" sx={visuallyHidden}>
                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                  </Box>
+                  </FABox>
                 ) : null}
               </TableSortLabel>
             </TableCell>
@@ -179,23 +211,23 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
         }}
       >
         {numSelected > 0 ? (
-          <Typography
+          <FATypography
             sx={{ flex: '1 1 100%' }}
             color="inherit"
             variant="subtitle1"
             component="div"
           >
             {numSelected} selected
-          </Typography>
+          </FATypography>
         ) : (
-          <Typography
+          <FATypography
             sx={{ flex: '1 1 100%' }}
             variant="h6"
             id="tableTitle"
             component="div"
           >
             Nutrition
-          </Typography>
+          </FATypography>
         )}
           <FormControlLabel
             control={<Checkbox checked={checked} onChange={onCheckBox} />}
@@ -395,7 +427,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
           {editDialogLabel}
           </DialogTitle>
           <DialogContent>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+            <FABox sx={{ display: 'flex', flexWrap: 'wrap' }}>
               <div>
                 <TextField
                   label={LabelConst.PaymentDate}
@@ -473,13 +505,13 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
                   ))}
                 </TextField>
               </div>
-            </Box>
+            </FABox>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => editCancel(row)}>キャンセル</Button>
-            <Button onClick={() => handleSubmit(editRow)} autoFocus disabled={!submitFlag}>
+            <FAButton onClick={() => editCancel(row)}>キャンセル</FAButton>
+            <FAButton onClick={() => handleSubmit(editRow)} autoFocus disabled={!submitFlag}>
               変更
-            </Button>
+            </FAButton>
           </DialogActions>
         </Dialog>
       </React.Fragment>
@@ -524,7 +556,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
         }
         return null;
       })}
-      <Box sx={{ marginBottom: props.marginBottom }} /> 
+      <FABox sx={{ marginBottom: props.marginBottom }} /> 
     </div>
   );
 };
@@ -535,7 +567,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
  * 
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const TextForm = <T extends FieldValues,>({ name, label, control, rules, fullWidth }: TextFormProps<T>): JSX.Element => {
+const FATextForm = <T extends FieldValues,>({ name, label, control, rules, fullWidth }: TextFormProps<T>): JSX.Element => {
   return (
     <Controller
       name={name}
@@ -637,11 +669,11 @@ const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
 const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
 
   return (
-    <Box
+    <FABox
       {...props}
     >
       {props.children} {/* 子要素を表示 */}
-    </Box>
+    </FABox>
   );
 };
 
@@ -650,7 +682,7 @@ const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
  * 
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const Toast: React.FC<ToastProps> = (props): JSX.Element => {
+const FAToast: React.FC<FAToastProps> = (props): JSX.Element => {
 
   const { open, handleClose, vertical, horizontal, severity, message } = props;
 
@@ -671,16 +703,45 @@ const Toast: React.FC<ToastProps> = (props): JSX.Element => {
 };
 
 
+/**
+ * 背景をグレーにするオーバーレイコンポーネント
+ * 
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const FABackDrop: React.FC<FABackdropProps> = (props): JSX.Element => {
+
+  const { overlayOpen } = props;
+
+  return (
+    <Backdrop
+      sx={{
+        color: '#fff',
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // グレーの背景
+      }}
+      open={overlayOpen}
+    />
+  )
+}
+
+
 export { 
     getIncomeDataFetchData,
     create,
+    FABox,
+    FAButton,
+    FAContainer,
+    FACssBaseline,
+    FATypography,
+    FAAvatar,
     EnhancedTableHead,
     EnhancedTableToolbar,
     EditDialog,
     Breadcrumbs,
-    TextForm,
+    FATextForm,
     PasswordTextForm,
     LinkBar,
     BoxLayoutPadding,
-    Toast
+    FAToast,
+    FABackDrop
 };
