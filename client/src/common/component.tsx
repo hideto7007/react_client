@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { alpha } from '@mui/material/styles';
-import { AvatarProps, Box, BoxProps, CssBaselineProps } from '@mui/material';
+import { AvatarProps, Box, BoxProps, CssBaselineProps, TextFieldProps } from '@mui/material';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -38,7 +38,11 @@ import { columns } from '@/common/columns';
 import ValidationCheck from '@/common/vaildation';
 import { Mockresponse } from '@/common/data';
 import { classificationListConst, LabelConst, pathMap } from '@/common/const';
-import { Alert, Avatar, Backdrop, Container, ContainerProps, CssBaseline, Divider, FormControl, FormHelperText, InputAdornment, InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem, OutlinedInput, Snackbar, TextField } from '@mui/material';
+import {
+  Alert, Avatar, Backdrop, Container, ContainerProps,
+  CssBaseline, Divider, FormControl, FormHelperText, InputAdornment,
+  InputLabel, ListItem, ListItemIcon, ListItemText, MenuItem,
+  OutlinedInput, Snackbar, TextField } from '@mui/material';
 import { Controller, FieldValues } from 'react-hook-form';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 // import ApiEndpoint from '@/common/apiEndpoint'
@@ -109,6 +113,10 @@ const getIncomeDataFetchData = async(startDate: string, endDate: string, userId:
 
   const FAContainer: React.FC<ContainerProps> = (props) => {
     return <Container {...props} />;
+  };
+
+  const FATextField: React.FC<TextFieldProps> = (props) => {
+    return <TextField {...props} />;
   };
 
 
@@ -429,7 +437,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
           <DialogContent>
             <FABox sx={{ display: 'flex', flexWrap: 'wrap' }}>
               <div>
-                <TextField
+                <FATextField
                   label={LabelConst.PaymentDate}
                   type="date"
                   sx={{ m: 1, width: '25ch' }}
@@ -439,7 +447,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
                   error={!!errors.payment_date}
                   helperText={errors.payment_date}
                 />
-                <TextField
+                <FATextField
                   label={LabelConst.Age}
                   type="number"
                   sx={{ m: 1, width: '25ch' }}
@@ -449,7 +457,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
                   error={!!errors.age}
                   helperText={errors.age}
                 />
-                <TextField
+                <FATextField
                   label={LabelConst.Industry}
                   type="string"
                   sx={{ m: 1, width: '25ch' }}
@@ -459,7 +467,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
                   error={!!errors.industry}
                   helperText={errors.industry}
                 />
-                <TextField
+                <FATextField
                   label={LabelConst.TotalAmount}
                   type="number"
                   sx={{ m: 1, width: '25ch' }}
@@ -469,7 +477,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
                   error={!!errors.total_amount}
                   helperText={errors.total_amount}
                 />
-                <TextField
+                <FATextField
                   label={LabelConst.DeductionAmount}
                   type="number"
                   sx={{ m: 1, width: '25ch' }}
@@ -479,7 +487,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
                   error={!!errors.deduction_amount}
                   helperText={errors.deduction_amount}
                 />
-                <TextField
+                <FATextField
                   label={LabelConst.TakeHomeAmount}
                   type="number"
                   sx={{ m: 1, width: '25ch' }}
@@ -489,7 +497,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
                   helperText={errors.take_home_amount}
                   disabled 
                 />
-                <TextField
+                <FATextField
                   label={LabelConst.Classification}
                   select
                   sx={{ m: 1, width: '25ch' }}
@@ -503,7 +511,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (props: EnhancedTablePro
                       {option}
                     </MenuItem>
                   ))}
-                </TextField>
+                </FATextField>
               </div>
             </FABox>
           </DialogContent>
@@ -592,7 +600,7 @@ const FATextForm = <T extends FieldValues,>({ name, label, control, rules, fullW
  * 
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const PasswordTextForm: React.FC<PasswordFormProps> = (props): JSX.Element => {
+const FAPasswordTextForm: React.FC<PasswordFormProps> = (props): JSX.Element => {
   const { name, control, rules, label } = props;
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -739,7 +747,7 @@ export {
     EditDialog,
     Breadcrumbs,
     FATextForm,
-    PasswordTextForm,
+    FAPasswordTextForm,
     LinkBar,
     BoxLayoutPadding,
     FAToast,

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router'; // useRouterをインポート
 import {
   FATextForm,
-  PasswordTextForm,
+  FAPasswordTextForm,
   FAToast,
   FABackDrop,
   FAContainer,
@@ -104,7 +104,7 @@ const SignIn: React.FC = () => {
             />
 
             {/* Passwordフィールド */}
-            <PasswordTextForm
+            <FAPasswordTextForm
               name="user_password"
               label="パスワード"
               control={control}

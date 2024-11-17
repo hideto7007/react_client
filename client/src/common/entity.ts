@@ -123,10 +123,15 @@ interface FileSelectProps {
 interface AuthFormProps {
   user_name: string;
   user_password: string;
-  confirmPassword?: string;  // Sign Upの場合のみ必要
+  confirm_password?: string;  // Sign Upの場合のみ必要
+  nick_name?: string;  // Sign Upの場合のみ必要
 }
 
 interface SinginResProps {
+  data: AuthFormProps[]
+}
+
+interface SingUpResProps {
   data: AuthFormProps[]
 }
 
@@ -240,6 +245,7 @@ export type {
     ToolbarProps,
     FAToastProps,
     SinginResProps,
+    SingUpResProps,
     FABackdropProps,
     FABoxProps
 }
