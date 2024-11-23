@@ -6,7 +6,6 @@ class Common {
         console.log(flg)
         if (flg) {
             if (msgArray.length == 1) {
-                console.log(msgArray)
                 msg = `【認証エラー】<br />エラー内容：${msgArray[0]}`
             } else if (msgArray.length == 2) {
                 msg = `【${msgArray[0]}】<br />エラー内容：${msgArray[1]}`
