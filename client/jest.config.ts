@@ -4,7 +4,6 @@ module.exports = {
     moduleNameMapper: {
         '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
         '^@/(.*)$': '<rootDir>/src/$1',
-        '^next/router$': '<rootDir>/__mocks__/nextRouterMock.js', // next/routerのモックファイル
     },
     transform: {
         '^.+\\.(ts|tsx)$': 'ts-jest',
@@ -17,5 +16,4 @@ module.exports = {
             },
         },
     },
-    setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
