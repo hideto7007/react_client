@@ -3,17 +3,11 @@ module.exports = {
     testEnvironment: 'jsdom',
     moduleNameMapper: {
         '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
-        '^@/(.*)$': '<rootDir>/src/$1',
+        '^@/(.*)$': '<rootDir>/$1',
     },
     transform: {
-        '^.+\\.(ts|tsx)$': 'ts-jest',
+        '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: { jsx: 'react-jsx' } }],
         '^.+\\.(js|jsx)$': ['babel-jest', { presets: ['next/babel'] }],
     },
-    globals: {
-        'ts-jest': {
-            tsconfig: {
-                jsx: 'react-jsx',
-            },
-        },
-    },
+    setupFilesAfterEnv: ['<rootDir>/setup-jest.ts']
 };

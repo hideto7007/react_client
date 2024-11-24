@@ -52,3 +52,8 @@ module.exports = {
 
 ```
 
+3. ESLint check command
+```bash
+npx eslint ./__tests__/*.test.tsx
+```
+
