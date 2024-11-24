@@ -1,6 +1,6 @@
 import React from 'react';
 import AboutChild from './AboutChild';
-import { Breadcrumbs } from '@/common/component';
+import { Breadcrumbs } from '@/src/common/component';
 
 
 const About: React.FC = () => {

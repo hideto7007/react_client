@@ -11,7 +11,6 @@ import PersonAdd from '@mui/icons-material/PersonAdd';
 import Settings from '@mui/icons-material/Settings';
 import Logout from '@mui/icons-material/Logout';
 
-import { MONEY_MANAGEMENT, MYPAGE } from '@/common/linkpages'
 import { useRouter } from 'next/router';
 
 const AccountMenu: React.FC = () => {

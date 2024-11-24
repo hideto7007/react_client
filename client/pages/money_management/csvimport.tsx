@@ -4,9 +4,9 @@ import {
   CsvFileSetting,
   FileSelectProps,
   CsvImportMainProps
-} from '@/common/entity';
+} from '@/src/common/entity';
 import { Box, Button, Typography } from '@mui/material';
-import { BoxLayoutPadding, Breadcrumbs } from "@/common/component";
+import { BoxLayoutPadding, Breadcrumbs } from "@/src/common/component";
 
 
 const ERROR_MESSAGE = 'ファイルを選択してください';

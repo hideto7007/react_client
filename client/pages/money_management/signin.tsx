@@ -11,14 +11,14 @@ import {
   FABox,
   FAAvatar,
   FATypography,
-  FAButton } from '@/common/component';
+  FAButton } from '@/src/common/component';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { AuthFormProps, SinginResProps } from '@/common/entity';
+import { AuthFormProps, SinginResProps } from '@/src/common/entity';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { validationRules } from '@/common/vaildation';
-import { Auth } from '@/common/const';
-import ApiClient from '@/common/apiClient';
-import Common from '@/common/common';
+import { validationRules } from '@/src/common/vaildation';
+import { Auth } from '@/src/common/const';
+import ApiClient from '@/src/common/apiClient';
+import Common from '@/src/common/common';
 
 const SignIn: React.FC = () => {
     const { control, handleSubmit, formState: { isValid } } = useForm<AuthFormProps>({

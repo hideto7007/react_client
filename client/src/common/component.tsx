@@ -33,11 +33,11 @@ import {
   BreadcrumbsProps,
   FAToastProps,
   FABackdropProps,
-  FABoxProps} from '@/common/entity'
-import { columns } from '@/common/columns';
-import ValidationCheck from '@/common/vaildation';
-import { Mockresponse } from '@/common/data';
-import { classificationListConst, LabelConst, pathMap } from '@/common/const';
+  FABoxProps} from '@/src/common/entity'
+import { columns } from '@/src/common/columns';
+import ValidationCheck from '@/src/common/vaildation';
+import { Mockresponse } from '@/src/common/data';
+import { classificationListConst, LabelConst, pathMap } from '@/src/common/const';
 import {
   Alert, Avatar, Backdrop, Container, ContainerProps,
   CssBaseline, Divider, FormControl, FormHelperText, InputAdornment,
@@ -48,7 +48,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 // import ApiEndpoint from '@/common/apiEndpoint'
 
 
-const getIncomeDataFetchData = async(startDate: string, endDate: string, userId: number): Promise<AnnualIncomeManagementData[] | void> => {
+const getIncomeDataFetchData = async(startDate: string, endDate: string, userId: number): Promise<AnnualIncomeManagementData[] | undefined> => {
     const queryList: string[] = []
     queryList.push("start_date=" + startDate)
     queryList.push("end_date=" + endDate)
@@ -77,6 +77,7 @@ const getIncomeDataFetchData = async(startDate: string, endDate: string, userId:
     
     } catch (error) {
       console.error('Error fetching data:', error)
+      return undefined
     }
   }
   

@@ -1,4 +1,4 @@
-import { SideBarProps } from '@/common/entity';
+import { SideBarProps } from '@/src/common/entity';
 
 const MONEY_MANAGEMENT = '/money_management';
 const MYPAGE = '/mypages';

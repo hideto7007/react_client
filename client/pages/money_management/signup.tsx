@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router'; // useRouterをインポート
-import { FATextForm, FAPasswordTextForm, FAButton, FAContainer, FACssBaseline, FABox, FAAvatar, FATypography, FABackDrop, FAToast } from '@/common/component';
+import { FATextForm, FAPasswordTextForm, FAButton, FAContainer, FACssBaseline, FABox, FAAvatar, FATypography, FABackDrop, FAToast } from '@/src/common/component';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { AuthFormProps, SingUpResProps } from '@/common/entity';
+import { AuthFormProps, SingUpResProps } from '@/src/common/entity';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { validationRules } from '@/common/vaildation';
-import ApiClient from '@/common/apiClient';
-import Common from '@/common/common';
+import { validationRules } from '@/src/common/vaildation';
+import ApiClient from '@/src/common/apiClient';
+import Common from '@/src/common/common';
 
 const SignUp: React.FC = () => {
     const { control, handleSubmit, watch, formState: { isValid } } = useForm<AuthFormProps>({

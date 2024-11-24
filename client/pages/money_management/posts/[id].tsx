@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import React from 'react';
-import { Breadcrumbs } from '@/common/component';
+import { Breadcrumbs } from '@/src/common/component';
 
 const Post: React.FC = () => {
     const router = useRouter();

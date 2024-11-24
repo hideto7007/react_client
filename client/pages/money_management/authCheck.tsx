@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Auth } from '@/common/const';
-import { FABackDrop, FABox, FAToast } from '@/common/component';
+import { Auth } from '@/src/common/const';
+import { FABackDrop, FABox, FAToast } from '@/src/common/component';
 // import { useCookies } from "react-cookie";
-import ApiClient from '@/common/apiClient';
-import Common from '@/common/common';
+import ApiClient from '@/src/common/apiClient';
+import Common from '@/src/common/common';
 
 
 const AuthCheck: React.FC = () => {
