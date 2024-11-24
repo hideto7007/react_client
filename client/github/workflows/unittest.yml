@@ -1,0 +1,29 @@
+name: UnitTest
+
+on:
+  push:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+
+      - name: Set up Nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Build Docker image
+        run: docker build -f Dockerfile -t unittest .
+
+      - name: Run tests inside Docker container and Unittest
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/client --name unittest unittest /bin/bash -c "\
+            cd /client && \
+            npm install -g n && \
+            npm install -g @mui/material @emotion/react @emotion/styled && \
+            npm install --save-dev jest ts-jest @types/jest @testing-library/react @testing-library/jest-dom && \
+            echo "================= test start ================= && \
+            npm test -- --coverage && \
+            echo "================= test end ================="
