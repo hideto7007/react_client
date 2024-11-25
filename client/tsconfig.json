@@ -12,7 +12,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["jest"], // 競合を防ぐため
+    "types": ["jest", "node"], // 競合を防ぐため
     "plugins": [
       {
         "name": "next"
