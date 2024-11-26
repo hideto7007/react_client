@@ -7,7 +7,6 @@ import {
     EnhancedTableToolbar,
     EditDialog } from '../../../src/common/component';
 import { LabelConst } from '../../../src/common/const';
-import { describe } from 'node:test';
 
 
 describe('component.tsx', () => {
@@ -18,8 +17,6 @@ describe('component.tsx', () => {
         const userId: number = 1;
       
         const data = await getIncomeDataFetchData(startDate, endDate, userId);
-
-        console.log("check", data)
         
         expect(data).toBeDefined();
         if (data) {
@@ -28,99 +25,99 @@ describe('component.tsx', () => {
         }
       });
 
-      // it('calls create function with correct data', async () => {
-      //   const data = {
-      //     id: 1,
-      //     income_forecast_id: '12345',
-      //     payment_date: '2024-01-01',
-      //     age: 30,
-      //     industry: 'IT',
-      //     total_amount: 100000,
-      //     deduction_amount: 20000,
-      //     take_home_amount: 80000,
-      //     update_user: 'user123',
-      //     classification: 'Salary',
-      //     user_id: 1
-      //   };
+      it('calls create function with correct data', async () => {
+        const data = {
+          id: 1,
+          income_forecast_id: '12345',
+          payment_date: '2024-01-01',
+          age: 30,
+          industry: 'IT',
+          total_amount: 100000,
+          deduction_amount: 20000,
+          take_home_amount: 80000,
+          update_user: 'user123',
+          classification: 'Salary',
+          user_id: 1
+        };
       
-      //   const consoleSpy = jest.spyOn(console, 'log');
-      //   await create(data);
+        const consoleSpy = jest.spyOn(console, 'log');
+        await create(data);
       
-      //   expect(consoleSpy).toHaveBeenCalledWith('create', data);
-      // });
-      // it('renders table head with correct columns', () => {
-      //   const props = {
-      //     onSelectAllClick: jest.fn(),
-      //     order: 'asc' as 'asc' | 'desc',
-      //     orderBy: 'age',
-      //     numSelected: 0,
-      //     rowCount: 5,
-      //     onRequestSort: jest.fn(),
-      //   };
+        expect(consoleSpy).toHaveBeenCalledWith('create', data);
+      });
+      it('renders table head with correct columns', () => {
+        const props = {
+          onSelectAllClick: jest.fn(),
+          order: 'asc' as 'asc' | 'desc',
+          orderBy: 'age',
+          numSelected: 0,
+          rowCount: 5,
+          onRequestSort: jest.fn(),
+        };
       
-      //   render(<EnhancedTableHead {...props} />);
+        render(<EnhancedTableHead {...props} />);
       
-      //   const columnHeaders = screen.getAllByRole('columnheader');
-      //   expect(columnHeaders.length).toBe(7); // カラム数に応じて調整
-      // });
+        const columnHeaders = screen.getAllByRole('columnheader');
+        expect(columnHeaders.length).toBe(7); // カラム数に応じて調整
+      });
 
-      // it('renders table toolbar with correct text when items are selected', () => {
-      //   const props = {
-      //     numSelected: 2,
-      //     selected: [1, 2],
-      //     data: [],
-      //     onDelete: jest.fn(),
-      //     checkboxLabel: 'Select All',
-      //     checked: false,
-      //     onCheckBox: jest.fn(),
-      //   };
+      it('renders table toolbar with correct text when items are selected', () => {
+        const props = {
+          numSelected: 2,
+          selected: [1, 2],
+          data: [],
+          onDelete: jest.fn(),
+          checkboxLabel: 'Select All',
+          checked: false,
+          onCheckBox: jest.fn(),
+        };
       
-      //   render(<EnhancedTableToolbar {...props} />);
+        render(<EnhancedTableToolbar {...props} />);
       
-      //   expect(screen.getByText('2 selected')).toBeInTheDocument();
-      // });
+        expect(screen.getByText('2 selected')).toBeInTheDocument();
+      });
       
-      // it('renders toolbar with delete icon when items are selected', () => {
-      //   const props = {
-      //     numSelected: 2,
-      //     selected: [1, 2],
-      //     data: [],
-      //     onDelete: jest.fn(),
-      //     checkboxLabel: 'Select All',
-      //     checked: false,
-      //     onCheckBox: jest.fn(),
-      //   };
+      it('renders toolbar with delete icon when items are selected', () => {
+        const props = {
+          numSelected: 2,
+          selected: [1, 2],
+          data: [],
+          onDelete: jest.fn(),
+          checkboxLabel: 'Select All',
+          checked: false,
+          onCheckBox: jest.fn(),
+        };
       
-      //   render(<EnhancedTableToolbar {...props} />);
+        render(<EnhancedTableToolbar {...props} />);
       
-      //   expect(screen.getByLabelText('Delete')).toBeInTheDocument();
-      // });
+        expect(screen.getByLabelText('Delete')).toBeInTheDocument();
+      });
 
-      // it('renders edit dialog with correct initial values', () => {
-      //   const props = {
-      //     editDialogLabel: 'Edit Data',
-      //     dialogOpen: true,
-      //     row: {
-      //       id: 1,
-      //       income_forecast_id: '12345',
-      //       payment_date: '2024-01-01',
-      //       age: 30,
-      //       industry: 'IT',
-      //       total_amount: 100000,
-      //       deduction_amount: 20000,
-      //       take_home_amount: 80000,
-      //       update_user: 'user123',
-      //       classification: 'Salary',
-      //       user_id: 1
-      //     },
-      //     handleClose: jest.fn(),
-      //   };
+      it('renders edit dialog with correct initial values', () => {
+        const props = {
+          editDialogLabel: 'Edit Data',
+          dialogOpen: true,
+          row: {
+            id: 1,
+            income_forecast_id: '12345',
+            payment_date: '2024-01-01',
+            age: 30,
+            industry: 'IT',
+            total_amount: 100000,
+            deduction_amount: 20000,
+            take_home_amount: 80000,
+            update_user: 'user123',
+            classification: 'Salary',
+            user_id: 1
+          },
+          handleClose: jest.fn(),
+        };
       
-      //   render(<EditDialog {...props} />);
+        render(<EditDialog {...props} />);
       
-      //   expect(screen.getByLabelText(LabelConst.PaymentDate)).toHaveValue('2024-01-01');
-      //   expect(screen.getByLabelText(LabelConst.Age)).toHaveValue(30);
-      // });
+        expect(screen.getByLabelText(LabelConst.PaymentDate)).toHaveValue('2024-01-01');
+        expect(screen.getByLabelText(LabelConst.Age)).toHaveValue(30);
+      });
       
       // it('calls handleFieldChange on input change', () => {
       //   const props = {
@@ -150,7 +147,4 @@ describe('component.tsx', () => {
       //   expect(ageInput).toHaveValue(35);
       // });
 })
-function expect(length: number) {
-  throw new Error('Function not implemented.');
-}
 
