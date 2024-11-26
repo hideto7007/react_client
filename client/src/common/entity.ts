@@ -1,5 +1,6 @@
+import { BoxProps } from "@mui/material";
 import { ReactNode } from "react";
-import { Control, ControllerFieldState, FieldError, FieldErrors, FieldValues, Path, RegisterOptions, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
+import { Control, ControllerFieldState, FieldErrors, FieldValues, Path, RegisterOptions, UseFormClearErrors, UseFormRegister, UseFormSetError, UseFormSetValue } from "react-hook-form";
 
 // インターフェース定義
 interface AnnualIncomeManagementKey {
@@ -120,9 +121,18 @@ interface FileSelectProps {
 };
 
 interface AuthFormProps {
-  email: string;
-  password: string;
-  confirmPassword?: string;  // Sign Upの場合のみ必要
+  user_name: string;
+  user_password: string;
+  confirm_password?: string;  // Sign Upの場合のみ必要
+  nick_name?: string;  // Sign Upの場合のみ必要
+}
+
+interface SinginResProps {
+  data: AuthFormProps[]
+}
+
+interface SingUpResProps {
+  data: AuthFormProps[]
 }
 
 interface PasswordFormProps {
@@ -159,20 +169,20 @@ interface ToolbarProps {
   disabled: boolean;
 }
 
-interface BoxProps {
-  children: ReactNode;
-  direction?: "row" | "column";
-  wrap?: "wrap" | "nowrap";
-  gap?: "none" | "narrow" | "medium" | "wide";
-  width?: string;
-  bordered?: boolean;
-  valign?: "top" | "bottom" | "center";
-  halign?: "left" | "right" | "center";
-  itemValign?: "top" | "bottom" | "center" | "stretch";
-  itemHalign?: "left" | "right" | "center" | "stretch";
-  marginBottom?: string;
-  display?: string;
-}
+// interface BoxProps {
+//   children: ReactNode;
+//   direction?: "row" | "column";
+//   wrap?: "wrap" | "nowrap";
+//   gap?: "none" | "narrow" | "medium" | "wide";
+//   width?: string;
+//   bordered?: boolean;
+//   valign?: "top" | "bottom" | "center";
+//   halign?: "left" | "right" | "center";
+//   itemValign?: "top" | "bottom" | "center" | "stretch";
+//   itemHalign?: "left" | "right" | "center" | "stretch";
+//   marginBottom?: string;
+//   display?: string;
+// }
 
 interface BreadcrumbsProps {
   marginBottom: string;
@@ -190,14 +200,21 @@ interface PathMapProps {
 
 interface CsvImportMainProps {};
 
-interface ToastProps {
+interface FAToastProps {
   open: boolean;
   handleClose: () => void;
   vertical: 'top' | 'bottom';
   horizontal: 'center' | 'right' | 'left';
   severity: 'success' | 'info' | 'warning' | 'error';
   message: string;
+}
 
+interface FABackdropProps {
+  overlayOpen: boolean;
+}
+
+interface FABoxProps extends BoxProps {
+  noValidate?: boolean; // 追加プロパティを許容
 }
 
 export type {
@@ -226,5 +243,9 @@ export type {
     BreadcrumbsProps,
     ClassesProps,
     ToolbarProps,
-    ToastProps
+    FAToastProps,
+    SinginResProps,
+    SingUpResProps,
+    FABackdropProps,
+    FABoxProps
 }

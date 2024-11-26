@@ -3,7 +3,7 @@ import { AppBar, Toolbar, ToolbarProps, Typography } from '@mui/material';
 import { IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import FaceIcon from '@mui/icons-material/Face';
-import { money_management_classes, mypage_classes } from '@/common/linkpages';
+import { money_management_classes, mypage_classes } from '@/src/common/linkpages';
 import { SideBar, SIDEBARWIDTH } from './SideBar';
 
 

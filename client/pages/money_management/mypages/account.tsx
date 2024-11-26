@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumbs } from '@/common/component';
+import { Breadcrumbs } from '@/src/common/component';
 
 
 const Account: React.FC = () => {

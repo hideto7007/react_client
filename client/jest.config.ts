@@ -1,19 +1,14 @@
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
+    collectCoverage: true,
     moduleNameMapper: {
         '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
-        '^@/(.*)$': '<rootDir>/src/$1',
+        '^@/(.*)$': '<rootDir>/$1',
     },
     transform: {
-        '^.+\\.(ts|tsx)$': 'ts-jest',
+        '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: { jsx: 'react-jsx' } }], // DOM要素を取得するための設定(react-jsx)
         '^.+\\.(js|jsx)$': ['babel-jest', { presets: ['next/babel'] }],
     },
-    globals: {
-        'ts-jest': {
-            tsconfig: {
-                jsx: 'react-jsx',
-            },
-        },
-    },
+    setupFilesAfterEnv: ['<rootDir>/setup-jest.ts']
 };

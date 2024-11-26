@@ -17,19 +17,19 @@ import EditIcon from '@mui/icons-material/Edit';
 import { 
     KeyConst,
     Align, Size, LabelConst
-} from '@/common/const'
+} from '@/src/common/const'
 import {
   AnnualIncomeManagementData,
   Order, AnnualIncomeManagementKeyNotEdit,
   AnnualIncomeManagementDeleteData
-} from '@/common/types'
+} from '@/src/common/entity'
 import {
   getIncomeDataFetchData,
   EnhancedTableHead,
   EnhancedTableToolbar,
   EditDialog,
   Breadcrumbs
-} from '@/common/component'
+} from '@/src/common/component'
 
 
 const useFetchIncomeData = (startDate: string, endDate: string, userId: number) => {

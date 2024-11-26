@@ -12,14 +12,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Checkbox, FormControlLabel, FormGroup, IconButton } from '@mui/material';
 
 
-import ApiEndpoint from '@/common/apiEndpoint'
+import ApiEndpoint from '@/src/common/apiEndpoint'
 import { 
     ErrorConst, Type, classificationListConst, KeyConst,
     Align, Size, labelListConst, keyListConst, LabelConst
-} from '@/common/const'
-import { Column, AnnualIncomeManagementData } from '@/common/types'
-import { Mockresponse } from '@/common/data'
-import { Breadcrumbs } from '@/common/component';
+} from '@/src/common/const'
+import { Column, AnnualIncomeManagementData } from '@/src/common/entity'
+import { Mockresponse } from '@/src/common/data'
+import { Breadcrumbs } from '@/src/common/component';
 
 
 let serverErrorFlag: boolean = false;

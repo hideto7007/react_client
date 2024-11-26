@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoxLayoutPadding, Breadcrumbs } from '@/common/component';
+import { BoxLayoutPadding, Breadcrumbs } from '@/src/common/component';
 
 
 const Mypage: React.FC = () => {
