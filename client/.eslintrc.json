@@ -1,18 +1,18 @@
 // ESLintの設定。現状jestのLintが効いてないので、後で確認する
 {
   "extends": ["next/core-web-vitals", "plugin:jest/recommended"],
-  "env": {
-    "jest": true
-  },
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "overrides": [
-    {
-      "files": ["**/*.test.ts", "**/*.test.tsx"],
-      "parserOptions": {
-        "project": null
-      }
-    }
-  ]
+  // "env": {
+  //   "jest": true
+  // },
+  // "parserOptions": {
+  //   "project": "./tsconfig.json"
+  // },
+  // "overrides": [
+  //   {
+  //     "files": ["**/*.test.ts", "**/*.test.tsx"],
+  //     "parserOptions": {
+  //       "project": null
+  //     }
+  //   }
+  // ]
 }

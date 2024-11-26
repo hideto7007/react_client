@@ -622,6 +622,7 @@ const FAPasswordTextForm: React.FC<PasswordFormProps> = (props): JSX.Element => 
           <>
             <OutlinedInput
               {...field}
+              id={name}
               label={label}
               type={showPassword ? 'text' : 'password'}
               endAdornment={
