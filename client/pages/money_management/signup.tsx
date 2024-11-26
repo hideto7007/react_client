@@ -35,7 +35,6 @@ const SignUp: React.FC = () => {
         const api = new ApiClient()
         const res = await api.callApi("/api/singup", "post", dataRes);
         if (res.status !== 200) {
-          console.log(res)
           if (res.data.error_msg) {
             errorMsgInfo = Common.ErrorMsgInfo(true, res.data.error_msg);
             setErrorMsg(errorMsgInfo);
