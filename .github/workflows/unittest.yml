@@ -22,6 +22,8 @@ jobs:
           docker run --rm -v /home/runner/work/react_client:/react_client --name unittest unittest /bin/bash -c "\
             cd react_client && \
             ls -la && \
+            cd react_client && \
+            ls -la && \
             npm install -g n && \
             npm install -g @mui/material @emotion/react @emotion/styled && \
             npm install --save-dev jest ts-jest @types/jest @testing-library/react @testing-library/jest-dom && \
