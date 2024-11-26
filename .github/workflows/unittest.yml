@@ -19,7 +19,7 @@ jobs:
 
       - name: Run tests inside Docker container and Unittest
         run: |
-          docker run --rm -v ${{ github.workspace }}:/client --name unittest unittest /bin/bash -c "\
+          docker run --rm -v ${{ github.workspace }}:/react_client --name unittest unittest /bin/bash -c "\
             cd /client && \
             npm install -g n && \
             npm install -g @mui/material @emotion/react @emotion/styled && \
