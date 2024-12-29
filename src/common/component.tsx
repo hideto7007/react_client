@@ -542,7 +542,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
     <div className="flex items-center text-sm px-4 w-full">
       {/* ホームページにいない場合のみHomeを表示 */}
       {router.pathname !== '/money_management' ? (
-        <Link href="/money_management">お金管理</Link>
+        <Link href="/money_management">たくわえる</Link>
       ) : null}
 
       {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}

@@ -43,7 +43,7 @@ const ToolBar: React.FC<ToolbarProps> = () => {
               <MenuIcon />
           </IconButton>
           <Typography variant="h5" sx={{ flexGrow: 1 }}>
-            お金管理アプリ
+            たくわえる
           </Typography>
             <IconButton
               edge="end" // 右端に配置
