@@ -1,17 +1,17 @@
-import { useRouter } from 'next/router';
-import React from 'react';
-import { Breadcrumbs } from '@/src/common/component';
+import { useRouter } from "next/router";
+import React from "react";
+import { Breadcrumbs } from "@/src/common/component";
 
 const Post: React.FC = () => {
-    const router = useRouter();
-    const { id } = router.query;
+  const router = useRouter();
+  const { id } = router.query;
 
-    return (
-        <div>
-            <Breadcrumbs />  {/* Include Breadcrumbs at the top */}
-            <h1> Post: {id}</h1>
-        </div>
-    );
-}
+  return (
+    <div>
+      <Breadcrumbs /> {/* Include Breadcrumbs at the top */}
+      <h1> Post: {id}</h1>
+    </div>
+  );
+};
 
 export default Post;

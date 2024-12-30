@@ -1,17 +1,17 @@
-import {  AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 
 interface ErrorMsg {
-    error_msg: string;
+  error_msg: string;
 }
 
 interface FieldError {
-    field: string;
-    message: string;
+  field: string;
+  message: string;
 }
 
 interface ValidateError {
-    recode_rows: number;
-    result: FieldError[];
+  recode_rows: number;
+  result: FieldError[];
 }
 
 interface ErrorResponse {
@@ -19,10 +19,6 @@ interface ErrorResponse {
   data: ErrorMsg | ValidateError;
 }
 
-interface OkResponse extends AxiosResponse<any, any>{}
+type OkResponse = AxiosResponse<never, never>;
 
-
-export type {
-    ErrorResponse,
-    OkResponse
-}
+export type { ErrorResponse, OkResponse };

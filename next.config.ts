@@ -1,15 +1,15 @@
-import { NextConfig } from 'next';
+import { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-    async rewrites() {
-      return [
-        {
-          source: '/api/:path*',
-          destination: 'http://host.docker.internal:8081/api/:path*', // Dockerからホストマシンにアクセス
-        },
-      ];
-    },
-  };
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://host.docker.internal:8081/api/:path*", // Dockerからホストマシンにアクセス
+      },
+    ];
+  },
+};
 
 // TODO
 // ローカルサーバーで実行する際のIP http://localhost:8080

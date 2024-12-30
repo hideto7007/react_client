@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, ToolbarProps, Typography } from '@mui/material';
-import { IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import FaceIcon from '@mui/icons-material/Face';
-import { money_management_classes, mypage_classes } from '@/src/common/linkpages';
-import { SideBar, SIDEBARWIDTH } from './SideBar';
-
+import React, { useState } from "react";
+import { AppBar, Toolbar, ToolbarProps, Typography } from "@mui/material";
+import { IconButton } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import FaceIcon from "@mui/icons-material/Face";
+import {
+  money_management_classes,
+  mypage_classes,
+} from "@/src/common/linkpages";
+import { SideBar, SIDEBARWIDTH } from "./SideBar";
 
 const ToolBar: React.FC<ToolbarProps> = () => {
   // サイドバーの開閉状態を管理
@@ -13,24 +15,29 @@ const ToolBar: React.FC<ToolbarProps> = () => {
   const [isAccountDrawerOpen, setAccountDrawerOpen] = useState(false); // アカウントサイドバーの開閉状態
 
   // メニューサイドバーをトグルする関数
-  const menuToggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    setMenuDrawerOpen(open);
-  };
+  const menuToggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      setMenuDrawerOpen(open);
+    };
 
   // アカウントサイドバーをトグルする関数
-  const accountToggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-    setAccountDrawerOpen(open);
-  };
+  const accountToggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      setAccountDrawerOpen(open);
+    };
 
   return (
     <>
       <AppBar
         position="fixed"
         sx={{
-          width: isMenuDrawerOpen || isAccountDrawerOpen ? `calc(100% - ${SIDEBARWIDTH}px)` : '100%',
+          width:
+            isMenuDrawerOpen || isAccountDrawerOpen
+              ? `calc(100% - ${SIDEBARWIDTH}px)`
+              : "100%",
           ml: isMenuDrawerOpen ? `${SIDEBARWIDTH}px` : 0, // 左側サイドバーの開閉に対応
           mr: isAccountDrawerOpen ? `${SIDEBARWIDTH}px` : 0, // 右側サイドバーの開閉に対応
-          transition: 'width 0.3s, margin-left 0.3s, margin-right 0.3s',
+          transition: "width 0.3s, margin-left 0.3s, margin-right 0.3s",
         }}
       >
         <Toolbar>
@@ -39,22 +46,26 @@ const ToolBar: React.FC<ToolbarProps> = () => {
             color="inherit"
             aria-label="menu"
             onClick={menuToggleDrawer(true)} // サイドバーを開く
-          > {/* メニューボタン */}
-              <MenuIcon />
+          >
+            {" "}
+            {/* メニューボタン */}
+            <MenuIcon />
           </IconButton>
           <Typography variant="h5" sx={{ flexGrow: 1 }}>
             たくわえる
           </Typography>
-            <IconButton
-              edge="end" // 右端に配置
-              color="inherit"
-              onClick={accountToggleDrawer(true)} // サイドバーを開く
-            > {/* アカウントボタン */}
-              <FaceIcon />
-            </IconButton>
+          <IconButton
+            edge="end" // 右端に配置
+            color="inherit"
+            onClick={accountToggleDrawer(true)} // サイドバーを開く
+          >
+            {" "}
+            {/* アカウントボタン */}
+            <FaceIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
-        <Toolbar />
+      <Toolbar />
       {/* サイドバーの表示・非表示 */}
       <SideBar
         anchor={"left"}
@@ -71,6 +82,5 @@ const ToolBar: React.FC<ToolbarProps> = () => {
     </>
   );
 };
-
 
 export default ToolBar;
