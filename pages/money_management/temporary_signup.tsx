@@ -1,37 +1,37 @@
-import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/router"; // useRouterをインポート
 import {
   FATextForm,
   FAPasswordTextForm,
-  FAToast,
-  FABackDrop,
+  FAButton,
   FAContainer,
   FACssBaseline,
   FABox,
   FAAvatar,
   FATypography,
-  FAButton,
+  FABackDrop,
+  FAToast,
 } from "@/src/common/component";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { AuthFormProps, SinginResProps } from "@/src/common/entity";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { AuthFormProps, SignUpResProps } from "@/src/common/entity";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { validationRules } from "@/src/common/vaildation";
-import { Auth } from "@/src/common/const";
 import ApiClient from "@/src/common/apiClient";
 import Common from "@/src/common/common";
 
-const SignIn: React.FC = () => {
+const TemporarySignUp: React.FC = () => {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { isValid },
   } = useForm<AuthFormProps>({
-    mode: "onChange", // ユーザーが入力するたびにバリデーション
-    // mode: 'onBlur', // 入力フィールドがフォーカスを失ったときにバリデーション
+    mode: "onChange",
     defaultValues: {
       user_name: "",
       user_password: "",
+      confirm_password: "",
+      nick_name: "",
     },
   });
   const router = useRouter();
@@ -40,14 +40,18 @@ const SignIn: React.FC = () => {
   const [overlayOpen, setOverlayOpen] = useState(false);
   let errorMsgInfo: string;
 
+  // passwordフィールドの値を監視
+  const password = watch("user_password");
+
   const onSubmit: SubmitHandler<AuthFormProps> = async (
     data: AuthFormProps,
   ) => {
-    const dataRes: SinginResProps = {
+    // console.log(`data: ${JSON.stringify(data)}`);
+    const dataRes: SignUpResProps = {
       data: [data],
     };
     const api = new ApiClient();
-    const res = await api.callApi("/api/singin", "post", dataRes);
+    const res = await api.callApi("/api/temporay_signup", "post", dataRes);
     if (res.status !== 200) {
       if (res.data.error_msg) {
         errorMsgInfo = Common.ErrorMsgInfo(true, res.data.error_msg);
@@ -60,9 +64,7 @@ const SignIn: React.FC = () => {
       setOpen(true);
       setOverlayOpen(true);
     } else {
-      localStorage.setItem(Auth.UserId, res.data.result[0].user_id);
-      localStorage.setItem(Auth.UserName, res.data.result[0].user_name);
-      router.push("/money_management");
+      router.push("signup");
     }
   };
 
@@ -85,10 +87,10 @@ const SignIn: React.FC = () => {
           }}
         >
           <FAAvatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
+            <PersonAddIcon />
           </FAAvatar>
           <FATypography component="h1" variant="h5">
-            サインイン
+            仮サインアップ
           </FATypography>
           <FABox
             component="form"
@@ -101,6 +103,13 @@ const SignIn: React.FC = () => {
               gap: 2, // 各要素間のスペースを追加
             }}
           >
+            {/* Emailフィールド */}
+            <FATextForm<AuthFormProps>
+              name="nick_name"
+              label="ニックネーム"
+              control={control}
+              rules={validationRules.nickName}
+            />
             {/* Emailフィールド */}
             <FATextForm<AuthFormProps>
               name="user_name"
@@ -116,10 +125,14 @@ const SignIn: React.FC = () => {
               control={control}
               rules={validationRules.password}
             />
-            <FATypography>
-              サインアップがまだの場合は
-              <Link href="/money_management/temporary_signup">こちら</Link>
-            </FATypography>
+
+            {/* confirmPasswordフィールド */}
+            <FAPasswordTextForm
+              name="confirm_password"
+              label="確認パスワード"
+              control={control}
+              rules={validationRules.confirmPassword(password)}
+            />
             <FAButton
               type="submit"
               disabled={!isValid}
@@ -127,7 +140,7 @@ const SignIn: React.FC = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              SIGN IN
+              SIGN UP
             </FAButton>
           </FABox>
         </FABox>
@@ -149,4 +162,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default TemporarySignUp;

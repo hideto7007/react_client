@@ -131,7 +131,7 @@ interface SinginResProps {
   data: AuthFormProps[]
 }
 
-interface SingUpResProps {
+interface SignUpResProps {
   data: AuthFormProps[]
 }
 
@@ -245,7 +245,7 @@ export type {
     ToolbarProps,
     FAToastProps,
     SinginResProps,
-    SingUpResProps,
+    SignUpResProps,
     FABackdropProps,
     FABoxProps
 }

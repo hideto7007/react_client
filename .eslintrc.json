@@ -1,15 +1,29 @@
 // ESLintの設定。現状jestのLintが効いてないので、後で確認する
 {
-  "extends": ["next/core-web-vitals", "plugin:jest/recommended"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:jest/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier" // Prettierとの競合を解消
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error" // Prettierルール違反をエラーとして扱う
+  },
   // "env": {
   //   "jest": true
   // },
-  // "parserOptions": {
-  //   "project": "./tsconfig.json"
-  // },
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   // "overrides": [
   //   {
-  //     "files": ["**/*.test.ts", "**/*.test.tsx"],
+  //     "files": [
+  //       "**/*.test.ts",
+  //       "**/*.test.tsx"
+  //     ],
   //     "parserOptions": {
   //       "project": null
   //     }

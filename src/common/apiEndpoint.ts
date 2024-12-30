@@ -37,8 +37,8 @@ class ApiEndpoint {
     return http.get(`api/refresh_token/` + params);
   }
 
-  singup(data: any): Promise<any> {
-    return http.post(`api/singup`, data);
+  SignUp(data: any): Promise<any> {
+    return http.post(`api/SignUp`, data);
   }
 
   singinEdit(data: any): Promise<any> {

@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": false,
+		"editor.codeActionsOnSave": {
+			"source.fixAll.eslint": "explicit"
+		},
+		"eslint.validate": [
+			"javascript",
+			"typescript",
+			"javascriptreact",
+			"typescriptreact"
+		],
+		"prettier.enable": false,
+	}
+}

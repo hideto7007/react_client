@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import SignUp from '../../../pages/money_management/signup';
+import TemporarySignUp from '../../../pages/money_management/temporary_signup';
 import { useRouter } from 'next/router';
 import ApiClient from '../../../src/common/apiClient';
 import { ErrorResponse, OkResponse } from '../../../src/common/presenter'
@@ -12,7 +12,7 @@ jest.mock('next/router', () => ({
 }));
 
 
-describe('SignUp.tsx', () => {
+describe('TemporarySignUp.tsx', () => {
     const mockPush = jest.fn();
     const mockedApiClient = jest.mocked(ApiClient);
 
@@ -23,7 +23,7 @@ describe('SignUp.tsx', () => {
     })
 
     it('サインアップ 入力フォームのレンダリングチェック', () => {
-        render(<SignUp />)
+        render(<TemporarySignUp />)
 
         // ニックネーム入力フィールドの確認
         const nikcNameInput = screen.getByLabelText('ニックネーム');
@@ -54,7 +54,7 @@ describe('SignUp.tsx', () => {
             },
         } as OkResponse);
 
-        render(<SignUp />);
+        render(<TemporarySignUp />);
 
         fireEvent.change(screen.getByLabelText('ニックネーム'), {
             target: { value: 'test' }
@@ -84,7 +84,7 @@ describe('SignUp.tsx', () => {
             data: { error_msg: '既に登録されたメールアドレスです。' },
         } as ErrorResponse);
 
-        render(<SignUp />);
+        render(<TemporarySignUp />);
 
         fireEvent.change(screen.getByLabelText('ニックネーム'), {
             target: { value: 'test' }
@@ -123,7 +123,7 @@ describe('SignUp.tsx', () => {
             },
         } as ErrorResponse);
 
-        render(<SignUp />);
+        render(<TemporarySignUp />);
 
         fireEvent.change(screen.getByLabelText('ニックネーム'), {
             target: { value: 'test' }

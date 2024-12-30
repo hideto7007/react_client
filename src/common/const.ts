@@ -1,5 +1,3 @@
-import { PathMapProps } from '@/src/common/entity'
-
 
 // 貯金額計算固定値
 enum PriceManagementConst {
