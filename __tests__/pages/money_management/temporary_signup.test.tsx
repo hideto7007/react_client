@@ -74,7 +74,7 @@ describe('TemporarySignUp.tsx', () => {
             expect(mockPush).toHaveBeenCalled();
             // expect(mockPush).toHaveBeenCalledWith('/signin');
             const result: string[] = mockPush.mock.calls.map((call: any[]) => call[0]);
-            expect(result.every((r) => r === 'signin')).toBe(true)
+            expect(result.every((r) => r === 'signup')).toBe(true)
         });
     })
 
