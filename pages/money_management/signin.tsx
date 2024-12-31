@@ -13,8 +13,9 @@ import {
   FATypography,
   FAButton,
 } from "@/src/common/component";
+import { ErrorResponse, UserInfo, ValidateError } from "@/src/common/presenter";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { AuthFormProps, SinginResProps } from "@/src/common/entity";
+import { AuthFormProps, SigninResProps } from "@/src/common/entity";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { validationRules } from "@/src/common/vaildation";
 import { Auth } from "@/src/common/const";
@@ -43,26 +44,45 @@ const SignIn: React.FC = () => {
   const onSubmit: SubmitHandler<AuthFormProps> = async (
     data: AuthFormProps,
   ) => {
-    const dataRes: SinginResProps = {
+    const dataRes: SigninResProps = {
       data: [data],
     };
     const api = new ApiClient();
-    const res = await api.callApi("/api/singin", "post", dataRes);
-    if (res.status !== 200) {
-      if (res.data.error_msg) {
-        errorMsgInfo = Common.ErrorMsgInfo(true, res.data.error_msg);
-        setErrorMsg(errorMsgInfo);
+    const res = await api.callApi<UserInfo>("/api/signin", "post", dataRes);
+
+    if (res.status === 404) {
+      errorMsgInfo = Common.ErrorMsgInfo("存在しないページ", "ページが見つかりません");
+      setErrorMsg(errorMsgInfo);
+      setOpen(true);
+      setOverlayOpen(true);
+      return;
+    }
+
+    if ("error_data" in res && res.status !== 200) {
+      // エラーレスポンスの場合
+      const errorData = res.error_data;
+      if ("result" in errorData) {
+        // バリデーションエラー
+        const validateError = errorData as ValidateError;
+        setErrorMsg(Common.ErrorMsgInfoArray(validateError));
       } else {
-        const msg = res.data.result[0];
-        errorMsgInfo = Common.ErrorMsgInfo(true, msg.field, msg.message);
+        if (res.status !== 401 && res.status !== 409) { 
+          errorMsgInfo = Common.ErrorMsgInfo("サーバーエラー", errorData.error_msg);
+        } else {
+          errorMsgInfo = Common.ErrorMsgInfo("認証エラー", errorData.error_msg);
+        }
         setErrorMsg(errorMsgInfo);
       }
       setOpen(true);
       setOverlayOpen(true);
     } else {
-      localStorage.setItem(Auth.UserId, res.data.result[0].user_id);
-      localStorage.setItem(Auth.UserName, res.data.result[0].user_name);
-      router.push("/money_management");
+      // 成功時のレスポンスの場合
+      if (api.isOkResponse(res)) {
+        const userInfo = res.data.result[0];
+        localStorage.setItem(Auth.UserId, userInfo.user_id);
+        localStorage.setItem(Auth.UserName, userInfo.user_name);
+        router.push("/money_management");
+      }
     }
   };
 

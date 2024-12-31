@@ -144,7 +144,7 @@ interface AuthFormProps {
   nick_name?: string; // Sign Upの場合のみ必要
 }
 
-interface SinginResProps {
+interface SigninResProps {
   data: AuthFormProps[];
 }
 
@@ -273,7 +273,7 @@ export type {
   ClassesProps,
   ToolbarProps,
   FAToastProps,
-  SinginResProps,
+  SigninResProps,
   SignUpResProps,
   FABackdropProps,
   FABoxProps,
