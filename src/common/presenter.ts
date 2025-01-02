@@ -21,7 +21,7 @@ interface ErrorResponse {
 }
 
 interface Result<T> {
-  result: T[]
+  result: T[] | T
 }
 
 interface OkResponse<T> {
@@ -41,11 +41,18 @@ interface UserInfo {
   user_name: string;
 }
 
+interface EmailAuthToken {
+  redis_key: string;
+  user_name: string;
+  nick_name: string;
+}
+
 export type {
   ValidateError,
   ErrorResponse,
   OkResponse,
   Result,
   Response,
-  UserInfo
+  UserInfo,
+  EmailAuthToken
 };

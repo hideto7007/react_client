@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Auth } from "@/src/common/const";
-import { FABackDrop, FABox, FAToast } from "@/src/common/component";
+import { TWBackDrop, TWBox, TWToast } from "@/src/common/component";
 // import { useCookies } from "react-cookie";
 import ApiClient from "@/src/common/apiClient";
 import Common from "@/src/common/common";
@@ -48,9 +48,9 @@ const AuthCheck: React.FC = () => {
 
   return (
     <>
-      <FABox sx={{ width: 500 }}>
-        <FABackDrop overlayOpen={overlayOpen} />
-        <FAToast
+      <TWBox sx={{ width: 500 }}>
+        <TWBackDrop overlayOpen={overlayOpen} />
+        <TWToast
           open={open}
           handleClose={handleClose}
           vertical={"top"}
@@ -58,7 +58,7 @@ const AuthCheck: React.FC = () => {
           severity={"error"}
           message={errorMsg}
         />
-      </FABox>
+      </TWBox>
     </>
   );
 };

@@ -114,11 +114,14 @@ const keyListConst = [
 ] as const;
 
 enum Auth {
-  AuthToken = "AuthToken",
-  RefreshAuthToken = "RefreshAuthToken",
+  AuthToken = "auth_token",
+  RefreshAuthToken = "refresh_auth_token",
   UserId = "user_id",
   UserName = "user_name",
   UserPassword = "user_password",
+  RedisKey = "redis_key",
+  TmpUserName = "tmp_user_name",
+  TmpNickName = "tmp_nick_name",
 }
 
 // パス名とタイトルのマッピングを定義

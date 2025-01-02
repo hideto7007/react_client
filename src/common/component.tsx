@@ -4,12 +4,17 @@ import {
   AvatarProps,
   Box,
   BoxProps,
+  CardActions,
+  CardActionsProps,
+  CardContent,
+  CardContentProps,
   CssBaselineProps,
   TextFieldProps,
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import Card, { CardProps } from '@mui/material/Card';
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography, { TypographyProps } from "@mui/material/Typography";
@@ -39,9 +44,9 @@ import {
   PasswordFormProps,
   SideBarProps,
   BreadcrumbsProps,
-  FAToastProps,
-  FABackdropProps,
-  FABoxProps,
+  TWToastProps,
+  TWBackdropProps,
+  TWBoxProps,
 } from "@/src/common/entity";
 import { columns } from "@/src/common/columns";
 import ValidationCheck from "@/src/common/vaildation";
@@ -125,32 +130,44 @@ const create = async (
  * できる範囲でラップしバージョンアップした際にメンテナンスがしやすくするため
  *
  */
-const FABox: React.FC<FABoxProps> = (props) => {
+const TWBox: React.FC<TWBoxProps> = (props) => {
   return <Box {...props} />;
 };
 
-const FAButton: React.FC<ButtonProps> = (props) => {
+const TWButton: React.FC<ButtonProps> = (props) => {
   return <Button {...props} />;
 };
 
-const FACssBaseline: React.FC<CssBaselineProps> = (props) => {
+const TWCssBaseline: React.FC<CssBaselineProps> = (props) => {
   return <CssBaseline {...props} />;
 };
 
-const FATypography: React.FC<TypographyProps> = (props) => {
+const TWTypography: React.FC<TypographyProps> = (props) => {
   return <Typography {...props} />;
 };
 
-const FAAvatar: React.FC<AvatarProps> = (props) => {
+const TWAvatar: React.FC<AvatarProps> = (props) => {
   return <Avatar {...props} />;
 };
 
-const FAContainer: React.FC<ContainerProps> = (props) => {
+const TWContainer: React.FC<ContainerProps> = (props) => {
   return <Container {...props} />;
 };
 
-const FATextField: React.FC<TextFieldProps> = (props) => {
+const TWTextField: React.FC<TextFieldProps> = (props) => {
   return <TextField {...props} />;
+};
+
+const TWCard: React.FC<CardProps> = (props) => {
+  return <Card {...props} />;
+};
+
+const TWCardActions: React.FC<CardActionsProps> = (props) => {
+  return <CardActions {...props} />;
+};
+
+const TWCardContent: React.FC<CardContentProps> = (props) => {
+  return <CardContent {...props} />;
 };
 
 /**
@@ -214,9 +231,9 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (
             >
               {column.label}
               {orderBy === column.id ? (
-                <FABox component="span" sx={visuallyHidden}>
+                <TWBox component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </FABox>
+                </TWBox>
               ) : null}
             </TableSortLabel>
           </TableCell>
@@ -273,23 +290,23 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (
       }}
     >
       {numSelected > 0 ? (
-        <FATypography
+        <TWTypography
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
           {numSelected} selected
-        </FATypography>
+        </TWTypography>
       ) : (
-        <FATypography
+        <TWTypography
           sx={{ flex: "1 1 100%" }}
           variant="h6"
           id="tableTitle"
           component="div"
         >
           Nutrition
-        </FATypography>
+        </TWTypography>
       )}
       <FormControlLabel
         control={<Checkbox checked={checked} onChange={onCheckBox} />}
@@ -525,9 +542,9 @@ const EditDialog: React.FC<editDialogProps> = (
       >
         <DialogTitle id="alert-dialog-title">{editDialogLabel}</DialogTitle>
         <DialogContent>
-          <FABox sx={{ display: "flex", flexWrap: "wrap" }}>
+          <TWBox sx={{ display: "flex", flexWrap: "wrap" }}>
             <div>
-              <FATextField
+              <TWTextField
                 label={LabelConst.PaymentDate}
                 type="date"
                 sx={{ m: 1, width: "25ch" }}
@@ -539,7 +556,7 @@ const EditDialog: React.FC<editDialogProps> = (
                 error={!!errors.payment_date}
                 helperText={errors.payment_date}
               />
-              <FATextField
+              <TWTextField
                 label={LabelConst.Age}
                 type="number"
                 sx={{ m: 1, width: "25ch" }}
@@ -549,7 +566,7 @@ const EditDialog: React.FC<editDialogProps> = (
                 error={!!errors.age}
                 helperText={errors.age}
               />
-              <FATextField
+              <TWTextField
                 label={LabelConst.Industry}
                 type="string"
                 sx={{ m: 1, width: "25ch" }}
@@ -559,7 +576,7 @@ const EditDialog: React.FC<editDialogProps> = (
                 error={!!errors.industry}
                 helperText={errors.industry}
               />
-              <FATextField
+              <TWTextField
                 label={LabelConst.TotalAmount}
                 type="number"
                 sx={{ m: 1, width: "25ch" }}
@@ -571,7 +588,7 @@ const EditDialog: React.FC<editDialogProps> = (
                 error={!!errors.total_amount}
                 helperText={errors.total_amount}
               />
-              <FATextField
+              <TWTextField
                 label={LabelConst.DeductionAmount}
                 type="number"
                 sx={{ m: 1, width: "25ch" }}
@@ -583,7 +600,7 @@ const EditDialog: React.FC<editDialogProps> = (
                 error={!!errors.deduction_amount}
                 helperText={errors.deduction_amount}
               />
-              <FATextField
+              <TWTextField
                 label={LabelConst.TakeHomeAmount}
                 type="number"
                 sx={{ m: 1, width: "25ch" }}
@@ -593,7 +610,7 @@ const EditDialog: React.FC<editDialogProps> = (
                 helperText={errors.take_home_amount}
                 disabled
               />
-              <FATextField
+              <TWTextField
                 label={LabelConst.Classification}
                 select
                 sx={{ m: 1, width: "25ch" }}
@@ -609,19 +626,19 @@ const EditDialog: React.FC<editDialogProps> = (
                     {option}
                   </MenuItem>
                 ))}
-              </FATextField>
+              </TWTextField>
             </div>
-          </FABox>
+          </TWBox>
         </DialogContent>
         <DialogActions>
-          <FAButton onClick={() => editCancel(row)}>キャンセル</FAButton>
-          <FAButton
+          <TWButton onClick={() => editCancel(row)}>キャンセル</TWButton>
+          <TWButton
             onClick={() => handleSubmit(editRow)}
             autoFocus
             disabled={!submitFlag}
           >
             変更
-          </FAButton>
+          </TWButton>
         </DialogActions>
       </Dialog>
     </React.Fragment>
@@ -671,7 +688,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
           }
           return null;
         })}
-      <FABox sx={{ marginBottom: props.marginBottom }} />
+      <TWBox sx={{ marginBottom: props.marginBottom }} />
     </div>
   );
 };
@@ -681,7 +698,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const FATextForm = <T extends FieldValues>({
+const TWTextForm = <T extends FieldValues>({
   name,
   label,
   control,
@@ -711,7 +728,7 @@ const FATextForm = <T extends FieldValues>({
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const FAPasswordTextForm: React.FC<PasswordFormProps> = (
+const TWPasswordTextForm: React.FC<PasswordFormProps> = (
   props,
 ): JSX.Element => {
   const { name, control, rules, label } = props;
@@ -789,9 +806,9 @@ const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
  */
 const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
   return (
-    <FABox {...props}>
+    <TWBox {...props}>
       {props.children} {/* 子要素を表示 */}
-    </FABox>
+    </TWBox>
   );
 };
 
@@ -800,7 +817,7 @@ const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const FAToast: React.FC<FAToastProps> = (props): JSX.Element => {
+const TWToast: React.FC<TWToastProps> = (props): JSX.Element => {
   const { open, handleClose, vertical, horizontal, severity, message } = props;
 
   return (
@@ -824,7 +841,7 @@ const FAToast: React.FC<FAToastProps> = (props): JSX.Element => {
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const FABackDrop: React.FC<FABackdropProps> = (props): JSX.Element => {
+const TWBackDrop: React.FC<TWBackdropProps> = (props): JSX.Element => {
   const { overlayOpen } = props;
 
   return (
@@ -842,20 +859,24 @@ const FABackDrop: React.FC<FABackdropProps> = (props): JSX.Element => {
 export {
   getIncomeDataFetchData,
   create,
-  FABox,
-  FAButton,
-  FAContainer,
-  FACssBaseline,
-  FATypography,
-  FAAvatar,
+  TWBox,
+  TWButton,
+  TWContainer,
+  TWCssBaseline,
+  TWTypography,
+  TWAvatar,
+  TWCard,
+  TWCardActions,
+  TWCardContent,
   EnhancedTableHead,
   EnhancedTableToolbar,
   EditDialog,
   Breadcrumbs,
-  FATextForm,
-  FAPasswordTextForm,
+  TWTextForm,
+  TWTextField,
+  TWPasswordTextForm,
   LinkBar,
   BoxLayoutPadding,
-  FAToast,
-  FABackDrop,
+  TWToast,
+  TWBackDrop,
 };

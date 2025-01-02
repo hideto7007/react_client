@@ -144,12 +144,27 @@ interface AuthFormProps {
   nick_name?: string; // Sign Upの場合のみ必要
 }
 
+interface SingUpProps {
+  redis_key: string;
+  auth_email_code: string;
+}
+
+interface EntryAuthEmailProps {
+  redis_key: string;
+  user_name: string;
+  nick_name: string;
+}
+
 interface SigninResProps {
   data: AuthFormProps[];
 }
 
-interface SignUpResProps {
+interface TmpSignUpResProps {
   data: AuthFormProps[];
+}
+
+interface RequestDataProps<T> {
+  data: T;
 }
 
 interface PasswordFormProps {
@@ -229,7 +244,7 @@ interface PathMapProps {
 
 interface CsvImportMainProps {}
 
-interface FAToastProps {
+interface TWToastProps {
   open: boolean;
   handleClose: () => void;
   vertical: "top" | "bottom";
@@ -238,11 +253,11 @@ interface FAToastProps {
   message: string;
 }
 
-interface FABackdropProps {
+interface TWBackdropProps {
   overlayOpen: boolean;
 }
 
-interface FABoxProps extends BoxProps {
+interface TWBoxProps extends BoxProps {
   noValidate?: boolean; // 追加プロパティを許容
 }
 
@@ -272,9 +287,12 @@ export type {
   BreadcrumbsProps,
   ClassesProps,
   ToolbarProps,
-  FAToastProps,
+  TWToastProps,
   SigninResProps,
-  SignUpResProps,
-  FABackdropProps,
-  FABoxProps,
+  TmpSignUpResProps,
+  RequestDataProps,
+  SingUpProps,
+  EntryAuthEmailProps,
+  TWBackdropProps,
+  TWBoxProps,
 };

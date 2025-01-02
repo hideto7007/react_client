@@ -1,23 +1,26 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router"; // useRouterをインポート
 import {
-  FATextForm,
-  FAPasswordTextForm,
-  FAButton,
-  FAContainer,
-  FACssBaseline,
-  FABox,
-  FAAvatar,
-  FATypography,
-  FABackDrop,
-  FAToast,
+  TWTextForm,
+  TWPasswordTextForm,
+  TWButton,
+  TWContainer,
+  TWCssBaseline,
+  TWBox,
+  TWAvatar,
+  TWTypography,
+  TWBackDrop,
+  TWToast,
 } from "@/src/common/component";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { AuthFormProps, SignUpResProps } from "@/src/common/entity";
+import { AuthFormProps, TmpSignUpResProps } from "@/src/common/entity";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { validationRules } from "@/src/common/vaildation";
 import ApiClient from "@/src/common/apiClient";
 import Common from "@/src/common/common";
+import { EmailAuthToken, ValidateError } from "@/src/common/presenter";
+import { Message } from "@/src/common/message";
+import { Auth } from "@/src/common/const";
 
 const TemporarySignUp: React.FC = () => {
   const {
@@ -46,25 +49,38 @@ const TemporarySignUp: React.FC = () => {
   const onSubmit: SubmitHandler<AuthFormProps> = async (
     data: AuthFormProps,
   ) => {
-    // console.log(`data: ${JSON.stringify(data)}`);
-    const dataRes: SignUpResProps = {
+    const dataRes: TmpSignUpResProps = {
       data: [data],
     };
     const api = new ApiClient();
-    const res = await api.callApi("/api/temporay_signup", "post", dataRes);
-    if (res.status !== 200) {
-      if (res.data.error_msg) {
-        errorMsgInfo = Common.ErrorMsgInfo(true, res.data.error_msg);
-        setErrorMsg(errorMsgInfo);
+    const res = await api.callApi<EmailAuthToken>("/api/temporay_signup", "post", dataRes);
+
+    if ("error_data" in res && res.status !== 200) {
+      // エラーレスポンスの場合
+      const errorData = res.error_data;
+      if ("result" in errorData) {
+        // バリデーションエラー
+        const validateError = errorData as ValidateError;
+        setErrorMsg(Common.ErrorMsgInfoArray(validateError));
       } else {
-        const msg = res.data.result[0];
-        errorMsgInfo = Common.ErrorMsgInfo(true, msg.field, msg.message);
+        if (res.status !== 401 && res.status !== 409) { 
+          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
+        } else {
+          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
+        }
         setErrorMsg(errorMsgInfo);
       }
       setOpen(true);
       setOverlayOpen(true);
     } else {
-      router.push("signup");
+      // 成功時のレスポンスの場合
+      if (api.isOkResponse(res)) {
+        const emailAuthToken = res.data.result as EmailAuthToken;
+        localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key);
+        localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name);
+        localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name);
+      }
+      router.push("/money_management/signup");
     }
   };
 
@@ -76,9 +92,9 @@ const TemporarySignUp: React.FC = () => {
 
   return (
     <div>
-      <FAContainer component="main" maxWidth="xs">
-        <FACssBaseline />
-        <FABox
+      <TWContainer component="main" maxWidth="xs">
+        <TWCssBaseline />
+        <TWBox
           sx={{
             marginTop: 8,
             display: "flex",
@@ -86,13 +102,13 @@ const TemporarySignUp: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <FAAvatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <TWAvatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <PersonAddIcon />
-          </FAAvatar>
-          <FATypography component="h1" variant="h5">
+          </TWAvatar>
+          <TWTypography component="h1" variant="h5">
             仮サインアップ
-          </FATypography>
-          <FABox
+          </TWTypography>
+          <TWBox
             component="form"
             noValidate
             onSubmit={handleSubmit(onSubmit)}
@@ -104,14 +120,14 @@ const TemporarySignUp: React.FC = () => {
             }}
           >
             {/* Emailフィールド */}
-            <FATextForm<AuthFormProps>
+            <TWTextForm<AuthFormProps>
               name="nick_name"
               label="ニックネーム"
               control={control}
               rules={validationRules.nickName}
             />
             {/* Emailフィールド */}
-            <FATextForm<AuthFormProps>
+            <TWTextForm<AuthFormProps>
               name="user_name"
               label="メールアドレス"
               control={control}
@@ -119,7 +135,7 @@ const TemporarySignUp: React.FC = () => {
             />
 
             {/* Passwordフィールド */}
-            <FAPasswordTextForm
+            <TWPasswordTextForm
               name="user_password"
               label="パスワード"
               control={control}
@@ -127,13 +143,13 @@ const TemporarySignUp: React.FC = () => {
             />
 
             {/* confirmPasswordフィールド */}
-            <FAPasswordTextForm
+            <TWPasswordTextForm
               name="confirm_password"
               label="確認パスワード"
               control={control}
               rules={validationRules.confirmPassword(password)}
             />
-            <FAButton
+            <TWButton
               type="submit"
               disabled={!isValid}
               fullWidth
@@ -141,14 +157,14 @@ const TemporarySignUp: React.FC = () => {
               sx={{ mt: 3, mb: 2 }}
             >
               SIGN UP
-            </FAButton>
-          </FABox>
-        </FABox>
-      </FAContainer>
+            </TWButton>
+          </TWBox>
+        </TWBox>
+      </TWContainer>
       <>
-        <FABox sx={{ width: 500 }}>
-          <FABackDrop overlayOpen={overlayOpen} />
-          <FAToast
+        <TWBox sx={{ width: 500 }}>
+          <TWBackDrop overlayOpen={overlayOpen} />
+          <TWToast
             open={open}
             handleClose={handleClose}
             vertical={"top"}
@@ -156,7 +172,7 @@ const TemporarySignUp: React.FC = () => {
             severity={"error"}
             message={errorMsg}
           />
-        </FABox>
+        </TWBox>
       </>
     </div>
   );

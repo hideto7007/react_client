@@ -2,16 +2,16 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/router"; // useRouterをインポート
 import {
-  FATextForm,
-  FAPasswordTextForm,
-  FAToast,
-  FABackDrop,
-  FAContainer,
-  FACssBaseline,
-  FABox,
-  FAAvatar,
-  FATypography,
-  FAButton,
+  TWTextForm,
+  TWPasswordTextForm,
+  TWToast,
+  TWBackDrop,
+  TWContainer,
+  TWCssBaseline,
+  TWBox,
+  TWAvatar,
+  TWTypography,
+  TWButton,
 } from "@/src/common/component";
 import { ErrorResponse, UserInfo, ValidateError } from "@/src/common/presenter";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -21,6 +21,7 @@ import { validationRules } from "@/src/common/vaildation";
 import { Auth } from "@/src/common/const";
 import ApiClient from "@/src/common/apiClient";
 import Common from "@/src/common/common";
+import { Message } from "@/src/common/message";
 
 const SignIn: React.FC = () => {
   const {
@@ -48,10 +49,10 @@ const SignIn: React.FC = () => {
       data: [data],
     };
     const api = new ApiClient();
-    const res = await api.callApi<UserInfo>("/api/signin", "post", dataRes);
+    const res = await api.callApi<UserInfo[]>("/api/signin", "post", dataRes);
 
     if (res.status === 404) {
-      errorMsgInfo = Common.ErrorMsgInfo("存在しないページ", "ページが見つかりません");
+      errorMsgInfo = Common.ErrorMsgInfo(Message.NotFound, Message.NotFoundText);
       setErrorMsg(errorMsgInfo);
       setOpen(true);
       setOverlayOpen(true);
@@ -67,9 +68,9 @@ const SignIn: React.FC = () => {
         setErrorMsg(Common.ErrorMsgInfoArray(validateError));
       } else {
         if (res.status !== 401 && res.status !== 409) { 
-          errorMsgInfo = Common.ErrorMsgInfo("サーバーエラー", errorData.error_msg);
+          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
         } else {
-          errorMsgInfo = Common.ErrorMsgInfo("認証エラー", errorData.error_msg);
+          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
         }
         setErrorMsg(errorMsgInfo);
       }
@@ -78,7 +79,7 @@ const SignIn: React.FC = () => {
     } else {
       // 成功時のレスポンスの場合
       if (api.isOkResponse(res)) {
-        const userInfo = res.data.result[0];
+        const userInfo = res.data.result[0] as UserInfo;
         localStorage.setItem(Auth.UserId, userInfo.user_id);
         localStorage.setItem(Auth.UserName, userInfo.user_name);
         router.push("/money_management");
@@ -94,9 +95,9 @@ const SignIn: React.FC = () => {
 
   return (
     <div>
-      <FAContainer component="main" maxWidth="xs">
-        <FACssBaseline />
-        <FABox
+      <TWContainer component="main" maxWidth="xs">
+        <TWCssBaseline />
+        <TWBox
           sx={{
             marginTop: 8,
             display: "flex",
@@ -104,13 +105,13 @@ const SignIn: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <FAAvatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <TWAvatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
-          </FAAvatar>
-          <FATypography component="h1" variant="h5">
+          </TWAvatar>
+          <TWTypography component="h1" variant="h5">
             サインイン
-          </FATypography>
-          <FABox
+          </TWTypography>
+          <TWBox
             component="form"
             noValidate
             onSubmit={handleSubmit(onSubmit)}
@@ -122,7 +123,7 @@ const SignIn: React.FC = () => {
             }}
           >
             {/* Emailフィールド */}
-            <FATextForm<AuthFormProps>
+            <TWTextForm<AuthFormProps>
               name="user_name"
               label="メールアドレス"
               control={control}
@@ -130,17 +131,17 @@ const SignIn: React.FC = () => {
             />
 
             {/* Passwordフィールド */}
-            <FAPasswordTextForm
+            <TWPasswordTextForm
               name="user_password"
               label="パスワード"
               control={control}
               rules={validationRules.password}
             />
-            <FATypography>
+            <TWTypography>
               サインアップがまだの場合は
               <Link href="/money_management/temporary_signup">こちら</Link>
-            </FATypography>
-            <FAButton
+            </TWTypography>
+            <TWButton
               type="submit"
               disabled={!isValid}
               fullWidth
@@ -148,14 +149,14 @@ const SignIn: React.FC = () => {
               sx={{ mt: 3, mb: 2 }}
             >
               SIGN IN
-            </FAButton>
-          </FABox>
-        </FABox>
-      </FAContainer>
+            </TWButton>
+          </TWBox>
+        </TWBox>
+      </TWContainer>
       <>
-        <FABox sx={{ width: 500 }}>
-          <FABackDrop overlayOpen={overlayOpen} />
-          <FAToast
+        <TWBox sx={{ width: 500 }}>
+          <TWBackDrop overlayOpen={overlayOpen} />
+          <TWToast
             open={open}
             handleClose={handleClose}
             vertical={"top"}
@@ -163,7 +164,7 @@ const SignIn: React.FC = () => {
             severity={"error"}
             message={errorMsg}
           />
-        </FABox>
+        </TWBox>
       </>
     </div>
   );
