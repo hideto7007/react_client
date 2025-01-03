@@ -9,12 +9,10 @@ import {
   CardContent,
   CardContentProps,
   CssBaselineProps,
-  TextFieldProps,
-  CircularProgressProps,
+  TextFieldProps
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
 import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Card, { CardProps } from '@mui/material/Card';
@@ -197,6 +195,29 @@ const TWCircularProgress: React.FC<TWCircularProgressProps> = (props) => {
         </Backdrop>
       </div>
   )
+};
+
+
+/**
+ * ローディング共通コンポーネント
+ *
+ * 全画面でローディングを表示する際に使用するコンポーネント
+ *
+ * @param {TWCircularProgressProps} props - コンポーネントが受け取るprops
+ * 
+ * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
+ */
+
+const TWCommonCircularProgress: React.FC<TWCircularProgressProps> = (
+  props: TWCircularProgressProps
+): JSX.Element  => {
+  return (
+    <TWCircularProgress
+      open={props.open}
+      color="success"
+      size={40}
+    />
+  );
 };
 
 /**
@@ -898,6 +919,7 @@ export {
   TWCardActions,
   TWCardContent,
   TWCircularProgress,
+  TWCommonCircularProgress,
   EnhancedTableHead,
   EnhancedTableToolbar,
   EditDialog,

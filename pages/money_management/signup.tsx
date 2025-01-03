@@ -1,5 +1,5 @@
 import ApiClient from "@/src/common/apiClient";
-import { TWBackDrop, TWBox, TWButton, TWCard, TWCardActions, TWCardContent, TWCircularProgress, TWTextField, TWToast, TWTypography } from "@/src/common/component";
+import { TWBackDrop, TWBox, TWButton, TWCard, TWCardActions, TWCardContent, TWCommonCircularProgress, TWTextField, TWToast, TWTypography } from "@/src/common/component";
 import { Auth } from "@/src/common/const";
 import { RequestDataProps, SingUpProps, EmailAuthProps, EmailAuthToastProps } from "@/src/common/entity";
 import Common from "@/src/common/common";
@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const EmailAuth: React.FC<EmailAuthProps> = (props: EmailAuthProps): JSX.Element => {
-  const { inputNum, inputRefs, code, setCode, handleEntryEmail } = props;
+  const { inputNum, inputRefs, code, setCode, handleEntryEmail, isDisabled, setIsDisabled } = props;
 
   const sx = {
     display: "flex",
@@ -42,6 +42,7 @@ const EmailAuth: React.FC<EmailAuthProps> = (props: EmailAuthProps): JSX.Element
             value={code[i]}
             type="tel"
             inputRef={(el) => (inputRefs.current[i] = el)}
+            disabled={isDisabled}
             sx={{
               width: 50,
               marginRight: 4,
@@ -54,6 +55,10 @@ const EmailAuth: React.FC<EmailAuthProps> = (props: EmailAuthProps): JSX.Element
               // 次の入力欄にフォーカス
               if (e.target.value !== "" && i < inputNum - 1) {
                 inputRefs.current[i + 1]?.focus();
+              }
+
+              if (i == inputNum - 1) {
+                setIsDisabled(true);
               }
             }}
           />
@@ -149,6 +154,7 @@ const SignUp: React.FC = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [progressOpen, setProgressOpen] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const router = useRouter();
   const api = new ApiClient();
   let errorMsgInfo: string;
@@ -242,6 +248,7 @@ const SignUp: React.FC = (): JSX.Element => {
           setOpen(true);
           setOverlayOpen(true);
           setCode(Array(inputNum).fill(""));
+          setIsDisabled(false);
         }
       }
     };
@@ -263,10 +270,8 @@ const SignUp: React.FC = (): JSX.Element => {
 
   return (
     <div>
-    <TWCircularProgress
+    <TWCommonCircularProgress
       open={progressOpen}
-      color="success"
-      size={40}
     />
       <TWCard
         sx={{
@@ -285,6 +290,8 @@ const SignUp: React.FC = (): JSX.Element => {
             code={code}
             setCode={setCode}
             handleEntryEmail={handleEntryEmail}
+            isDisabled={isDisabled}
+            setIsDisabled={setIsDisabled}
           />
         </TWCardContent>
         <br />

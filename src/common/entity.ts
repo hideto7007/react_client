@@ -267,6 +267,8 @@ interface EmailAuthProps {
   code: string[];
   setCode: (value: React.SetStateAction<string[]>) => void;
   handleEntryEmail: () => Promise<void>;
+  isDisabled: boolean;
+  setIsDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface EmailAuthToastProps {

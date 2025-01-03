@@ -11,7 +11,7 @@ import {
   TWTypography,
   TWBackDrop,
   TWToast,
-  TWCircularProgress,
+  TWCommonCircularProgress,
 } from "@/src/common/component";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthFormProps, TmpSignUpResProps } from "@/src/common/entity";
@@ -97,10 +97,8 @@ const TemporarySignUp: React.FC = () => {
 
   return (
     <div>
-    <TWCircularProgress
+    <TWCommonCircularProgress
       open={progressOpen}
-      color="success"
-      size={40}
     />
       <TWContainer component="main" maxWidth="xs">
         <TWCssBaseline />

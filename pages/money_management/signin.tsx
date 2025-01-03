@@ -12,7 +12,7 @@ import {
   TWAvatar,
   TWTypography,
   TWButton,
-  TWCircularProgress,
+  TWCommonCircularProgress,
 } from "@/src/common/component";
 import { ErrorResponse, UserInfo, ValidateError } from "@/src/common/presenter";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -76,6 +76,7 @@ const SignIn: React.FC = () => {
       // 成功時のレスポンスの場合
       if (api.isOkResponse(res)) {
         const userInfo = res.data.result[0] as UserInfo;
+        localStorage.clear();
         localStorage.setItem(Auth.UserId, userInfo.user_id);
         localStorage.setItem(Auth.UserName, userInfo.user_name);
         setProgressOpen(false);
@@ -92,10 +93,8 @@ const SignIn: React.FC = () => {
 
   return (
     <div>
-    <TWCircularProgress
+    <TWCommonCircularProgress
       open={progressOpen}
-      color="success"
-      size={40}
     />
       <TWContainer component="main" maxWidth="xs">
         <TWCssBaseline />
