@@ -1,4 +1,4 @@
-import { BoxProps } from "@mui/material";
+import { BoxProps, CircularProgressProps } from "@mui/material";
 import { ReactNode } from "react";
 import {
   Control,
@@ -261,6 +261,28 @@ interface TWBoxProps extends BoxProps {
   noValidate?: boolean; // 追加プロパティを許容
 }
 
+interface EmailAuthProps {
+  inputNum: number;
+  inputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>;
+  code: string[];
+  setCode: (value: React.SetStateAction<string[]>) => void;
+  handleEntryEmail: () => Promise<void>;
+}
+
+interface EmailAuthToastProps {
+  successOverlayOpen: boolean;
+  successOpen: boolean;
+  successHandleClose: () => void;
+  successMsg: string;
+  overlayOpen: boolean;
+  open: boolean;
+  handleClose: () => void;
+  msg: string;
+}
+
+interface TWCircularProgressProps extends CircularProgressProps {
+  open: boolean;
+}
 export type {
   AnnualIncomeManagementKey,
   AnnualIncomeManagementData,
@@ -295,4 +317,7 @@ export type {
   EntryAuthEmailProps,
   TWBackdropProps,
   TWBoxProps,
+  EmailAuthProps,
+  EmailAuthToastProps,
+  TWCircularProgressProps
 };

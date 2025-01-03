@@ -11,6 +11,7 @@ import {
   TWTypography,
   TWBackDrop,
   TWToast,
+  TWCircularProgress,
 } from "@/src/common/component";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthFormProps, TmpSignUpResProps } from "@/src/common/entity";
@@ -41,6 +42,7 @@ const TemporarySignUp: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const [progressOpen, setProgressOpen] = useState(false);
   let errorMsgInfo: string;
 
   // passwordフィールドの値を監視
@@ -53,6 +55,7 @@ const TemporarySignUp: React.FC = () => {
       data: [data],
     };
     const api = new ApiClient();
+    setProgressOpen(true);
     const res = await api.callApi<EmailAuthToken>("/api/temporay_signup", "post", dataRes);
 
     if ("error_data" in res && res.status !== 200) {
@@ -70,6 +73,7 @@ const TemporarySignUp: React.FC = () => {
         }
         setErrorMsg(errorMsgInfo);
       }
+      setProgressOpen(false);
       setOpen(true);
       setOverlayOpen(true);
     } else {
@@ -79,8 +83,9 @@ const TemporarySignUp: React.FC = () => {
         localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key);
         localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name);
         localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name);
+        setProgressOpen(false);
+        router.push("/money_management/signup");
       }
-      router.push("/money_management/signup");
     }
   };
 
@@ -92,6 +97,11 @@ const TemporarySignUp: React.FC = () => {
 
   return (
     <div>
+    <TWCircularProgress
+      open={progressOpen}
+      color="success"
+      size={40}
+    />
       <TWContainer component="main" maxWidth="xs">
         <TWCssBaseline />
         <TWBox

@@ -12,6 +12,7 @@ import {
   TWAvatar,
   TWTypography,
   TWButton,
+  TWCircularProgress,
 } from "@/src/common/component";
 import { ErrorResponse, UserInfo, ValidateError } from "@/src/common/presenter";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -40,6 +41,7 @@ const SignIn: React.FC = () => {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [open, setOpen] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
+  const [progressOpen, setProgressOpen] = useState(false);
   let errorMsgInfo: string;
 
   const onSubmit: SubmitHandler<AuthFormProps> = async (
@@ -49,15 +51,8 @@ const SignIn: React.FC = () => {
       data: [data],
     };
     const api = new ApiClient();
+    setProgressOpen(true);
     const res = await api.callApi<UserInfo[]>("/api/signin", "post", dataRes);
-
-    if (res.status === 404) {
-      errorMsgInfo = Common.ErrorMsgInfo(Message.NotFound, Message.NotFoundText);
-      setErrorMsg(errorMsgInfo);
-      setOpen(true);
-      setOverlayOpen(true);
-      return;
-    }
 
     if ("error_data" in res && res.status !== 200) {
       // エラーレスポンスの場合
@@ -74,6 +69,7 @@ const SignIn: React.FC = () => {
         }
         setErrorMsg(errorMsgInfo);
       }
+      setProgressOpen(false);
       setOpen(true);
       setOverlayOpen(true);
     } else {
@@ -82,6 +78,7 @@ const SignIn: React.FC = () => {
         const userInfo = res.data.result[0] as UserInfo;
         localStorage.setItem(Auth.UserId, userInfo.user_id);
         localStorage.setItem(Auth.UserName, userInfo.user_name);
+        setProgressOpen(false);
         router.push("/money_management");
       }
     }
@@ -95,6 +92,11 @@ const SignIn: React.FC = () => {
 
   return (
     <div>
+    <TWCircularProgress
+      open={progressOpen}
+      color="success"
+      size={40}
+    />
       <TWContainer component="main" maxWidth="xs">
         <TWCssBaseline />
         <TWBox

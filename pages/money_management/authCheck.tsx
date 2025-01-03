@@ -2,40 +2,48 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Auth } from "@/src/common/const";
 import { TWBackDrop, TWBox, TWToast } from "@/src/common/component";
-// import { useCookies } from "react-cookie";
 import ApiClient from "@/src/common/apiClient";
 import Common from "@/src/common/common";
+import { ValidateError } from "@/src/common/presenter";
+import { Message } from "@/src/common/message";
 
 const AuthCheck: React.FC = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [overlayOpen, setOverlayOpen] = useState(false);
-  // const [cookies, setCookie, removeCookie] = useCookies([Auth.RefreshAuthToken]);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  let errorMsgInfo: string;
   const api = new ApiClient();
 
   useEffect(() => {
     (async () => {
-      try {
-        const res = await api.callApi("/api/refresh_token", "get", {
-          user_id: localStorage.getItem(Auth.UserId),
-        });
-        if (res.status !== 200) {
-          const msg = res.data.error_msg;
-          setOpen(true);
-          setOverlayOpen(true);
-          const consoleMsgInfo = Common.ErrorMsgInfo(true, msg);
-          setErrorMsg(consoleMsgInfo);
+      const res = await api.callApi<string>("/api/refresh_token", "get", {
+        user_id: localStorage.getItem(Auth.UserId),
+      });
+      if ("error_data" in res && res.status !== 200) {
+      // エラーレスポンスの場合
+      const errorData = res.error_data;
+      if ("result" in errorData) {
+        // バリデーションエラー
+        const validateError = errorData as ValidateError;
+        setErrorMsg(Common.ErrorMsgInfoArray(validateError));
+      } else {
+        if (res.status !== 401 && res.status !== 409) { 
+          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
         } else {
-          console.log("Response結果:", res.data.result);
+          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
         }
-      } catch (error) {
-        console.error("サーバーエラー：", error);
-        const consoleMsgInfo = Common.ErrorMsgInfo(false, error as string);
-        setErrorMsg(consoleMsgInfo);
-        setOpen(true);
-        setOverlayOpen(true);
+        setErrorMsg(errorMsgInfo);
       }
+      setOpen(true);
+      setOverlayOpen(true);
+    } else {
+      // 成功時のレスポンスの場合
+      if (api.isOkResponse(res)) {
+        const result = res.data.result as string;
+        console.log(result);
+      }
+    }
     })();
   }, [router]);
 

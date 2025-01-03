@@ -10,8 +10,11 @@ import {
   CardContentProps,
   CssBaselineProps,
   TextFieldProps,
+  CircularProgressProps,
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
+import CircularProgress from '@mui/material/CircularProgress';
+import Stack from '@mui/material/Stack';
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Card, { CardProps } from '@mui/material/Card';
@@ -47,6 +50,7 @@ import {
   TWToastProps,
   TWBackdropProps,
   TWBoxProps,
+  TWCircularProgressProps,
 } from "@/src/common/entity";
 import { columns } from "@/src/common/columns";
 import ValidationCheck from "@/src/common/vaildation";
@@ -168,6 +172,31 @@ const TWCardActions: React.FC<CardActionsProps> = (props) => {
 
 const TWCardContent: React.FC<CardContentProps> = (props) => {
   return <CardContent {...props} />;
+};
+
+const TWCircularProgress: React.FC<TWCircularProgressProps> = (props) => {
+    return (
+      <div>
+        <Backdrop
+          sx={{
+            color: "#fff",
+            zIndex: (theme) => theme.zIndex.drawer + 1
+          }}
+          open={props.open}
+        >
+          <TWBox
+          sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CircularProgress {...props} />
+          </TWBox>
+        </Backdrop>
+      </div>
+  )
 };
 
 /**
@@ -868,6 +897,7 @@ export {
   TWCard,
   TWCardActions,
   TWCardContent,
+  TWCircularProgress,
   EnhancedTableHead,
   EnhancedTableToolbar,
   EditDialog,
