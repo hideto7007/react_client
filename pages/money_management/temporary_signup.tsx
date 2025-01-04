@@ -12,9 +12,12 @@ import {
   TWBackDrop,
   TWToast,
   TWCommonCircularProgress,
+  ExternalSignButton,
+  TWExternalText,
 } from "@/src/common/component";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthFormProps, TmpSignUpResProps } from "@/src/common/entity";
+import { Response } from "@/src/common/presenter";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { validationRules } from "@/src/common/vaildation";
 import ApiClient from "@/src/common/apiClient";
@@ -22,8 +25,16 @@ import Common from "@/src/common/common";
 import { EmailAuthToken, ValidateError } from "@/src/common/presenter";
 import { Message } from "@/src/common/message";
 import { Auth } from "@/src/common/const";
+import { FcGoogle } from "react-icons/fc";
+import { FaLine } from "react-icons/fa6";
 
-const TemporarySignUp: React.FC = () => {
+
+/**
+ * 仮サインアップコンポーネント
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const TemporarySignUp: React.FC = (): JSX.Element => {
   const {
     control,
     handleSubmit,
@@ -44,6 +55,7 @@ const TemporarySignUp: React.FC = () => {
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [progressOpen, setProgressOpen] = useState(false);
   let errorMsgInfo: string;
+  const api = new ApiClient();
 
   // passwordフィールドの値を監視
   const password = watch("user_password");
@@ -54,7 +66,6 @@ const TemporarySignUp: React.FC = () => {
     const dataRes: TmpSignUpResProps = {
       data: [data],
     };
-    const api = new ApiClient();
     setProgressOpen(true);
     const res = await api.callApi<EmailAuthToken>("/api/temporay_signup", "post", dataRes);
 
@@ -94,6 +105,45 @@ const TemporarySignUp: React.FC = () => {
     setOpen(false);
     setOverlayOpen(false);
   };
+
+  const handlerResult = (res: Response<string>): void => {
+    if ("error_data" in res && res.status !== 200) {
+      // エラーレスポンスの場合
+      const errorData = res.error_data;
+      if ("result" in errorData) {
+        // バリデーションエラー
+        const validateError = errorData as ValidateError;
+        setErrorMsg(Common.ErrorMsgInfoArray(validateError));
+      } else {
+        if (res.status !== 401 && res.status !== 409) { 
+          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
+        } else {
+          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
+        }
+        setErrorMsg(errorMsgInfo);
+      }
+      setProgressOpen(false);
+      setOpen(true);
+      setOverlayOpen(true);
+    } else {
+      // 成功時のレスポンスの場合
+      router.push("/money_management/signin");
+    }
+  }
+
+  const googleHandler = async () => {
+    setProgressOpen(true);
+    const res = await api.callApi<string>("/auth/google/signup", "get");
+    handlerResult(res);
+    setProgressOpen(false);
+  }
+
+  const lineHandler = async () => {
+    setProgressOpen(true);
+    const res = await api.callApi<string>("/auth/line/signup", "get");
+    handlerResult(res);
+    setProgressOpen(false);
+  }
 
   return (
     <div>
@@ -167,6 +217,22 @@ const TemporarySignUp: React.FC = () => {
               SIGN UP
             </TWButton>
           </TWBox>
+          <TWExternalText
+            text="サインアップ"
+          />
+          <ExternalSignButton
+            icon={<FcGoogle />}
+            label="Google"
+            onClick={googleHandler}
+          />
+            <TWBox
+              sx={{ mt: 2}}
+            />
+          <ExternalSignButton
+            icon={<FaLine />}
+            label="Line"
+            onClick={lineHandler}
+          />
         </TWBox>
       </TWContainer>
       <>

@@ -10,136 +10,6 @@ import { useRouter } from "next/router";
 
 
 /**
- * メール認証コンポーネント
- *
- * @param {EmailAuthProps} props - コンポーネントが受け取るprops
- *
- * @returns {JSX.Element} - ダイアログのJSX要素を返す
- */
-const EmailAuth: React.FC<EmailAuthProps> = (props: EmailAuthProps): JSX.Element => {
-  const { inputNum, inputRefs, code, setCode, handleEntryEmail, isDisabled, setIsDisabled } = props;
-
-  const sx = {
-    display: "flex",
-    justifyContent: "center", // 水平方向の中央揃え
-    alignItems: "center", // 垂直方向の中央揃え
-  }
-
-  return (
-    <div>
-      <TWBox sx={sx}>
-        <TWTypography variant="h4">
-          メール認証コード
-        </TWTypography>
-      </TWBox>
-        <br />
-        <br />
-      <TWBox sx={sx}>
-        {[...Array(inputNum)].map((_, i) => (
-          <TWTextField
-            key={i}
-            autoFocus={i === 0}
-            value={code[i]}
-            type="tel"
-            inputRef={(el) => (inputRefs.current[i] = el)}
-            disabled={isDisabled}
-            sx={{
-              width: 50,
-              marginRight: 4,
-            }}
-            onChange={(e) => {
-              const newCode = [...code];
-              newCode[i] = e.target.value;
-              setCode(newCode);
-
-              // 次の入力欄にフォーカス
-              if (e.target.value !== "" && i < inputNum - 1) {
-                inputRefs.current[i + 1]?.focus();
-              }
-
-              if (i == inputNum - 1) {
-                setIsDisabled(true);
-              }
-            }}
-          />
-        ))}
-      </TWBox>
-        <br />
-        <br />
-      <TWBox sx={sx}>
-        <TWTypography
-          variant="h6">
-            仮サインアップ時に登録したメールアドレスに認証コードを送信しました。
-        </TWTypography>
-      </TWBox>
-      <TWBox sx={sx}>
-        <TWTypography
-          variant="h6">
-          続けるにはコードを入力してください。
-        </TWTypography>
-      </TWBox>
-      <TWBox sx={sx}>
-        <TWButton
-          size="large"
-          color="primary"
-          onClick={handleEntryEmail}
-        >コードを再送信</TWButton>
-        </TWBox>
-    </div>
-  );
-};
-
-/**
- * メール認証トーストコンポーネント
- *
- * @param {EmailAuthToastProps} props - コンポーネントが受け取るprops
- *
- * @returns {JSX.Element} - ダイアログのJSX要素を返す
- */
-const EmailAuthToast: React.FC<EmailAuthToastProps> = (props: EmailAuthToastProps): JSX.Element => {
-  const {
-    successOverlayOpen,
-    successOpen,
-    successHandleClose,
-    successMsg,
-    overlayOpen,
-    open,
-    handleClose,
-    msg
-  } = props;
-  const vertical = "top";
-  const center = "center";
-  const width = 500;
-
-  return (
-    <div>
-      <TWBox sx={{ width: width }}>
-        <TWBackDrop overlayOpen={successOverlayOpen} />
-        <TWToast
-          open={successOpen}
-          handleClose={successHandleClose}
-          vertical={vertical}
-          horizontal={center}
-          severity={"success"}
-          message={successMsg}
-        />
-      </TWBox>
-      <TWBox sx={{ width: width }}>
-        <TWBackDrop overlayOpen={overlayOpen} />
-        <TWToast
-          open={open}
-          handleClose={handleClose}
-          vertical={vertical}
-          horizontal={center}
-          severity={"error"}
-          message={msg}
-        />
-      </TWBox>
-    </div>
-  );
-}
-
-/**
  * サインアップコンポーネント
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
@@ -313,5 +183,136 @@ const SignUp: React.FC = (): JSX.Element => {
   </div> 
   );
 };
+
+/**
+ * メール認証コンポーネント
+ *
+ * @param {EmailAuthProps} props - コンポーネントが受け取るprops
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const EmailAuth: React.FC<EmailAuthProps> = (props: EmailAuthProps): JSX.Element => {
+  const { inputNum, inputRefs, code, setCode, handleEntryEmail, isDisabled, setIsDisabled } = props;
+
+  const sx = {
+    display: "flex",
+    justifyContent: "center", // 水平方向の中央揃え
+    alignItems: "center", // 垂直方向の中央揃え
+  }
+
+  return (
+    <div>
+      <TWBox sx={sx}>
+        <TWTypography variant="h4">
+          メール認証コード
+        </TWTypography>
+      </TWBox>
+        <br />
+        <br />
+      <TWBox sx={sx}>
+        {[...Array(inputNum)].map((_, i) => (
+          <TWTextField
+            key={i}
+            autoFocus={i === 0}
+            value={code[i]}
+            type="tel"
+            inputRef={(el) => (inputRefs.current[i] = el)}
+            disabled={isDisabled}
+            sx={{
+              width: 50,
+              marginRight: 4,
+            }}
+            onChange={(e) => {
+              const newCode = [...code];
+              newCode[i] = e.target.value;
+              setCode(newCode);
+
+              // 次の入力欄にフォーカス
+              if (e.target.value !== "" && i < inputNum - 1) {
+                inputRefs.current[i + 1]?.focus();
+              }
+
+              if (i == inputNum - 1) {
+                setIsDisabled(true);
+              }
+            }}
+          />
+        ))}
+      </TWBox>
+        <br />
+        <br />
+      <TWBox sx={sx}>
+        <TWTypography
+          variant="h6">
+            仮サインアップ時に登録したメールアドレスに認証コードを送信しました。
+        </TWTypography>
+      </TWBox>
+      <TWBox sx={sx}>
+        <TWTypography
+          variant="h6">
+          続けるにはコードを入力してください。
+        </TWTypography>
+      </TWBox>
+      <TWBox sx={sx}>
+        <TWButton
+          size="large"
+          color="primary"
+          onClick={handleEntryEmail}
+        >コードを再送信</TWButton>
+        </TWBox>
+    </div>
+  );
+};
+
+/**
+ * メール認証トーストコンポーネント
+ *
+ * @param {EmailAuthToastProps} props - コンポーネントが受け取るprops
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const EmailAuthToast: React.FC<EmailAuthToastProps> = (props: EmailAuthToastProps): JSX.Element => {
+  const {
+    successOverlayOpen,
+    successOpen,
+    successHandleClose,
+    successMsg,
+    overlayOpen,
+    open,
+    handleClose,
+    msg
+  } = props;
+  const vertical = "top";
+  const center = "center";
+  const width = 500;
+
+  return (
+    <div>
+      <TWBox sx={{ width: width }}>
+        <TWBackDrop overlayOpen={successOverlayOpen} />
+        <TWToast
+          open={successOpen}
+          handleClose={successHandleClose}
+          vertical={vertical}
+          horizontal={center}
+          severity={"success"}
+          message={successMsg}
+        />
+      </TWBox>
+      <TWBox sx={{ width: width }}>
+        <TWBackDrop overlayOpen={overlayOpen} />
+        <TWToast
+          open={open}
+          handleClose={handleClose}
+          vertical={vertical}
+          horizontal={center}
+          severity={"error"}
+          message={msg}
+        />
+      </TWBox>
+    </div>
+  );
+}
+
 
 export default SignUp;

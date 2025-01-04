@@ -1,4 +1,5 @@
-import { BoxProps, CircularProgressProps } from "@mui/material";
+import { BoxProps, CircularProgressProps, SvgIconTypeMap } from "@mui/material";
+import { OverridableComponent } from "@mui/material/OverridableComponent";
 import { ReactNode } from "react";
 import {
   Control,
@@ -282,8 +283,18 @@ interface EmailAuthToastProps {
   msg: string;
 }
 
+interface ExternalSignButtonProps {
+  label: string;
+  icon?: React.ReactNode;
+  onClick: () => void;
+}
+
 interface TWCircularProgressProps extends CircularProgressProps {
   open: boolean;
+}
+
+interface TWExternalTextProps {
+  text: string;
 }
 export type {
   AnnualIncomeManagementKey,
@@ -321,5 +332,7 @@ export type {
   TWBoxProps,
   EmailAuthProps,
   EmailAuthToastProps,
-  TWCircularProgressProps
+  TWCircularProgressProps,
+  ExternalSignButtonProps,
+  TWExternalTextProps
 };

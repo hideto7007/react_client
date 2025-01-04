@@ -49,6 +49,8 @@ import {
   TWBackdropProps,
   TWBoxProps,
   TWCircularProgressProps,
+  ExternalSignButtonProps,
+  TWExternalTextProps,
 } from "@/src/common/entity";
 import { columns } from "@/src/common/columns";
 import ValidationCheck from "@/src/common/vaildation";
@@ -196,6 +198,104 @@ const TWCircularProgress: React.FC<TWCircularProgressProps> = (props) => {
       </div>
   )
 };
+
+
+/**
+ * 外部認証ボタンコンポーネント
+ *
+ * 外部認証ボタンを表示するコンポーネント
+ *
+ * @param {ExternalSignButtonProps} props - コンポーネントが受け取るprops
+ * 
+ * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
+ */
+
+const ExternalSignButton: React.FC<ExternalSignButtonProps> = (
+  props: ExternalSignButtonProps
+): JSX.Element  => {
+  return (
+    <TWButton
+      variant="outlined"
+      fullWidth
+      startIcon={props.icon}
+      onClick={props.onClick}
+      sx={{
+        borderRadius: 25,
+        textTransform: "none",
+        width: "50%",  
+        borderColor: "black",
+        color: "black",
+        justifyContent: "flex-start", // コンテンツ全体を左寄せ
+        paddingLeft: 2, // 左余白を追加してアイコンを見やすくする
+      }}
+    >
+      <TWBox 
+        sx={{
+          width: "70%",
+          display: "flex",
+          justifyContent: "center",
+        }}>
+        {props.label}
+      </TWBox>
+    </TWButton>
+  );
+};
+
+/**
+ * 外部認証テキストコンポーネント
+ *
+ * 外部認証テキスト部分を表示するコンポーネント
+ *
+ * @param {TWExternalTextProps} props - コンポーネントが受け取るprops
+ * 
+ * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
+ */
+
+const TWExternalText: React.FC<TWExternalTextProps> = (props: TWExternalTextProps): JSX.Element => {
+  return (
+    <div>
+      <TWBox
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          width: "100%",
+          mt: 3,
+          mb: 3,
+        }}
+      >
+      <TWBox
+        sx={{
+          flex: 1,
+          borderBottom: "1px solid black",
+        }}
+      />
+      <TWTypography
+        sx={{
+          paddingLeft: 2,
+          paddingRight: 2,
+          whiteSpace: "nowrap",
+        }}
+        variant="subtitle1"
+      >
+        または
+      </TWTypography>
+      <TWBox
+        sx={{
+          flex: 1,
+          borderBottom: "1px solid black",
+        }}
+      />
+    </TWBox>
+    <TWTypography
+      variant="subtitle1"
+      gutterBottom
+      sx={{ mt: 1, mb: 3 }}
+    >
+      お持ちのアカウントで{props.text}する
+    </TWTypography>
+  </div>
+  );
+}
 
 
 /**
@@ -920,6 +1020,8 @@ export {
   TWCardContent,
   TWCircularProgress,
   TWCommonCircularProgress,
+  ExternalSignButton,
+  TWExternalText,
   EnhancedTableHead,
   EnhancedTableToolbar,
   EditDialog,

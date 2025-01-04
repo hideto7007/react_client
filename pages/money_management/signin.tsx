@@ -13,16 +13,21 @@ import {
   TWTypography,
   TWButton,
   TWCommonCircularProgress,
+  ExternalSignButton,
+  TWExternalText,
 } from "@/src/common/component";
 import { ErrorResponse, UserInfo, ValidateError } from "@/src/common/presenter";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { AuthFormProps, SigninResProps } from "@/src/common/entity";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { validationRules } from "@/src/common/vaildation";
+import { Response } from "@/src/common/presenter";
 import { Auth } from "@/src/common/const";
 import ApiClient from "@/src/common/apiClient";
 import Common from "@/src/common/common";
 import { Message } from "@/src/common/message";
+import { FcGoogle } from "react-icons/fc";
+import { FaLine } from "react-icons/fa6";
 
 const SignIn: React.FC = () => {
   const {
@@ -43,17 +48,9 @@ const SignIn: React.FC = () => {
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [progressOpen, setProgressOpen] = useState(false);
   let errorMsgInfo: string;
+  const api = new ApiClient();
 
-  const onSubmit: SubmitHandler<AuthFormProps> = async (
-    data: AuthFormProps,
-  ) => {
-    const dataRes: SigninResProps = {
-      data: [data],
-    };
-    const api = new ApiClient();
-    setProgressOpen(true);
-    const res = await api.callApi<UserInfo[]>("/api/signin", "post", dataRes);
-
+  const handlerResult = (res: Response<UserInfo[]>): void => {
     if ("error_data" in res && res.status !== 200) {
       // エラーレスポンスの場合
       const errorData = res.error_data;
@@ -83,6 +80,17 @@ const SignIn: React.FC = () => {
         router.push("/money_management");
       }
     }
+  }
+
+  const onSubmit: SubmitHandler<AuthFormProps> = async (
+    data: AuthFormProps,
+  ) => {
+    const dataRes: SigninResProps = {
+      data: [data],
+    };
+    setProgressOpen(true);
+    const res = await api.callApi<UserInfo[]>("/api/signin", "post", dataRes);
+    handlerResult(res);
   };
 
   // トーストを閉じる処理
@@ -90,6 +98,21 @@ const SignIn: React.FC = () => {
     setOpen(false);
     setOverlayOpen(false);
   };
+
+
+  const googleHandler = async () => {
+    setProgressOpen(true);
+    const res = await api.callApi<UserInfo[]>("/auth/google/signin", "get");
+    handlerResult(res);
+    setProgressOpen(false);
+  }
+
+  const lineHandler = async () => {
+    setProgressOpen(true);
+    const res = await api.callApi<UserInfo[]>("/auth/line/signin", "get");
+    handlerResult(res);
+    setProgressOpen(false);
+  }
 
   return (
     <div>
@@ -152,6 +175,22 @@ const SignIn: React.FC = () => {
               SIGN IN
             </TWButton>
           </TWBox>
+          <TWExternalText
+            text="サインイン"
+          />
+          <ExternalSignButton
+            icon={<FcGoogle />}
+            label="Google"
+            onClick={googleHandler}
+          />
+            <TWBox
+              sx={{ mt: 2}}
+            />
+          <ExternalSignButton
+            icon={<FaLine />}
+            label="Line"
+            onClick={lineHandler}
+          />
         </TWBox>
       </TWContainer>
       <>
