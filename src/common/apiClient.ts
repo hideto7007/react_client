@@ -3,10 +3,11 @@ import {
   ErrorResponse,
   Response,
   OkResponse,
-  Result
+  Result,
 } from "@/src/common/presenter";
 
-const BASE_URL: string | undefined = process.env.API_BASE_URL || "http://localhost:8080";
+const BASE_URL: string | undefined =
+  process.env.API_BASE_URL || "http://localhost:8080";
 // const BASE_URL: string | undefined = process.env.API_BASE_URL || 'http://host.docker.internal:8080'
 
 class ApiClient {
@@ -58,8 +59,8 @@ class ApiClient {
         data: res.data as Result<T>,
         status: res.status,
         statusText: res.statusText,
-        headers: res.headers
-      }
+        headers: res.headers,
+      };
       return okRes;
     } catch (error) {
       return this.handleError(error);
@@ -68,7 +69,7 @@ class ApiClient {
 
   public isOkResponse<T>(response: Response<T>): response is OkResponse<T> {
     return "data" in response && "result" in response.data;
-  };
+  }
 }
 
-export {ApiClient, BASE_URL};
+export { ApiClient, BASE_URL };

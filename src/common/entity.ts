@@ -334,5 +334,5 @@ export type {
   EmailAuthToastProps,
   TWCircularProgressProps,
   ExternalSignButtonProps,
-  TWExternalTextProps
+  TWExternalTextProps,
 };

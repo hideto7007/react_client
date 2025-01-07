@@ -4,7 +4,7 @@ class ApiEndpoint {
   getPriceManagement(params: any): Promise<any> {
     return http.get(`/api/price/` + params);
   }
-  
+
   getIncomeData(params: any): Promise<any> {
     return http.get(`/api/income_data/` + params);
   }

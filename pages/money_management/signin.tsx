@@ -60,10 +60,16 @@ const SignIn: React.FC = () => {
         const validateError = errorData as ValidateError;
         setErrorMsg(Common.ErrorMsgInfoArray(validateError));
       } else {
-        if (res.status !== 401 && res.status !== 409) { 
-          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
+        if (res.status !== 401 && res.status !== 409) {
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.ServerError,
+            errorData.error_msg,
+          );
         } else {
-          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.AuthError,
+            errorData.error_msg,
+          );
         }
         setErrorMsg(errorMsgInfo);
       }
@@ -81,7 +87,7 @@ const SignIn: React.FC = () => {
         router.push("/money_management");
       }
     }
-  }
+  };
 
   const onSubmit: SubmitHandler<AuthFormProps> = async (
     data: AuthFormProps,
@@ -100,18 +106,17 @@ const SignIn: React.FC = () => {
     setOverlayOpen(false);
   };
 
-
   const googleHandler = async () => {
     setProgressOpen(true);
     // リダイレクト
     window.location.href = GOOGLE_SIGN_IN;
-  }
+  };
 
   const lineHandler = async () => {
     setProgressOpen(true);
     // リダイレクト
     window.location.href = LINE_SIGN_IN;
-  }
+  };
 
   React.useEffect(() => {
     const url = new URL(location.href);
@@ -139,9 +144,7 @@ const SignIn: React.FC = () => {
 
   return (
     <div>
-    <TWCommonCircularProgress
-      open={progressOpen}
-    />
+      <TWCommonCircularProgress open={progressOpen} />
       <TWContainer component="main" maxWidth="xs">
         <TWCssBaseline />
         <TWBox
@@ -188,6 +191,9 @@ const SignIn: React.FC = () => {
               サインアップがまだの場合は
               <Link href="/money_management/temporary_signup">こちら</Link>
             </TWTypography>
+            <TWTypography sx={{ fontSize: "0.8rem" }}>
+              <Link href="/money_management/sign_password_reset">サインインパスワード忘れた方</Link>
+            </TWTypography>
             <TWButton
               type="submit"
               disabled={!isValid}
@@ -198,17 +204,13 @@ const SignIn: React.FC = () => {
               SIGN IN
             </TWButton>
           </TWBox>
-          <TWExternalText
-            text="サインイン"
-          />
+          <TWExternalText text="サインイン" />
           <ExternalSignButton
             icon={<FcGoogle />}
             label="Google"
             onClick={googleHandler}
           />
-            <TWBox
-              sx={{ mt: 2}}
-            />
+          <TWBox sx={{ mt: 2 }} />
           <ExternalSignButton
             icon={<FaLine />}
             label="Line"

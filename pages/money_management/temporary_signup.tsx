@@ -29,7 +29,6 @@ import { FcGoogle } from "react-icons/fc";
 import { FaLine } from "react-icons/fa6";
 import { GOOGLE_SIGN_UP, LINE_SIGN_UP } from "@/src/utils/redirectPath";
 
-
 /**
  * 仮サインアップコンポーネント
  *
@@ -68,7 +67,11 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
       data: [data],
     };
     setProgressOpen(true);
-    const res = await api.callApi<EmailAuthToken>("/api/temporay_signup", "post", dataRes);
+    const res = await api.callApi<EmailAuthToken>(
+      "/api/temporay_signup",
+      "post",
+      dataRes,
+    );
 
     if ("error_data" in res && res.status !== 200) {
       // エラーレスポンスの場合
@@ -78,10 +81,16 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
         const validateError = errorData as ValidateError;
         setErrorMsg(Common.ErrorMsgInfoArray(validateError));
       } else {
-        if (res.status !== 401 && res.status !== 409) { 
-          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
+        if (res.status !== 401 && res.status !== 409) {
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.ServerError,
+            errorData.error_msg,
+          );
         } else {
-          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.AuthError,
+            errorData.error_msg,
+          );
         }
         setErrorMsg(errorMsgInfo);
       }
@@ -116,10 +125,16 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
         const validateError = errorData as ValidateError;
         setErrorMsg(Common.ErrorMsgInfoArray(validateError));
       } else {
-        if (res.status !== 401 && res.status !== 409) { 
-          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
+        if (res.status !== 401 && res.status !== 409) {
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.ServerError,
+            errorData.error_msg,
+          );
         } else {
-          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.AuthError,
+            errorData.error_msg,
+          );
         }
         setErrorMsg(errorMsgInfo);
       }
@@ -131,19 +146,19 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
       setProgressOpen(false);
       router.push("/money_management/signin");
     }
-  }
+  };
 
   const googleHandler = async () => {
     setProgressOpen(true);
     // リダイレクト
     window.location.href = GOOGLE_SIGN_UP;
-  }
+  };
 
   const lineHandler = async () => {
     setProgressOpen(true);
     // リダイレクト
     window.location.href = LINE_SIGN_UP;
-  }
+  };
 
   React.useEffect(() => {
     const url = new URL(location.href);
@@ -164,9 +179,7 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
 
   return (
     <div>
-    <TWCommonCircularProgress
-      open={progressOpen}
-    />
+      <TWCommonCircularProgress open={progressOpen} />
       <TWContainer component="main" maxWidth="xs">
         <TWCssBaseline />
         <TWBox
@@ -234,17 +247,13 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
               SIGN UP
             </TWButton>
           </TWBox>
-          <TWExternalText
-            text="サインアップ"
-          />
+          <TWExternalText text="サインアップ" />
           <ExternalSignButton
             icon={<FcGoogle />}
             label="Google"
             onClick={googleHandler}
           />
-            <TWBox
-              sx={{ mt: 2}}
-            />
+          <TWBox sx={{ mt: 2 }} />
           <ExternalSignButton
             icon={<FaLine />}
             label="Line"

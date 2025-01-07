@@ -21,29 +21,35 @@ const AuthCheck: React.FC = () => {
         user_id: localStorage.getItem(Auth.UserId),
       });
       if ("error_data" in res && res.status !== 200) {
-      // エラーレスポンスの場合
-      const errorData = res.error_data;
-      if ("result" in errorData) {
-        // バリデーションエラー
-        const validateError = errorData as ValidateError;
-        setErrorMsg(Common.ErrorMsgInfoArray(validateError));
-      } else {
-        if (res.status !== 401 && res.status !== 409) { 
-          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
+        // エラーレスポンスの場合
+        const errorData = res.error_data;
+        if ("result" in errorData) {
+          // バリデーションエラー
+          const validateError = errorData as ValidateError;
+          setErrorMsg(Common.ErrorMsgInfoArray(validateError));
         } else {
-          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
+          if (res.status !== 401 && res.status !== 409) {
+            errorMsgInfo = Common.ErrorMsgInfo(
+              Message.ServerError,
+              errorData.error_msg,
+            );
+          } else {
+            errorMsgInfo = Common.ErrorMsgInfo(
+              Message.AuthError,
+              errorData.error_msg,
+            );
+          }
+          setErrorMsg(errorMsgInfo);
         }
-        setErrorMsg(errorMsgInfo);
+        setOpen(true);
+        setOverlayOpen(true);
+      } else {
+        // 成功時のレスポンスの場合
+        if (api.isOkResponse(res)) {
+          const result = res.data.result as string;
+          console.log(result);
+        }
       }
-      setOpen(true);
-      setOverlayOpen(true);
-    } else {
-      // 成功時のレスポンスの場合
-      if (api.isOkResponse(res)) {
-        const result = res.data.result as string;
-        console.log(result);
-      }
-    }
     })();
   }, [router]);
 

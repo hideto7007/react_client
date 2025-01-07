@@ -9,13 +9,13 @@ import {
   CardContent,
   CardContentProps,
   CssBaselineProps,
-  TextFieldProps
+  TextFieldProps,
 } from "@mui/material";
 import TableCell from "@mui/material/TableCell";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Card, { CardProps } from '@mui/material/Card';
+import Card, { CardProps } from "@mui/material/Card";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 import Typography, { TypographyProps } from "@mui/material/Typography";
@@ -175,30 +175,29 @@ const TWCardContent: React.FC<CardContentProps> = (props) => {
 };
 
 const TWCircularProgress: React.FC<TWCircularProgressProps> = (props) => {
-    return (
-      <div>
-        <Backdrop
+  return (
+    <div>
+      <Backdrop
+        sx={{
+          color: "#fff",
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+        }}
+        open={props.open}
+      >
+        <TWBox
           sx={{
-            color: "#fff",
-            zIndex: (theme) => theme.zIndex.drawer + 1
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-          open={props.open}
         >
-          <TWBox
-          sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <CircularProgress {...props} />
-          </TWBox>
-        </Backdrop>
-      </div>
-  )
+          <CircularProgress {...props} />
+        </TWBox>
+      </Backdrop>
+    </div>
+  );
 };
-
 
 /**
  * 外部認証ボタンコンポーネント
@@ -206,13 +205,13 @@ const TWCircularProgress: React.FC<TWCircularProgressProps> = (props) => {
  * 外部認証ボタンを表示するコンポーネント
  *
  * @param {ExternalSignButtonProps} props - コンポーネントが受け取るprops
- * 
+ *
  * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
  */
 
 const ExternalSignButton: React.FC<ExternalSignButtonProps> = (
-  props: ExternalSignButtonProps
-): JSX.Element  => {
+  props: ExternalSignButtonProps,
+): JSX.Element => {
   return (
     <TWButton
       variant="outlined"
@@ -222,19 +221,20 @@ const ExternalSignButton: React.FC<ExternalSignButtonProps> = (
       sx={{
         borderRadius: 25,
         textTransform: "none",
-        width: "50%",  
+        width: "50%",
         borderColor: "black",
         color: "black",
         justifyContent: "flex-start", // コンテンツ全体を左寄せ
         paddingLeft: 2, // 左余白を追加してアイコンを見やすくする
       }}
     >
-      <TWBox 
+      <TWBox
         sx={{
           width: "70%",
           display: "flex",
           justifyContent: "center",
-        }}>
+        }}
+      >
         {props.label}
       </TWBox>
     </TWButton>
@@ -247,11 +247,13 @@ const ExternalSignButton: React.FC<ExternalSignButtonProps> = (
  * 外部認証テキスト部分を表示するコンポーネント
  *
  * @param {TWExternalTextProps} props - コンポーネントが受け取るprops
- * 
+ *
  * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
  */
 
-const TWExternalText: React.FC<TWExternalTextProps> = (props: TWExternalTextProps): JSX.Element => {
+const TWExternalText: React.FC<TWExternalTextProps> = (
+  props: TWExternalTextProps,
+): JSX.Element => {
   return (
     <div>
       <TWBox
@@ -263,40 +265,35 @@ const TWExternalText: React.FC<TWExternalTextProps> = (props: TWExternalTextProp
           mb: 3,
         }}
       >
-      <TWBox
-        sx={{
-          flex: 1,
-          borderBottom: "1px solid black",
-        }}
-      />
-      <TWTypography
-        sx={{
-          paddingLeft: 2,
-          paddingRight: 2,
-          whiteSpace: "nowrap",
-        }}
-        variant="subtitle1"
-      >
-        または
+        <TWBox
+          sx={{
+            flex: 1,
+            borderBottom: "1px solid black",
+          }}
+        />
+        <TWTypography
+          sx={{
+            paddingLeft: 2,
+            paddingRight: 2,
+            whiteSpace: "nowrap",
+          }}
+          variant="subtitle1"
+        >
+          または
+        </TWTypography>
+        <TWBox
+          sx={{
+            flex: 1,
+            borderBottom: "1px solid black",
+          }}
+        />
+      </TWBox>
+      <TWTypography variant="subtitle1" gutterBottom sx={{ mt: 1, mb: 3 }}>
+        お持ちのアカウントで{props.text}する
       </TWTypography>
-      <TWBox
-        sx={{
-          flex: 1,
-          borderBottom: "1px solid black",
-        }}
-      />
-    </TWBox>
-    <TWTypography
-      variant="subtitle1"
-      gutterBottom
-      sx={{ mt: 1, mb: 3 }}
-    >
-      お持ちのアカウントで{props.text}する
-    </TWTypography>
-  </div>
+    </div>
   );
-}
-
+};
 
 /**
  * ローディング共通コンポーネント
@@ -304,20 +301,14 @@ const TWExternalText: React.FC<TWExternalTextProps> = (props: TWExternalTextProp
  * 全画面でローディングを表示する際に使用するコンポーネント
  *
  * @param {TWCircularProgressProps} props - コンポーネントが受け取るprops
- * 
+ *
  * @returns {JSX.Element} - テーブルのヘッダーを表すJSX要素を返します
  */
 
 const TWCommonCircularProgress: React.FC<TWCircularProgressProps> = (
-  props: TWCircularProgressProps
-): JSX.Element  => {
-  return (
-    <TWCircularProgress
-      open={props.open}
-      color="success"
-      size={40}
-    />
-  );
+  props: TWCircularProgressProps,
+): JSX.Element => {
+  return <TWCircularProgress open={props.open} color="success" size={40} />;
 };
 
 /**

@@ -1,4 +1,9 @@
-import { AxiosResponse, AxiosResponseHeaders, InternalAxiosRequestConfig, RawAxiosResponseHeaders } from "axios";
+import {
+  AxiosResponse,
+  AxiosResponseHeaders,
+  InternalAxiosRequestConfig,
+  RawAxiosResponseHeaders,
+} from "axios";
 
 // レスポンスの型定義
 interface ErrorMsg {
@@ -21,7 +26,7 @@ interface ErrorResponse {
 }
 
 interface Result<T> {
-  result: T[] | T
+  result: T[] | T;
 }
 
 interface OkResponse<T> {
@@ -54,5 +59,5 @@ export type {
   Result,
   Response,
   UserInfo,
-  EmailAuthToken
+  EmailAuthToken,
 };

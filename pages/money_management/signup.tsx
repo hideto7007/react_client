@@ -1,13 +1,28 @@
 import { ApiClient } from "@/src/common/apiClient";
-import { TWBackDrop, TWBox, TWButton, TWCard, TWCardActions, TWCardContent, TWCommonCircularProgress, TWTextField, TWToast, TWTypography } from "@/src/common/component";
+import {
+  TWBackDrop,
+  TWBox,
+  TWButton,
+  TWCard,
+  TWCardActions,
+  TWCardContent,
+  TWCommonCircularProgress,
+  TWTextField,
+  TWToast,
+  TWTypography,
+} from "@/src/common/component";
 import { Auth } from "@/src/common/const";
-import { RequestDataProps, SingUpProps, EmailAuthProps, EmailAuthToastProps } from "@/src/common/entity";
+import {
+  RequestDataProps,
+  SingUpProps,
+  EmailAuthProps,
+  EmailAuthToastProps,
+} from "@/src/common/entity";
 import Common from "@/src/common/common";
 import React, { useRef, useState } from "react";
 import { Message } from "@/src/common/message";
 import { EmailAuthToken, ValidateError } from "@/src/common/presenter";
 import { useRouter } from "next/router";
-
 
 /**
  * サインアップコンポーネント
@@ -31,13 +46,17 @@ const SignUp: React.FC = (): JSX.Element => {
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const handleEntryEmail = async(): Promise<void> => {
+  const handleEntryEmail = async (): Promise<void> => {
     setProgressOpen(true);
-    const res = await api.callApi<EmailAuthToken>("api/retry_auth_email", "get", {
-      redis_key: localStorage.getItem(Auth.RedisKey),
-      user_name: localStorage.getItem(Auth.TmpUserName),
-      nick_name: localStorage.getItem(Auth.TmpNickName),
-    });
+    const res = await api.callApi<EmailAuthToken>(
+      "api/retry_auth_email",
+      "get",
+      {
+        redis_key: localStorage.getItem(Auth.RedisKey),
+        user_name: localStorage.getItem(Auth.TmpUserName),
+        nick_name: localStorage.getItem(Auth.TmpNickName),
+      },
+    );
 
     if ("error_data" in res && res.status !== 200) {
       // エラーレスポンスの場合
@@ -47,10 +66,16 @@ const SignUp: React.FC = (): JSX.Element => {
         const validateError = errorData as ValidateError;
         setErrorMsg(Common.ErrorMsgInfoArray(validateError));
       } else {
-        if (res.status !== 401 && res.status !== 409) { 
-          errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
+        if (res.status !== 401 && res.status !== 409) {
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.ServerError,
+            errorData.error_msg,
+          );
         } else {
-          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.AuthError,
+            errorData.error_msg,
+          );
         }
         setErrorMsg(errorMsgInfo);
       }
@@ -66,7 +91,7 @@ const SignUp: React.FC = (): JSX.Element => {
       }
     }
     setProgressOpen(false);
-  }
+  };
 
   React.useEffect(() => {
     const fetchData = async () => {
@@ -93,10 +118,16 @@ const SignUp: React.FC = (): JSX.Element => {
               const validateError = errorData as ValidateError;
               setErrorMsg(Common.ErrorMsgInfoArray(validateError));
             } else {
-              if (res.status !== 401 && res.status !== 409) { 
-                errorMsgInfo = Common.ErrorMsgInfo(Message.ServerError, errorData.error_msg);
+              if (res.status !== 401 && res.status !== 409) {
+                errorMsgInfo = Common.ErrorMsgInfo(
+                  Message.ServerError,
+                  errorData.error_msg,
+                );
               } else {
-                errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, errorData.error_msg);
+                errorMsgInfo = Common.ErrorMsgInfo(
+                  Message.AuthError,
+                  errorData.error_msg,
+                );
               }
               setErrorMsg(errorMsgInfo);
             }
@@ -113,7 +144,10 @@ const SignUp: React.FC = (): JSX.Element => {
           }
           setProgressOpen(false);
         } else {
-          errorMsgInfo = Common.ErrorMsgInfo(Message.AuthError, "認証コードが一致しません。");
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.AuthError,
+            "認証コードが一致しません。",
+          );
           setErrorMsg(errorMsgInfo);
           setOpen(true);
           setOverlayOpen(true);
@@ -122,7 +156,7 @@ const SignUp: React.FC = (): JSX.Element => {
         }
       }
     };
-  
+
     fetchData();
   }, [code]);
 
@@ -140,9 +174,7 @@ const SignUp: React.FC = (): JSX.Element => {
 
   return (
     <div>
-    <TWCommonCircularProgress
-      open={progressOpen}
-    />
+      <TWCommonCircularProgress open={progressOpen} />
       <TWCard
         sx={{
           maxWidth: 800,
@@ -165,22 +197,21 @@ const SignUp: React.FC = (): JSX.Element => {
           />
         </TWCardContent>
         <br />
-          <TWCardActions>
-        </TWCardActions>
+        <TWCardActions></TWCardActions>
       </TWCard>
       <>
-      <EmailAuthToast
-        successOverlayOpen={successOverlayOpen}
-        successOpen={successOpen}
-        successHandleClose={successHandleClose}
-        successMsg={successMsg}
-        overlayOpen={overlayOpen}
-        open={open}
-        handleClose={handleClose}
-        msg={errorMsg}
-      />
-    </>
-  </div> 
+        <EmailAuthToast
+          successOverlayOpen={successOverlayOpen}
+          successOpen={successOpen}
+          successHandleClose={successHandleClose}
+          successMsg={successMsg}
+          overlayOpen={overlayOpen}
+          open={open}
+          handleClose={handleClose}
+          msg={errorMsg}
+        />
+      </>
+    </div>
   );
 };
 
@@ -191,24 +222,32 @@ const SignUp: React.FC = (): JSX.Element => {
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const EmailAuth: React.FC<EmailAuthProps> = (props: EmailAuthProps): JSX.Element => {
-  const { inputNum, inputRefs, code, setCode, handleEntryEmail, isDisabled, setIsDisabled } = props;
+const EmailAuth: React.FC<EmailAuthProps> = (
+  props: EmailAuthProps,
+): JSX.Element => {
+  const {
+    inputNum,
+    inputRefs,
+    code,
+    setCode,
+    handleEntryEmail,
+    isDisabled,
+    setIsDisabled,
+  } = props;
 
   const sx = {
     display: "flex",
     justifyContent: "center", // 水平方向の中央揃え
     alignItems: "center", // 垂直方向の中央揃え
-  }
+  };
 
   return (
     <div>
       <TWBox sx={sx}>
-        <TWTypography variant="h4">
-          メール認証コード
-        </TWTypography>
+        <TWTypography variant="h4">メール認証コード</TWTypography>
       </TWBox>
-        <br />
-        <br />
+      <br />
+      <br />
       <TWBox sx={sx}>
         {[...Array(inputNum)].map((_, i) => (
           <TWTextField
@@ -239,27 +278,23 @@ const EmailAuth: React.FC<EmailAuthProps> = (props: EmailAuthProps): JSX.Element
           />
         ))}
       </TWBox>
-        <br />
-        <br />
+      <br />
+      <br />
       <TWBox sx={sx}>
-        <TWTypography
-          variant="h6">
-            仮サインアップ時に登録したメールアドレスに認証コードを送信しました。
+        <TWTypography variant="h6">
+          仮サインアップ時に登録したメールアドレスに認証コードを送信しました。
         </TWTypography>
       </TWBox>
       <TWBox sx={sx}>
-        <TWTypography
-          variant="h6">
+        <TWTypography variant="h6">
           続けるにはコードを入力してください。
         </TWTypography>
       </TWBox>
       <TWBox sx={sx}>
-        <TWButton
-          size="large"
-          color="primary"
-          onClick={handleEntryEmail}
-        >コードを再送信</TWButton>
-        </TWBox>
+        <TWButton size="large" color="primary" onClick={handleEntryEmail}>
+          コードを再送信
+        </TWButton>
+      </TWBox>
     </div>
   );
 };
@@ -271,7 +306,9 @@ const EmailAuth: React.FC<EmailAuthProps> = (props: EmailAuthProps): JSX.Element
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const EmailAuthToast: React.FC<EmailAuthToastProps> = (props: EmailAuthToastProps): JSX.Element => {
+const EmailAuthToast: React.FC<EmailAuthToastProps> = (
+  props: EmailAuthToastProps,
+): JSX.Element => {
   const {
     successOverlayOpen,
     successOpen,
@@ -280,7 +317,7 @@ const EmailAuthToast: React.FC<EmailAuthToastProps> = (props: EmailAuthToastProp
     overlayOpen,
     open,
     handleClose,
-    msg
+    msg,
   } = props;
   const vertical = "top";
   const center = "center";
@@ -312,7 +349,6 @@ const EmailAuthToast: React.FC<EmailAuthToastProps> = (props: EmailAuthToastProp
       </TWBox>
     </div>
   );
-}
-
+};
 
 export default SignUp;
