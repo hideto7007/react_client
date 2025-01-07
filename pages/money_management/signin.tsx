@@ -102,17 +102,39 @@ const SignIn: React.FC = () => {
 
   const googleHandler = async () => {
     setProgressOpen(true);
-    const res = await api.callApi<UserInfo[]>("/auth/google/signin", "get");
-    handlerResult(res);
-    setProgressOpen(false);
+    // リダイレクト
+    window.location.href = "http://localhost:8080/auth/google/signin";
   }
 
   const lineHandler = async () => {
     setProgressOpen(true);
-    const res = await api.callApi<UserInfo[]>("/auth/line/signin", "get");
-    handlerResult(res);
-    setProgressOpen(false);
+    // リダイレクト
+    window.location.href = "http://localhost:8080/auth/line/signin";
   }
+
+  React.useEffect(() => {
+    const url = new URL(location.href);
+
+    const userId = url.searchParams.get(Auth.UserId);
+    const UserName = url.searchParams.get(Auth.UserName);
+    const signType = url.searchParams.get(Auth.SignType);
+    const error = url.searchParams.get(Auth.Error);
+    localStorage.clear();
+
+    if (userId && UserName && signType) {
+      localStorage.setItem(Auth.UserId, userId);
+      localStorage.setItem(Auth.UserName, UserName);
+      localStorage.setItem(Auth.SignType, signType);
+      setProgressOpen(false);
+      router.push("/money_management");
+    } else if (error && signType) {
+      setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error));
+      setOpen(true);
+      setOverlayOpen(true);
+      // ページをリロードする
+      router.push("/money_management/signin");
+    }
+  }, []);
 
   return (
     <div>

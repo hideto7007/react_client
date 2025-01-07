@@ -118,6 +118,8 @@ enum Auth {
   RefreshAuthToken = "refresh_auth_token",
   UserId = "user_id",
   UserName = "user_name",
+  SignType = "sign_type",
+  Error = "error",
   UserPassword = "user_password",
   RedisKey = "redis_key",
   TmpUserName = "tmp_user_name",

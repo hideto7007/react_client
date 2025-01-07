@@ -127,23 +127,39 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
       setOverlayOpen(true);
     } else {
       // 成功時のレスポンスの場合
+      setProgressOpen(false);
       router.push("/money_management/signin");
     }
   }
 
   const googleHandler = async () => {
     setProgressOpen(true);
-    const res = await api.callApi<string>("/auth/google/signup", "get");
-    handlerResult(res);
-    setProgressOpen(false);
+    // リダイレクト
+    window.location.href = "http://localhost:8080/auth/google/signup";
   }
 
   const lineHandler = async () => {
     setProgressOpen(true);
-    const res = await api.callApi<string>("/auth/line/signup", "get");
-    handlerResult(res);
-    setProgressOpen(false);
+    // リダイレクト
+    window.location.href = "http://localhost:8080/auth/line/signup";
   }
+
+  React.useEffect(() => {
+    const url = new URL(location.href);
+
+    const signType = url.searchParams.get(Auth.SignType);
+    const error = url.searchParams.get(Auth.Error);
+    localStorage.clear();
+
+    if (signType) {
+      setProgressOpen(false);
+      router.push("/money_management/signin");
+    } else if (error && signType) {
+      setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error));
+      setOpen(true);
+      setOverlayOpen(true);
+    }
+  }, []);
 
   return (
     <div>
