@@ -23,11 +23,12 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { validationRules } from "@/src/common/vaildation";
 import { Response } from "@/src/common/presenter";
 import { Auth } from "@/src/common/const";
-import ApiClient from "@/src/common/apiClient";
+import { ApiClient } from "@/src/common/apiClient";
 import Common from "@/src/common/common";
 import { Message } from "@/src/common/message";
 import { FcGoogle } from "react-icons/fc";
 import { FaLine } from "react-icons/fa6";
+import { GOOGLE_SIGN_IN, LINE_SIGN_IN } from "@/src/utils/redirectPath";
 
 const SignIn: React.FC = () => {
   const {
@@ -103,13 +104,13 @@ const SignIn: React.FC = () => {
   const googleHandler = async () => {
     setProgressOpen(true);
     // リダイレクト
-    window.location.href = "http://localhost:8080/auth/google/signin";
+    window.location.href = GOOGLE_SIGN_IN;
   }
 
   const lineHandler = async () => {
     setProgressOpen(true);
     // リダイレクト
-    window.location.href = "http://localhost:8080/auth/line/signin";
+    window.location.href = LINE_SIGN_IN;
   }
 
   React.useEffect(() => {

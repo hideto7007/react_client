@@ -1,4 +1,4 @@
-import ApiClient from "@/src/common/apiClient";
+import { ApiClient } from "@/src/common/apiClient";
 import { TWBackDrop, TWBox, TWButton, TWCard, TWCardActions, TWCardContent, TWCommonCircularProgress, TWTextField, TWToast, TWTypography } from "@/src/common/component";
 import { Auth } from "@/src/common/const";
 import { RequestDataProps, SingUpProps, EmailAuthProps, EmailAuthToastProps } from "@/src/common/entity";

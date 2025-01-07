@@ -6,9 +6,8 @@ import {
   Result
 } from "@/src/common/presenter";
 
-const BASE_URL: string | undefined =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
-// const BASE_URL: string | undefined = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://host.docker.internal:8080'
+const BASE_URL: string | undefined = process.env.API_BASE_URL || "http://localhost:8080";
+// const BASE_URL: string | undefined = process.env.API_BASE_URL || 'http://host.docker.internal:8080'
 
 class ApiClient {
   private readonly apiInstance: AxiosInstance;
@@ -72,4 +71,4 @@ class ApiClient {
   };
 }
 
-export default ApiClient;
+export {ApiClient, BASE_URL};

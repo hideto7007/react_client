@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Auth } from "@/src/common/const";
 import { TWBackDrop, TWBox, TWToast } from "@/src/common/component";
-import ApiClient from "@/src/common/apiClient";
+import { ApiClient } from "@/src/common/apiClient";
 import Common from "@/src/common/common";
 import { ValidateError } from "@/src/common/presenter";
 import { Message } from "@/src/common/message";

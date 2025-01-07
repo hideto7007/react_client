@@ -20,13 +20,14 @@ import { AuthFormProps, TmpSignUpResProps } from "@/src/common/entity";
 import { Response } from "@/src/common/presenter";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { validationRules } from "@/src/common/vaildation";
-import ApiClient from "@/src/common/apiClient";
+import { ApiClient } from "@/src/common/apiClient";
 import Common from "@/src/common/common";
 import { EmailAuthToken, ValidateError } from "@/src/common/presenter";
 import { Message } from "@/src/common/message";
 import { Auth } from "@/src/common/const";
 import { FcGoogle } from "react-icons/fc";
 import { FaLine } from "react-icons/fa6";
+import { GOOGLE_SIGN_UP, LINE_SIGN_UP } from "@/src/utils/redirectPath";
 
 
 /**
@@ -135,13 +136,13 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
   const googleHandler = async () => {
     setProgressOpen(true);
     // リダイレクト
-    window.location.href = "http://localhost:8080/auth/google/signup";
+    window.location.href = GOOGLE_SIGN_UP;
   }
 
   const lineHandler = async () => {
     setProgressOpen(true);
     // リダイレクト
-    window.location.href = "http://localhost:8080/auth/line/signup";
+    window.location.href = LINE_SIGN_UP;
   }
 
   React.useEffect(() => {
