@@ -1,5 +1,5 @@
-import * as React from "react";
-import { alpha } from "@mui/material/styles";
+import * as React from 'react'
+import { alpha } from '@mui/material/styles'
 import {
   AvatarProps,
   Box,
@@ -10,29 +10,29 @@ import {
   CardContentProps,
   CssBaselineProps,
   TextFieldProps,
-} from "@mui/material";
-import TableCell from "@mui/material/TableCell";
-import CircularProgress from "@mui/material/CircularProgress";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Card, { CardProps } from "@mui/material/Card";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography, { TypographyProps } from "@mui/material/Typography";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
-import Button, { ButtonProps } from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import { useRouter } from "next/router";
-import Link from "next/link";
+} from '@mui/material'
+import TableCell from '@mui/material/TableCell'
+import CircularProgress from '@mui/material/CircularProgress'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import Card, { CardProps } from '@mui/material/Card'
+import TableSortLabel from '@mui/material/TableSortLabel'
+import Toolbar from '@mui/material/Toolbar'
+import Typography, { TypographyProps } from '@mui/material/Typography'
+import Checkbox from '@mui/material/Checkbox'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import DeleteIcon from '@mui/icons-material/Delete'
+import FilterListIcon from '@mui/icons-material/FilterList'
+import { visuallyHidden } from '@mui/utils'
+import Button, { ButtonProps } from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
+import { useRouter } from 'next/router'
+import Link from 'next/link'
 
 import {
   AnnualIncomeManagementData,
@@ -51,15 +51,11 @@ import {
   TWCircularProgressProps,
   ExternalSignButtonProps,
   TWExternalTextProps,
-} from "@/src/common/entity";
-import { columns } from "@/src/common/columns";
-import ValidationCheck from "@/src/common/vaildation";
-import { Mockresponse } from "@/src/common/data";
-import {
-  classificationListConst,
-  LabelConst,
-  pathMap,
-} from "@/src/common/const";
+} from '@/src/common/entity'
+import { columns } from '@/src/common/columns'
+import ValidationCheck from '@/src/common/vaildation'
+import { Mockresponse } from '@/src/common/data'
+import { classificationListConst, LabelConst } from '@/src/common/const'
 import {
   Alert,
   Avatar,
@@ -67,21 +63,19 @@ import {
   Container,
   ContainerProps,
   CssBaseline,
-  Divider,
   FormControl,
   FormHelperText,
   InputAdornment,
   InputLabel,
   ListItem,
-  ListItemIcon,
   ListItemText,
   MenuItem,
   OutlinedInput,
   Snackbar,
   TextField,
-} from "@mui/material";
-import { Controller, FieldValues } from "react-hook-form";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+} from '@mui/material'
+import { Controller, FieldValues } from 'react-hook-form'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 // import ApiEndpoint from '@/common/apiEndpoint'
 
 const getIncomeDataFetchData = async (
@@ -89,15 +83,15 @@ const getIncomeDataFetchData = async (
   endDate: string,
   userId: number,
 ): Promise<AnnualIncomeManagementData[] | undefined> => {
-  const queryList: string[] = [];
-  queryList.push("start_date=" + startDate);
-  queryList.push("end_date=" + endDate);
-  queryList.push("user_id=" + userId);
-  const fullPrames: string = "?" + queryList.join("&");
+  const queryList: string[] = []
+  queryList.push('start_date=' + startDate)
+  queryList.push('end_date=' + endDate)
+  queryList.push('user_id=' + userId)
+  const fullPrames: string = '?' + queryList.join('&')
   try {
     // const response = await ApiEndpoint.getIncomeData(fullPrames)
-    const response = Mockresponse;
-    const dataList = response.data.result;
+    const response = Mockresponse
+    const dataList = response.data.result
 
     const res: AnnualIncomeManagementData[] = dataList.map(
       (data: any, idx: number) => ({
@@ -109,24 +103,24 @@ const getIncomeDataFetchData = async (
         total_amount: data.TotalAmount,
         deduction_amount: data.DeductionAmount,
         take_home_amount: data.TakeHomeAmount,
-        update_user: "",
+        update_user: '',
         classification: data.Classification,
         user_id: data.UserID,
       }),
-    );
+    )
 
-    return res;
+    return res
   } catch (error) {
-    console.error("Error fetching data:", error);
-    return undefined;
+    console.error('Error fetching data:', error)
+    return undefined
   }
-};
+}
 
 const create = async (
-  row: AnnualIncomeManagementData | null,
+  row: AnnualIncomeManagementData | null
 ): Promise<void> => {
-  await console.log("create", row);
-};
+  await console.log('create', row)
+}
 
 /**
  * reactコンポーネントラップ
@@ -135,69 +129,69 @@ const create = async (
  *
  */
 const TWBox: React.FC<TWBoxProps> = (props) => {
-  return <Box {...props} />;
-};
+  return <Box {...props} />
+}
 
 const TWButton: React.FC<ButtonProps> = (props) => {
-  return <Button {...props} />;
-};
+  return <Button {...props} />
+}
 
 const TWCssBaseline: React.FC<CssBaselineProps> = (props) => {
-  return <CssBaseline {...props} />;
-};
+  return <CssBaseline {...props} />
+}
 
 const TWTypography: React.FC<TypographyProps> = (props) => {
-  return <Typography {...props} />;
-};
+  return <Typography {...props} />
+}
 
 const TWAvatar: React.FC<AvatarProps> = (props) => {
-  return <Avatar {...props} />;
-};
+  return <Avatar {...props} />
+}
 
 const TWContainer: React.FC<ContainerProps> = (props) => {
-  return <Container {...props} />;
-};
+  return <Container {...props} />
+}
 
 const TWTextField: React.FC<TextFieldProps> = (props) => {
-  return <TextField {...props} />;
-};
+  return <TextField {...props} />
+}
 
 const TWCard: React.FC<CardProps> = (props) => {
-  return <Card {...props} />;
-};
+  return <Card {...props} />
+}
 
 const TWCardActions: React.FC<CardActionsProps> = (props) => {
-  return <CardActions {...props} />;
-};
+  return <CardActions {...props} />
+}
 
 const TWCardContent: React.FC<CardContentProps> = (props) => {
-  return <CardContent {...props} />;
-};
+  return <CardContent {...props} />
+}
 
 const TWCircularProgress: React.FC<TWCircularProgressProps> = (props) => {
   return (
     <div>
       <Backdrop
         sx={{
-          color: "#fff",
+          color: '#fff',
           zIndex: (theme) => theme.zIndex.drawer + 1,
         }}
         open={props.open}
       >
         <TWBox
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           <CircularProgress {...props} />
         </TWBox>
       </Backdrop>
     </div>
-  );
-};
+  )
+}
 
 /**
  * 外部認証ボタンコンポーネント
@@ -210,7 +204,7 @@ const TWCircularProgress: React.FC<TWCircularProgressProps> = (props) => {
  */
 
 const ExternalSignButton: React.FC<ExternalSignButtonProps> = (
-  props: ExternalSignButtonProps,
+  props: ExternalSignButtonProps
 ): JSX.Element => {
   return (
     <TWButton
@@ -220,26 +214,26 @@ const ExternalSignButton: React.FC<ExternalSignButtonProps> = (
       onClick={props.onClick}
       sx={{
         borderRadius: 25,
-        textTransform: "none",
-        width: "50%",
-        borderColor: "black",
-        color: "black",
-        justifyContent: "flex-start", // コンテンツ全体を左寄せ
+        textTransform: 'none',
+        width: '50%',
+        borderColor: 'black',
+        color: 'black',
+        justifyContent: 'flex-start', // コンテンツ全体を左寄せ
         paddingLeft: 2, // 左余白を追加してアイコンを見やすくする
       }}
     >
       <TWBox
         sx={{
-          width: "70%",
-          display: "flex",
-          justifyContent: "center",
+          width: '70%',
+          display: 'flex',
+          justifyContent: 'center',
         }}
       >
         {props.label}
       </TWBox>
     </TWButton>
-  );
-};
+  )
+}
 
 /**
  * 外部認証テキストコンポーネント
@@ -252,15 +246,15 @@ const ExternalSignButton: React.FC<ExternalSignButtonProps> = (
  */
 
 const TWExternalText: React.FC<TWExternalTextProps> = (
-  props: TWExternalTextProps,
+  props: TWExternalTextProps
 ): JSX.Element => {
   return (
     <div>
       <TWBox
         sx={{
-          display: "flex",
-          alignItems: "center",
-          width: "100%",
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
           mt: 3,
           mb: 3,
         }}
@@ -268,14 +262,14 @@ const TWExternalText: React.FC<TWExternalTextProps> = (
         <TWBox
           sx={{
             flex: 1,
-            borderBottom: "1px solid black",
+            borderBottom: '1px solid black',
           }}
         />
         <TWTypography
           sx={{
             paddingLeft: 2,
             paddingRight: 2,
-            whiteSpace: "nowrap",
+            whiteSpace: 'nowrap',
           }}
           variant="subtitle1"
         >
@@ -284,7 +278,7 @@ const TWExternalText: React.FC<TWExternalTextProps> = (
         <TWBox
           sx={{
             flex: 1,
-            borderBottom: "1px solid black",
+            borderBottom: '1px solid black',
           }}
         />
       </TWBox>
@@ -292,8 +286,8 @@ const TWExternalText: React.FC<TWExternalTextProps> = (
         お持ちのアカウントで{props.text}する
       </TWTypography>
     </div>
-  );
-};
+  )
+}
 
 /**
  * ローディング共通コンポーネント
@@ -308,8 +302,8 @@ const TWExternalText: React.FC<TWExternalTextProps> = (
 const TWCommonCircularProgress: React.FC<TWCircularProgressProps> = (
   props: TWCircularProgressProps,
 ): JSX.Element => {
-  return <TWCircularProgress open={props.open} color="success" size={40} />;
-};
+  return <TWCircularProgress open={props.open} color="success" size={40} />
+}
 
 /**
  * EnhancedTableHeadコンポーネント
@@ -337,12 +331,12 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (
     numSelected,
     rowCount,
     onRequestSort,
-  } = props;
+  } = props
   const createSortHandler =
     (property: keyof AnnualIncomeManagementKeyNotEdit) =>
     (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
+      onRequestSort(event, property)
+    }
 
   return (
     <TableHead>
@@ -354,7 +348,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              "aria-label": "select all desserts",
+              'aria-label': 'select all desserts',
             }}
           />
         </TableCell>
@@ -362,18 +356,18 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (
           <TableCell
             key={column.id}
             align={column.align}
-            padding={column.disablePadding ? "none" : "normal"}
+            padding={column.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === column.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === column.id}
-              direction={orderBy === column.id ? order : "asc"}
+              direction={orderBy === column.id ? order : 'asc'}
               onClick={createSortHandler(column.id)}
             >
               {column.label}
               {orderBy === column.id ? (
                 <TWBox component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </TWBox>
               ) : null}
             </TableSortLabel>
@@ -381,8 +375,8 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (
         ))}
       </TableRow>
     </TableHead>
-  );
-};
+  )
+}
 
 /**
  * EnhancedTableToolbarコンポーネント
@@ -401,7 +395,7 @@ const EnhancedTableHead: React.FC<EnhancedTableProps> = (
  * @returns {JSX.Element} - テーブルのツールバーを表すJSX要素を返します
  */
 const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (
-  props: EnhancedTableToolbarProps,
+  props: EnhancedTableToolbarProps
 ): JSX.Element => {
   const {
     numSelected,
@@ -411,10 +405,10 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (
     checkboxLabel,
     checked,
     onCheckBox,
-  } = props;
+  } = props
   // const {
   //   numSelected, selected, data, onDelete, checkboxLabel,
-  //   onCheckBox } = props;
+  //   onCheckBox } = props
 
   return (
     <Toolbar
@@ -432,7 +426,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (
     >
       {numSelected > 0 ? (
         <TWTypography
-          sx={{ flex: "1 1 100%" }}
+          sx={{ flex: '1 1 100%' }}
           color="inherit"
           variant="subtitle1"
           component="div"
@@ -441,7 +435,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (
         </TWTypography>
       ) : (
         <TWTypography
-          sx={{ flex: "1 1 100%" }}
+          sx={{ flex: '1 1 100%' }}
           variant="h6"
           id="tableTitle"
           component="div"
@@ -468,8 +462,8 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (
         </Tooltip>
       )}
     </Toolbar>
-  );
-};
+  )
+}
 
 /**
  * EditDialogコンポーネント
@@ -483,9 +477,9 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const EditDialog: React.FC<editDialogProps> = (
-  props: editDialogProps,
+  props: editDialogProps
 ): JSX.Element => {
-  const { editDialogLabel, dialogOpen, row, handleClose } = props;
+  const { editDialogLabel, dialogOpen, row, handleClose } = props
 
   const errorObj = {
     payment_date: null,
@@ -495,37 +489,37 @@ const EditDialog: React.FC<editDialogProps> = (
     deduction_amount: null,
     take_home_amount: null,
     classification: null,
-  };
+  }
 
   const [editRow, setEditRow] =
-    React.useState<AnnualIncomeManagementData | null>(row);
+    React.useState<AnnualIncomeManagementData | null>(row)
   // 個々でバリデーションエラーを表示させるための状態管理
-  const [errors, setErrors] = React.useState<Validate>(errorObj);
+  const [errors, setErrors] = React.useState<Validate>(errorObj)
   // バリデーションエラーを格納させる状態管理
-  const [submitFlag, setSubmitFlag] = React.useState<boolean>(true);
+  const [submitFlag, setSubmitFlag] = React.useState<boolean>(true)
 
   /**
    * 都度レンダリングして行データをセットする
    */
   React.useEffect(() => {
     if (row) {
-      setEditRow(row);
+      setEditRow(row)
     }
-  }, [row]);
+  }, [row])
 
   /**
    * 都度レンダリングしてバリデーションチェックを行う
    */
   React.useEffect(() => {
     const allValuesAreNull = Object.values(errors).every(
-      (value) => value === null,
-    );
+      (value) => value === null
+    )
     if (allValuesAreNull) {
-      setSubmitFlag(true);
+      setSubmitFlag(true)
     } else {
-      setSubmitFlag(false);
+      setSubmitFlag(false)
     }
-  }, [errors]);
+  }, [errors])
 
   /**
    * 総支給額 - 差引額で手取り額を算出
@@ -534,22 +528,22 @@ const EditDialog: React.FC<editDialogProps> = (
   React.useEffect(() => {
     if (editRow) {
       const takeHomeAmount: number =
-        Number(editRow.total_amount | 0) - Number(editRow.deduction_amount | 0);
+        Number(editRow.total_amount | 0) - Number(editRow.deduction_amount | 0)
       if (takeHomeAmount !== Number(editRow.take_home_amount)) {
-        setEditRow({ ...editRow, take_home_amount: takeHomeAmount });
+        setEditRow({ ...editRow, take_home_amount: takeHomeAmount })
         const validationError = ValidationCheck.check(
-          "take_home_amount",
-          takeHomeAmount,
-        );
+          'take_home_amount',
+          takeHomeAmount
+        )
         const validationErrorResult =
-          validationError === true ? null : validationError || null;
+          validationError === true ? null : validationError || null
         setErrors((prev) => ({
           ...prev,
           take_home_amount: validationErrorResult,
-        }));
+        }))
       }
     }
-  }, [editRow]);
+  }, [editRow])
 
   /**
    * フィールドのバリデーションと更新
@@ -559,22 +553,22 @@ const EditDialog: React.FC<editDialogProps> = (
    */
   const handleFieldChange = (
     field: keyof AnnualIncomeManagementData,
-    value: string | number | Date,
+    value: string | number | Date
   ) => {
-    let convertedValue: string | number | Date = value;
+    let convertedValue: string | number | Date = value
 
     // If the field is total_amount or deduction_amount, convert the value to a number
     if (
-      field === "total_amount" ||
-      field === "deduction_amount" ||
-      field === "age" ||
-      field === "take_home_amount"
+      field === 'total_amount' ||
+      field === 'deduction_amount' ||
+      field === 'age' ||
+      field === 'take_home_amount'
     ) {
-      convertedValue = Number(value);
+      convertedValue = Number(value)
     }
-    setEditRow((prev) => (prev ? { ...prev, [field]: convertedValue } : prev));
-    validateField(field, convertedValue);
-  };
+    setEditRow((prev) => (prev ? { ...prev, [field]: convertedValue } : prev))
+    validateField(field, convertedValue)
+  }
 
   /**
    * 各入力フォームのバリデーションチェック
@@ -584,19 +578,19 @@ const EditDialog: React.FC<editDialogProps> = (
    */
   const validateField = (
     field: keyof AnnualIncomeManagementData,
-    value: string | number | Date,
+    value: string | number | Date
   ) => {
-    let validationError: string | boolean = true;
+    let validationError: string | boolean = true
 
-    validationError = ValidationCheck.check(field, value);
+    validationError = ValidationCheck.check(field, value)
 
     const validationErrorResult =
-      validationError === true ? null : validationError || null;
+      validationError === true ? null : validationError || null
     // []付けづにキー名を渡すと、'field'という文字列で渡してしまう
     // []をつければ動的なキー名で渡すことができる
 
-    setErrors((prev) => ({ ...prev, [field]: validationErrorResult }));
-  };
+    setErrors((prev) => ({ ...prev, [field]: validationErrorResult }))
+  }
 
   /**
    * フォーム送信
@@ -605,26 +599,27 @@ const EditDialog: React.FC<editDialogProps> = (
    */
   const handleSubmit = async (editRow: AnnualIncomeManagementData | null) => {
     const allValuesAreNull = Object.values(errors).every(
-      (value) => value === null,
-    );
+      (value) => value === null
+    )
     if (allValuesAreNull && editRow) {
       // 念の為送信前も型チェック
       Object.entries(editRow).forEach(([key, val]) => {
         if (
-          key === "total_amount" ||
-          key === "deduction_amount" ||
-          key === "age" ||
-          key === "take_home_amount"
+          key === 'total_amount' ||
+          key === 'deduction_amount' ||
+          key === 'age' ||
+          key === 'take_home_amount'
         ) {
-          if (typeof val === "string") {
-            (editRow as any)[key] = Number(val);
+          if (typeof val === 'string') {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ;(editRow as any)[key] = Number(val)
           }
         }
-      });
-      await create(editRow);
-      handleClose(); // ダイアログを閉じる
+      })
+      await create(editRow)
+      handleClose() // ダイアログを閉じる
     }
-  };
+  }
 
   /**
    * createHandleChange - 行データを処理する非同期関数
@@ -633,10 +628,10 @@ const EditDialog: React.FC<editDialogProps> = (
    */
   const createHandleChange = async (row: AnnualIncomeManagementData | null) => {
     if (row) {
-      await create(row);
+      await create(row)
     }
-    handleClose(); // ダイアログを閉じる
-  };
+    handleClose() // ダイアログを閉じる
+  }
 
   /**
    * editCancel - 編集データをキャンセルして元に戻す
@@ -644,11 +639,11 @@ const EditDialog: React.FC<editDialogProps> = (
    * @param {AnnualIncomeManagementData} row - 編集する行データ
    */
   const editCancel = (row: AnnualIncomeManagementData | null) => {
-    setEditRow(row);
-    console.log(row);
-    setErrors(errorObj);
-    handleClose(); // ダイアログを閉じる
-  };
+    setEditRow(row)
+    console.log(row)
+    setErrors(errorObj)
+    handleClose() // ダイアログを閉じる
+  }
 
   /**
    * handleFromChange - 入力値を変更を処理する関数
@@ -662,16 +657,16 @@ const EditDialog: React.FC<editDialogProps> = (
   ) => {
     if (editRow) {
       if (
-        field === "age" ||
-        field === "total_amount" ||
-        field === "deduction_amount"
+        field === 'age' ||
+        field === 'total_amount' ||
+        field === 'deduction_amount'
       ) {
-        setEditRow({ ...editRow, [field]: event.target.valueAsNumber });
+        setEditRow({ ...editRow, [field]: event.target.valueAsNumber })
       } else {
-        setEditRow({ ...editRow, [field]: event.target.value });
+        setEditRow({ ...editRow, [field]: event.target.value })
       }
     }
-  };
+  }
 
   return (
     <React.Fragment>
@@ -683,15 +678,15 @@ const EditDialog: React.FC<editDialogProps> = (
       >
         <DialogTitle id="alert-dialog-title">{editDialogLabel}</DialogTitle>
         <DialogContent>
-          <TWBox sx={{ display: "flex", flexWrap: "wrap" }}>
+          <TWBox sx={{ display: 'flex', flexWrap: 'wrap' }}>
             <div>
               <TWTextField
                 label={LabelConst.PaymentDate}
                 type="date"
-                sx={{ m: 1, width: "25ch" }}
-                value={editRow?.payment_date || ""}
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.payment_date || ''}
                 onChange={(e) =>
-                  handleFieldChange("payment_date", e.target.value)
+                  handleFieldChange('payment_date', e.target.value)
                 }
                 InputLabelProps={{ shrink: true }}
                 error={!!errors.payment_date}
@@ -700,9 +695,9 @@ const EditDialog: React.FC<editDialogProps> = (
               <TWTextField
                 label={LabelConst.Age}
                 type="number"
-                sx={{ m: 1, width: "25ch" }}
-                value={editRow?.age || ""}
-                onChange={(e) => handleFieldChange("age", e.target.value)}
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.age || ''}
+                onChange={(e) => handleFieldChange('age', e.target.value)}
                 InputLabelProps={{ shrink: true }}
                 error={!!errors.age}
                 helperText={errors.age}
@@ -710,9 +705,9 @@ const EditDialog: React.FC<editDialogProps> = (
               <TWTextField
                 label={LabelConst.Industry}
                 type="string"
-                sx={{ m: 1, width: "25ch" }}
-                value={editRow?.industry || ""}
-                onChange={(e) => handleFieldChange("industry", e.target.value)}
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.industry || ''}
+                onChange={(e) => handleFieldChange('industry', e.target.value)}
                 InputLabelProps={{ shrink: true }}
                 error={!!errors.industry}
                 helperText={errors.industry}
@@ -720,10 +715,10 @@ const EditDialog: React.FC<editDialogProps> = (
               <TWTextField
                 label={LabelConst.TotalAmount}
                 type="number"
-                sx={{ m: 1, width: "25ch" }}
-                value={editRow?.total_amount || ""}
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.total_amount || ''}
                 onChange={(e) =>
-                  handleFieldChange("total_amount", e.target.value)
+                  handleFieldChange('total_amount', e.target.value)
                 }
                 InputLabelProps={{ shrink: true }}
                 error={!!errors.total_amount}
@@ -732,10 +727,10 @@ const EditDialog: React.FC<editDialogProps> = (
               <TWTextField
                 label={LabelConst.DeductionAmount}
                 type="number"
-                sx={{ m: 1, width: "25ch" }}
-                value={editRow?.deduction_amount || ""}
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.deduction_amount || ''}
                 onChange={(e) =>
-                  handleFieldChange("deduction_amount", e.target.value)
+                  handleFieldChange('deduction_amount', e.target.value)
                 }
                 InputLabelProps={{ shrink: true }}
                 error={!!errors.deduction_amount}
@@ -744,8 +739,8 @@ const EditDialog: React.FC<editDialogProps> = (
               <TWTextField
                 label={LabelConst.TakeHomeAmount}
                 type="number"
-                sx={{ m: 1, width: "25ch" }}
-                value={editRow?.take_home_amount || ""}
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.take_home_amount || ''}
                 InputLabelProps={{ shrink: true }}
                 error={!!errors.take_home_amount}
                 helperText={errors.take_home_amount}
@@ -754,10 +749,10 @@ const EditDialog: React.FC<editDialogProps> = (
               <TWTextField
                 label={LabelConst.Classification}
                 select
-                sx={{ m: 1, width: "25ch" }}
-                value={editRow?.classification || ""}
+                sx={{ m: 1, width: '25ch' }}
+                value={editRow?.classification || ''}
                 onChange={(e) =>
-                  handleFieldChange("classification", e.target.value)
+                  handleFieldChange('classification', e.target.value)
                 }
                 error={!!errors.classification}
                 helperText={errors.classification}
@@ -783,8 +778,8 @@ const EditDialog: React.FC<editDialogProps> = (
         </DialogActions>
       </Dialog>
     </React.Fragment>
-  );
-};
+  )
+}
 
 /**
  * Breadcrumbsコンポーネント
@@ -793,31 +788,31 @@ const EditDialog: React.FC<editDialogProps> = (
  */
 const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
   // 現在のルート（URL）に関する情報を取得
-  const router = useRouter();
+  const router = useRouter()
   // 各パスセグメントを結合するための変数
-  let joinedPath = "";
+  let joinedPath = ''
 
   return (
     <div className="flex items-center text-sm px-4 w-full">
       {/* ホームページにいない場合のみHomeを表示 */}
-      {router.pathname !== "/money_management" ? (
+      {router.pathname !== '/money_management' ? (
         <Link href="/money_management">たくわえる</Link>
       ) : null}
 
       {/* 現在のURLを「/」で分割し、各パスセグメントを処理 */}
       {router.asPath
-        .split("/")
-        .filter((path) => path !== "money_management")
+        .split('/')
+        .filter((path) => path !== 'money_management')
         .map((path, index) => {
           if (path) {
-            joinedPath += path + "/";
+            joinedPath += path + '/'
 
             // パス名に対応する表示用タイトルを取得
-            const title = path === "mypages" ? "マイページ" : path; // パスに対してカスタム名を定義
+            const title = path === 'mypages' ? 'マイページ' : path // パスに対してカスタム名を定義
 
             return (
               <span key={index} className="flex items-center">
-                <span className="mx-1">{" > "}</span>
+                <span className="mx-1">{' > '}</span>
                 {/* 修正：相対パスにする */}
                 <Link href={`/money_management/${joinedPath}`}>
                   <span className="text-gray-500 hover:text-gray-600 no-underline">
@@ -825,14 +820,14 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = (props): JSX.Element => {
                   </span>
                 </Link>
               </span>
-            );
+            )
           }
-          return null;
+          return null
         })}
       <TWBox sx={{ marginBottom: props.marginBottom }} />
     </div>
-  );
-};
+  )
+}
 
 /**
  * テキストフォームコンポーネント
@@ -861,8 +856,8 @@ const TWTextForm = <T extends FieldValues>({
         />
       )}
     />
-  );
-};
+  )
+}
 
 /**
  * パスワードフォームコンポーネント
@@ -870,18 +865,18 @@ const TWTextForm = <T extends FieldValues>({
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const TWPasswordTextForm: React.FC<PasswordFormProps> = (
-  props,
+  props
 ): JSX.Element => {
-  const { name, control, rules, label } = props;
-  const [showPassword, setShowPassword] = React.useState(false);
+  const { name, control, rules, label } = props
+  const [showPassword, setShowPassword] = React.useState(false)
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
 
   const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>,
+    event: React.MouseEvent<HTMLButtonElement>
   ) => {
-    event.preventDefault();
-  };
+    event.preventDefault()
+  }
 
   return (
     <FormControl variant="outlined" fullWidth>
@@ -896,7 +891,7 @@ const TWPasswordTextForm: React.FC<PasswordFormProps> = (
               {...field}
               id={name}
               label={label}
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -912,7 +907,7 @@ const TWPasswordTextForm: React.FC<PasswordFormProps> = (
             />
             {/* エラーメッセージを表示 */}
             {fieldState.error && (
-              <FormHelperText sx={{ color: "red" }}>
+              <FormHelperText sx={{ color: 'red' }}>
                 {fieldState.error.message}
               </FormHelperText>
             )}
@@ -920,8 +915,8 @@ const TWPasswordTextForm: React.FC<PasswordFormProps> = (
         )}
       />
     </FormControl>
-  );
-};
+  )
+}
 
 /**
  * リンク用のコンポーネント
@@ -929,7 +924,7 @@ const TWPasswordTextForm: React.FC<PasswordFormProps> = (
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
-  const { name, link } = props;
+  const { name, link } = props
 
   return (
     <Link href={link} passHref>
@@ -937,8 +932,8 @@ const LinkBar: React.FC<SideBarProps> = (props): JSX.Element => {
         <ListItemText primary={name} />
       </ListItem>
     </Link>
-  );
-};
+  )
+}
 
 /**
  * Box下側幅固定コンポーネント
@@ -950,8 +945,8 @@ const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
     <TWBox {...props}>
       {props.children} {/* 子要素を表示 */}
     </TWBox>
-  );
-};
+  )
+}
 
 /**
  * トーストコンポーネント
@@ -959,7 +954,7 @@ const BoxLayoutPadding: React.FC<BoxProps> = (props) => {
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const TWToast: React.FC<TWToastProps> = (props): JSX.Element => {
-  const { open, handleClose, vertical, horizontal, severity, message } = props;
+  const { open, handleClose, vertical, horizontal, severity, message } = props
 
   return (
     <>
@@ -969,13 +964,13 @@ const TWToast: React.FC<TWToastProps> = (props): JSX.Element => {
         onClose={handleClose}
         anchorOrigin={{ vertical: vertical, horizontal: horizontal }}
       >
-        <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
+        <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
           <span dangerouslySetInnerHTML={{ __html: message }} />
         </Alert>
       </Snackbar>
     </>
-  );
-};
+  )
+}
 
 /**
  * 背景をグレーにするオーバーレイコンポーネント
@@ -983,19 +978,19 @@ const TWToast: React.FC<TWToastProps> = (props): JSX.Element => {
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const TWBackDrop: React.FC<TWBackdropProps> = (props): JSX.Element => {
-  const { overlayOpen } = props;
+  const { overlayOpen } = props
 
   return (
     <Backdrop
       sx={{
-        color: "#fff",
+        color: '#fff',
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)", // グレーの背景
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // グレーの背景
       }}
       open={overlayOpen}
     />
-  );
-};
+  )
+}
 
 export {
   getIncomeDataFetchData,
@@ -1024,4 +1019,4 @@ export {
   BoxLayoutPadding,
   TWToast,
   TWBackDrop,
-};
+}

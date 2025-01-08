@@ -1,4 +1,4 @@
-import { ApiClient } from "@/src/common/apiClient";
+import { ApiClient } from '@/src/common/apiClient'
 import {
   TWBackDrop,
   TWBox,
@@ -10,19 +10,19 @@ import {
   TWTextField,
   TWToast,
   TWTypography,
-} from "@/src/common/component";
-import { Auth } from "@/src/common/const";
+} from '@/src/common/component'
+import { Auth } from '@/src/common/const'
 import {
   RequestDataProps,
   SingUpProps,
   EmailAuthProps,
   EmailAuthToastProps,
-} from "@/src/common/entity";
-import Common from "@/src/common/common";
-import React, { useRef, useState } from "react";
-import { Message } from "@/src/common/message";
-import { EmailAuthToken, ValidateError } from "@/src/common/presenter";
-import { useRouter } from "next/router";
+} from '@/src/common/entity'
+import Common from '@/src/common/common'
+import React, { useRef, useState } from 'react'
+import { Message } from '@/src/common/message'
+import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
+import { useRouter } from 'next/router'
 
 /**
  * サインアップコンポーネント
@@ -30,147 +30,147 @@ import { useRouter } from "next/router";
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const SignUp: React.FC = (): JSX.Element => {
-  const inputNum: number = 4;
-  const [code, setCode] = useState<string[]>(Array(inputNum).fill(""));
-  const [successMsg, setSuccessMsg] = useState<string>("");
-  const [successOpen, setSuccessOpen] = useState(false);
-  const [successOverlayOpen, setSuccessOverlayOpen] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string>("");
-  const [open, setOpen] = useState(false);
-  const [progressOpen, setProgressOpen] = useState(false);
-  const [overlayOpen, setOverlayOpen] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const router = useRouter();
-  const api = new ApiClient();
-  let errorMsgInfo: string;
+  const inputNum: number = 4
+  const [code, setCode] = useState<string[]>(Array(inputNum).fill(''))
+  const [successMsg, setSuccessMsg] = useState<string>('')
+  const [successOpen, setSuccessOpen] = useState(false)
+  const [successOverlayOpen, setSuccessOverlayOpen] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string>('')
+  const [open, setOpen] = useState(false)
+  const [progressOpen, setProgressOpen] = useState(false)
+  const [overlayOpen, setOverlayOpen] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false)
+  const router = useRouter()
+  const api = new ApiClient()
+  let errorMsgInfo: string
 
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   const handleEntryEmail = async (): Promise<void> => {
-    setProgressOpen(true);
+    setProgressOpen(true)
     const res = await api.callApi<EmailAuthToken>(
-      "api/retry_auth_email",
-      "get",
+      'api/retry_auth_email',
+      'get',
       {
         redis_key: localStorage.getItem(Auth.RedisKey),
         user_name: localStorage.getItem(Auth.TmpUserName),
         nick_name: localStorage.getItem(Auth.TmpNickName),
-      },
-    );
+      }
+    )
 
-    if ("error_data" in res && res.status !== 200) {
+    if ('error_data' in res && res.status !== 200) {
       // エラーレスポンスの場合
-      const errorData = res.error_data;
-      if ("result" in errorData) {
+      const errorData = res.error_data
+      if ('result' in errorData) {
         // バリデーションエラー
-        const validateError = errorData as ValidateError;
-        setErrorMsg(Common.ErrorMsgInfoArray(validateError));
+        const validateError = errorData as ValidateError
+        setErrorMsg(Common.ErrorMsgInfoArray(validateError))
       } else {
         if (res.status !== 401 && res.status !== 409) {
           errorMsgInfo = Common.ErrorMsgInfo(
             Message.ServerError,
-            errorData.error_msg,
-          );
+            errorData.error_msg
+          )
         } else {
           errorMsgInfo = Common.ErrorMsgInfo(
             Message.AuthError,
-            errorData.error_msg,
-          );
+            errorData.error_msg
+          )
         }
-        setErrorMsg(errorMsgInfo);
+        setErrorMsg(errorMsgInfo)
       }
-      setOpen(true);
-      setOverlayOpen(true);
+      setOpen(true)
+      setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
       if (api.isOkResponse(res)) {
-        const emailAuthToken = res.data.result as EmailAuthToken;
-        localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key);
-        localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name);
-        localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name);
+        const emailAuthToken = res.data.result as EmailAuthToken
+        localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
+        localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
+        localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
       }
     }
-    setProgressOpen(false);
-  };
+    setProgressOpen(false)
+  }
 
   React.useEffect(() => {
     const fetchData = async () => {
-      let errorMsgInfo: string;
-      if (code.every((c) => c !== "")) {
-        const authCheck = localStorage.getItem(Auth.RedisKey)?.split(":");
-        if (authCheck !== undefined && authCheck[0] === code.join("")) {
+      let errorMsgInfo: string
+      if (code.every((c) => c !== '')) {
+        const authCheck = localStorage.getItem(Auth.RedisKey)?.split(':')
+        if (authCheck !== undefined && authCheck[0] === code.join('')) {
           const data: RequestDataProps<SingUpProps[]> = {
             data: [
               {
-                redis_key: authCheck.join(":"),
-                auth_email_code: code.join(""),
+                redis_key: authCheck.join(':'),
+                auth_email_code: code.join(''),
               },
             ],
-          };
-          setProgressOpen(true);
-          const res = await api.callApi<string>("/api/signup", "post", data);
+          }
+          setProgressOpen(true)
+          const res = await api.callApi<string>('/api/signup', 'post', data)
 
-          if ("error_data" in res && res.status !== 200) {
+          if ('error_data' in res && res.status !== 200) {
             // エラーレスポンスの場合
-            const errorData = res.error_data;
-            if ("result" in errorData) {
+            const errorData = res.error_data
+            if ('result' in errorData) {
               // バリデーションエラー
-              const validateError = errorData as ValidateError;
-              setErrorMsg(Common.ErrorMsgInfoArray(validateError));
+              const validateError = errorData as ValidateError
+              setErrorMsg(Common.ErrorMsgInfoArray(validateError))
             } else {
               if (res.status !== 401 && res.status !== 409) {
                 errorMsgInfo = Common.ErrorMsgInfo(
                   Message.ServerError,
-                  errorData.error_msg,
-                );
+                  errorData.error_msg
+                )
               } else {
                 errorMsgInfo = Common.ErrorMsgInfo(
                   Message.AuthError,
-                  errorData.error_msg,
-                );
+                  errorData.error_msg
+                )
               }
-              setErrorMsg(errorMsgInfo);
+              setErrorMsg(errorMsgInfo)
             }
-            setOpen(true);
-            setOverlayOpen(true);
-            setCode(Array(inputNum).fill(""));
+            setOpen(true)
+            setOverlayOpen(true)
+            setCode(Array(inputNum).fill(''))
           } else {
             // 成功時のレスポンスの場合
-            setSuccessMsg("認証に成功しました。");
-            setSuccessOpen(true);
-            setSuccessOverlayOpen(true);
+            setSuccessMsg('認証に成功しました。')
+            setSuccessOpen(true)
+            setSuccessOverlayOpen(true)
             // 仮登録情報削除
-            localStorage.clear();
+            localStorage.clear()
           }
-          setProgressOpen(false);
+          setProgressOpen(false)
         } else {
           errorMsgInfo = Common.ErrorMsgInfo(
             Message.AuthError,
-            "認証コードが一致しません。",
-          );
-          setErrorMsg(errorMsgInfo);
-          setOpen(true);
-          setOverlayOpen(true);
-          setCode(Array(inputNum).fill(""));
-          setIsDisabled(false);
+            '認証コードが一致しません。'
+          )
+          setErrorMsg(errorMsgInfo)
+          setOpen(true)
+          setOverlayOpen(true)
+          setCode(Array(inputNum).fill(''))
+          setIsDisabled(false)
         }
       }
-    };
+    }
 
-    fetchData();
-  }, [code]);
+    fetchData()
+  }, [api, code])
 
   // トーストを閉じる処理
   const successHandleClose = () => {
-    setSuccessOpen(false);
-    setSuccessOverlayOpen(false);
-    router.push("/money_management/signin");
-  };
+    setSuccessOpen(false)
+    setSuccessOverlayOpen(false)
+    router.push('/money_management/signin')
+  }
 
   const handleClose = () => {
-    setOpen(false);
-    setOverlayOpen(false);
-  };
+    setOpen(false)
+    setOverlayOpen(false)
+  }
 
   return (
     <div>
@@ -179,10 +179,10 @@ const SignUp: React.FC = (): JSX.Element => {
         sx={{
           maxWidth: 800,
           height: 500,
-          margin: "auto",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          margin: 'auto',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
       >
         <TWCardContent>
@@ -212,8 +212,8 @@ const SignUp: React.FC = (): JSX.Element => {
         />
       </>
     </div>
-  );
-};
+  )
+}
 
 /**
  * メール認証コンポーネント
@@ -223,7 +223,7 @@ const SignUp: React.FC = (): JSX.Element => {
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const EmailAuth: React.FC<EmailAuthProps> = (
-  props: EmailAuthProps,
+  props: EmailAuthProps
 ): JSX.Element => {
   const {
     inputNum,
@@ -233,18 +233,18 @@ const EmailAuth: React.FC<EmailAuthProps> = (
     handleEntryEmail,
     isDisabled,
     setIsDisabled,
-  } = props;
+  } = props
 
   const sx = {
-    display: "flex",
-    justifyContent: "center", // 水平方向の中央揃え
-    alignItems: "center", // 垂直方向の中央揃え
-  };
+    display: 'flex',
+    justifyContent: 'center', // 水平方向の中央揃え
+    alignItems: 'center', // 垂直方向の中央揃え
+  }
 
   return (
     <div>
       <TWBox sx={sx}>
-        <TWTypography variant="h4">メール認証コード</TWTypography>
+        <TWTypography variant='h4'>メール認証コード</TWTypography>
       </TWBox>
       <br />
       <br />
@@ -254,7 +254,7 @@ const EmailAuth: React.FC<EmailAuthProps> = (
             key={i}
             autoFocus={i === 0}
             value={code[i]}
-            type="tel"
+            type='tel'
             inputRef={(el) => (inputRefs.current[i] = el)}
             disabled={isDisabled}
             sx={{
@@ -262,17 +262,17 @@ const EmailAuth: React.FC<EmailAuthProps> = (
               marginRight: 4,
             }}
             onChange={(e) => {
-              const newCode = [...code];
-              newCode[i] = e.target.value;
-              setCode(newCode);
+              const newCode = [...code]
+              newCode[i] = e.target.value
+              setCode(newCode)
 
               // 次の入力欄にフォーカス
-              if (e.target.value !== "" && i < inputNum - 1) {
-                inputRefs.current[i + 1]?.focus();
+              if (e.target.value !== '' && i < inputNum - 1) {
+                inputRefs.current[i + 1]?.focus()
               }
 
               if (i == inputNum - 1) {
-                setIsDisabled(true);
+                setIsDisabled(true)
               }
             }}
           />
@@ -281,23 +281,23 @@ const EmailAuth: React.FC<EmailAuthProps> = (
       <br />
       <br />
       <TWBox sx={sx}>
-        <TWTypography variant="h6">
+        <TWTypography variant='h6'>
           仮サインアップ時に登録したメールアドレスに認証コードを送信しました。
         </TWTypography>
       </TWBox>
       <TWBox sx={sx}>
-        <TWTypography variant="h6">
+        <TWTypography variant='h6'>
           続けるにはコードを入力してください。
         </TWTypography>
       </TWBox>
       <TWBox sx={sx}>
-        <TWButton size="large" color="primary" onClick={handleEntryEmail}>
+        <TWButton size='large' color='primary' onClick={handleEntryEmail}>
           コードを再送信
         </TWButton>
       </TWBox>
     </div>
-  );
-};
+  )
+}
 
 /**
  * メール認証トーストコンポーネント
@@ -307,7 +307,7 @@ const EmailAuth: React.FC<EmailAuthProps> = (
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
 const EmailAuthToast: React.FC<EmailAuthToastProps> = (
-  props: EmailAuthToastProps,
+  props: EmailAuthToastProps
 ): JSX.Element => {
   const {
     successOverlayOpen,
@@ -318,10 +318,10 @@ const EmailAuthToast: React.FC<EmailAuthToastProps> = (
     open,
     handleClose,
     msg,
-  } = props;
-  const vertical = "top";
-  const center = "center";
-  const width = 500;
+  } = props
+  const vertical = 'top'
+  const center = 'center'
+  const width = 500
 
   return (
     <div>
@@ -332,7 +332,7 @@ const EmailAuthToast: React.FC<EmailAuthToastProps> = (
           handleClose={successHandleClose}
           vertical={vertical}
           horizontal={center}
-          severity={"success"}
+          severity={'success'}
           message={successMsg}
         />
       </TWBox>
@@ -343,12 +343,12 @@ const EmailAuthToast: React.FC<EmailAuthToastProps> = (
           handleClose={handleClose}
           vertical={vertical}
           horizontal={center}
-          severity={"error"}
+          severity={'error'}
           message={msg}
         />
       </TWBox>
     </div>
-  );
-};
+  )
+}
 
-export default SignUp;
+export default SignUp

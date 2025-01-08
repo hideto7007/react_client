@@ -1,6 +1,6 @@
-import Link from "next/link";
-import React, { useState } from "react";
-import { useRouter } from "next/router"; // useRouterをインポート
+import Link from 'next/link'
+import React, { useState } from 'react'
+import { useRouter } from 'next/router' // useRouterをインポート
 import {
   TWTextForm,
   TWPasswordTextForm,
@@ -15,20 +15,20 @@ import {
   TWCommonCircularProgress,
   ExternalSignButton,
   TWExternalText,
-} from "@/src/common/component";
-import { ErrorResponse, UserInfo, ValidateError } from "@/src/common/presenter";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { AuthFormProps, SigninResProps } from "@/src/common/entity";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { validationRules } from "@/src/common/vaildation";
-import { Response } from "@/src/common/presenter";
-import { Auth } from "@/src/common/const";
-import { ApiClient } from "@/src/common/apiClient";
-import Common from "@/src/common/common";
-import { Message } from "@/src/common/message";
-import { FcGoogle } from "react-icons/fc";
-import { FaLine } from "react-icons/fa6";
-import { GOOGLE_SIGN_IN, LINE_SIGN_IN } from "@/src/utils/redirectPath";
+} from '@/src/common/component'
+import { UserInfo, ValidateError } from '@/src/common/presenter'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { AuthFormProps, SigninResProps } from '@/src/common/entity'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { validationRules } from '@/src/common/vaildation'
+import { Response } from '@/src/common/presenter'
+import { Auth } from '@/src/common/const'
+import { ApiClient } from '@/src/common/apiClient'
+import Common from '@/src/common/common'
+import { Message } from '@/src/common/message'
+import { FcGoogle } from 'react-icons/fc'
+import { FaLine } from 'react-icons/fa6'
+import { GOOGLE_SIGN_IN, LINE_SIGN_IN } from '@/src/utils/redirectPath'
 
 const SignIn: React.FC = () => {
   const {
@@ -36,111 +36,111 @@ const SignIn: React.FC = () => {
     handleSubmit,
     formState: { isValid },
   } = useForm<AuthFormProps>({
-    mode: "onChange", // ユーザーが入力するたびにバリデーション
+    mode: 'onChange', // ユーザーが入力するたびにバリデーション
     // mode: 'onBlur', // 入力フィールドがフォーカスを失ったときにバリデーション
     defaultValues: {
-      user_name: "",
-      user_password: "",
+      user_name: '',
+      user_password: '',
     },
-  });
-  const router = useRouter();
-  const [errorMsg, setErrorMsg] = useState<string>("");
-  const [open, setOpen] = useState(false);
-  const [overlayOpen, setOverlayOpen] = useState(false);
-  const [progressOpen, setProgressOpen] = useState(false);
-  let errorMsgInfo: string;
-  const api = new ApiClient();
+  })
+  const router = useRouter()
+  const [errorMsg, setErrorMsg] = useState<string>('')
+  const [open, setOpen] = useState(false)
+  const [overlayOpen, setOverlayOpen] = useState(false)
+  const [progressOpen, setProgressOpen] = useState(false)
+  let errorMsgInfo: string
+  const api = new ApiClient()
 
   const handlerResult = (res: Response<UserInfo[]>): void => {
-    if ("error_data" in res && res.status !== 200) {
+    if ('error_data' in res && res.status !== 200) {
       // エラーレスポンスの場合
-      const errorData = res.error_data;
-      if ("result" in errorData) {
+      const errorData = res.error_data
+      if ('result' in errorData) {
         // バリデーションエラー
-        const validateError = errorData as ValidateError;
-        setErrorMsg(Common.ErrorMsgInfoArray(validateError));
+        const validateError = errorData as ValidateError
+        setErrorMsg(Common.ErrorMsgInfoArray(validateError))
       } else {
         if (res.status !== 401 && res.status !== 409) {
           errorMsgInfo = Common.ErrorMsgInfo(
             Message.ServerError,
-            errorData.error_msg,
-          );
+            errorData.error_msg
+          )
         } else {
           errorMsgInfo = Common.ErrorMsgInfo(
             Message.AuthError,
-            errorData.error_msg,
-          );
+            errorData.error_msg
+          )
         }
-        setErrorMsg(errorMsgInfo);
+        setErrorMsg(errorMsgInfo)
       }
-      setProgressOpen(false);
-      setOpen(true);
-      setOverlayOpen(true);
+      setProgressOpen(false)
+      setOpen(true)
+      setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
       if (api.isOkResponse(res)) {
-        const userInfo = res.data.result[0] as UserInfo;
-        localStorage.clear();
-        localStorage.setItem(Auth.UserId, userInfo.user_id);
-        localStorage.setItem(Auth.UserName, userInfo.user_name);
-        setProgressOpen(false);
-        router.push("/money_management");
+        const userInfo = res.data.result[0] as UserInfo
+        localStorage.clear()
+        localStorage.setItem(Auth.UserId, userInfo.user_id)
+        localStorage.setItem(Auth.UserName, userInfo.user_name)
+        setProgressOpen(false)
+        router.push('/money_management')
       }
     }
-  };
+  }
 
   const onSubmit: SubmitHandler<AuthFormProps> = async (
-    data: AuthFormProps,
+    data: AuthFormProps
   ) => {
     const dataRes: SigninResProps = {
       data: [data],
-    };
-    setProgressOpen(true);
-    const res = await api.callApi<UserInfo[]>("/api/signin", "post", dataRes);
-    handlerResult(res);
-  };
+    }
+    setProgressOpen(true)
+    const res = await api.callApi<UserInfo[]>('/api/signin', 'post', dataRes)
+    handlerResult(res)
+  }
 
   // トーストを閉じる処理
   const handleClose = () => {
-    setOpen(false);
-    setOverlayOpen(false);
-  };
+    setOpen(false)
+    setOverlayOpen(false)
+  }
 
   const googleHandler = async () => {
-    setProgressOpen(true);
+    setProgressOpen(true)
     // リダイレクト
-    window.location.href = GOOGLE_SIGN_IN;
-  };
+    window.location.href = GOOGLE_SIGN_IN
+  }
 
   const lineHandler = async () => {
-    setProgressOpen(true);
+    setProgressOpen(true)
     // リダイレクト
-    window.location.href = LINE_SIGN_IN;
-  };
+    window.location.href = LINE_SIGN_IN
+  }
 
   React.useEffect(() => {
-    const url = new URL(location.href);
+    const url = new URL(location.href)
 
-    const userId = url.searchParams.get(Auth.UserId);
-    const UserName = url.searchParams.get(Auth.UserName);
-    const signType = url.searchParams.get(Auth.SignType);
-    const error = url.searchParams.get(Auth.Error);
-    localStorage.clear();
+    const userId = url.searchParams.get(Auth.UserId)
+    const UserName = url.searchParams.get(Auth.UserName)
+    const signType = url.searchParams.get(Auth.SignType)
+    const error = url.searchParams.get(Auth.Error)
+    localStorage.clear()
 
     if (userId && UserName && signType) {
-      localStorage.setItem(Auth.UserId, userId);
-      localStorage.setItem(Auth.UserName, UserName);
-      localStorage.setItem(Auth.SignType, signType);
-      setProgressOpen(false);
-      router.push("/money_management");
+      localStorage.setItem(Auth.UserId, userId)
+      localStorage.setItem(Auth.UserName, UserName)
+      localStorage.setItem(Auth.SignType, signType)
+      setProgressOpen(false)
+      router.push('/money_management')
     } else if (error && signType) {
-      setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error));
-      setOpen(true);
-      setOverlayOpen(true);
+      setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error))
+      setOpen(true)
+      setOverlayOpen(true)
       // ページをリロードする
-      router.push("/money_management/signin");
+      router.push('/money_management/signin')
     }
-  }, []);
+  }, [])
 
   return (
     <div>
@@ -150,12 +150,12 @@ const SignIn: React.FC = () => {
         <TWBox
           sx={{
             marginTop: 8,
-            display: "flex",
-            flexDirection: "column", // 縦に並べる設定
-            alignItems: "center",
+            display: 'flex',
+            flexDirection: 'column', // 縦に並べる設定
+            alignItems: 'center',
           }}
         >
-          <TWAvatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <TWAvatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </TWAvatar>
           <TWTypography component="h1" variant="h5">
@@ -167,8 +167,8 @@ const SignIn: React.FC = () => {
             onSubmit={handleSubmit(onSubmit)}
             sx={{
               mt: 1,
-              display: "flex",
-              flexDirection: "column", // 入力フィールドを縦に並べる
+              display: 'flex',
+              flexDirection: 'column', // 入力フィールドを縦に並べる
               gap: 2, // 各要素間のスペースを追加
             }}
           >
@@ -191,8 +191,10 @@ const SignIn: React.FC = () => {
               サインアップがまだの場合は
               <Link href="/money_management/temporary_signup">こちら</Link>
             </TWTypography>
-            <TWTypography sx={{ fontSize: "0.8rem" }}>
-              <Link href="/money_management/sign_password_reset">サインインパスワード忘れた方</Link>
+            <TWTypography sx={{ fontSize: '0.8rem' }}>
+              <Link href="/money_management/sign_register_email_check">
+                サインインパスワード忘れた方
+              </Link>
             </TWTypography>
             <TWButton
               type="submit"
@@ -224,15 +226,15 @@ const SignIn: React.FC = () => {
           <TWToast
             open={open}
             handleClose={handleClose}
-            vertical={"top"}
-            horizontal={"center"}
-            severity={"error"}
+            vertical={'top'}
+            horizontal={'center'}
+            severity={'error'}
             message={errorMsg}
           />
         </TWBox>
       </>
     </div>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn
