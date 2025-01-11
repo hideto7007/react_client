@@ -158,7 +158,7 @@ const SignUp: React.FC = (): JSX.Element => {
     }
 
     fetchData()
-  }, [api, code])
+  }, [code])
 
   // トーストを閉じる処理
   const successHandleClose = () => {
@@ -352,3 +352,6 @@ const EmailAuthToast: React.FC<EmailAuthToastProps> = (
 }
 
 export default SignUp
+
+
+// リンターエラー解消から
