@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import TemporarySignUp from '../../../pages/money_management/temporary_signup'
 import { useRouter } from 'next/router'
-import ApiClient from '../../../src/common/apiClient'
+import { ApiClient } from '../../../src/common/apiClient'
 import { ErrorResponse, OkResponse } from '../../../src/common/presenter'
 
 // モックを定義
@@ -16,6 +16,8 @@ describe('TemporarySignUp.tsx', () => {
 
   beforeEach(() => {
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
+    mockedApiClient.prototype.callApi.mockClear()
+    mockedApiClient.prototype.isOkResponse.mockClear()
     mockPush.mockClear()
     mockedApiClient.mockClear()
   })
@@ -45,12 +47,13 @@ describe('TemporarySignUp.tsx', () => {
   })
 
   it('ボタン押下して成功したら、router.push が呼び出される', async () => {
+    mockedApiClient.prototype.isOkResponse.mockReturnValue(true)
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 200,
       data: {
         result: 'サインアップに成功',
       },
-    } as OkResponse)
+    } as OkResponse<string>)
 
     render(<TemporarySignUp />)
 
@@ -72,14 +75,14 @@ describe('TemporarySignUp.tsx', () => {
       expect(mockPush).toHaveBeenCalled()
       // expect(mockPush).toHaveBeenCalledWith('/signin');
       const result: string[] = mockPush.mock.calls.map((call: any[]) => call[0])
-      expect(result.every((r) => r === 'signup')).toBe(true)
+      expect(result.every((r) => r === '/money_management/signup')).toBe(true)
     })
   })
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる 1', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
-      data: { error_msg: '既に登録されたメールアドレスです。' },
+      error_data: { error_msg: '既に登録されたメールアドレスです。' },
     } as ErrorResponse)
 
     render(<TemporarySignUp />)
@@ -112,8 +115,42 @@ describe('TemporarySignUp.tsx', () => {
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる 2', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
+      status: 500,
+      error_data: { error_msg: '既に登録されたメールアドレスです。' },
+    } as ErrorResponse)
+
+    render(<TemporarySignUp />)
+
+    fireEvent.change(screen.getByLabelText('ニックネーム'), {
+      target: { value: 'test' },
+    })
+    fireEvent.change(screen.getByLabelText('メールアドレス'), {
+      target: { value: 'test@example.com' },
+    })
+    fireEvent.change(screen.getByLabelText('パスワード'), {
+      target: { value: 'Test12345!' },
+    })
+    fireEvent.change(screen.getByLabelText('確認パスワード'), {
+      target: { value: 'Test12345!' },
+    })
+
+    // `router.push` が呼び出されるかを確認
+    await waitFor(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'SIGN UP' }))
+      expect(
+        screen.getByText((content, element) => {
+          return content.includes(
+            'エラー内容：既に登録されたメールアドレスです。'
+          )
+        })
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('ボタン押して失敗したら、エラーメッセージがセットされる 3', async () => {
+    mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
-      data: {
+      error_data: {
         result: [
           {
             field: 'user_password',

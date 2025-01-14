@@ -137,7 +137,7 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
     if (signType) {
       setProgressOpen(false)
       router.push('/money_management/signin')
-    } else if (error && signType) {
+    } else if (error !== null && signType !== null) {
       setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error))
       setOpen(true)
       setOverlayOpen(true)
