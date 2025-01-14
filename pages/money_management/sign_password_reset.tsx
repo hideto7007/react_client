@@ -14,12 +14,13 @@ import {
 import { useForm, SubmitHandler } from 'react-hook-form'
 import Common from '@/src/common/common'
 import { validationRules } from '@/src/common/vaildation'
-import { AuthFormProps, SigninResProps } from '@/src/common/entity'
+import { AuthFormProps, EmailAuthToastProps, NewPasswordUpdateProps, RequestDataProps, SigninResProps } from '@/src/common/entity'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
 import { useRouter } from 'next/router'
 import { ApiClient } from '@/src/common/apiClient'
 import { Message } from '@/src/common/message'
+import { Auth } from '@/src/common/const'
 
 /**
  * パスワード再設定コンポーネント
@@ -32,7 +33,7 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
     handleSubmit,
     watch,
     formState: { isValid },
-  } = useForm<AuthFormProps>({
+  } = useForm<NewPasswordUpdateProps>({
     mode: 'onChange',
     defaultValues: {
       current_password: '',
@@ -45,22 +46,35 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [overlayOpen, setOverlayOpen] = useState(false)
   const [progressOpen, setProgressOpen] = useState(false)
+  const [successMsg, setSuccessMsg] = useState<string>('')
+  const [successOpen, setSuccessOpen] = useState(false)
+  const [successOverlayOpen, setSuccessOverlayOpen] = useState(false)
   let errorMsgInfo: string
   const api = new ApiClient()
 
   // passwordフィールドの値を監視
   const newUserPassword = watch('new_user_password')
 
-  const onSubmit: SubmitHandler<AuthFormProps> = async (
-    data: AuthFormProps
+  const onSubmit: SubmitHandler<NewPasswordUpdateProps> = async (
+    data: NewPasswordUpdateProps
   ) => {
-    const dataRes: SigninResProps = {
-      data: [data],
+    const url = new URL(location.href)
+    const TokenId = url.searchParams.get(Auth.TokenId) || ''
+    const dataRes: RequestDataProps<NewPasswordUpdateProps[]> = {
+      data: [
+        {
+          token_id: TokenId,
+          current_password: data.current_password || '',
+          new_user_password: data.new_user_password,
+          confirm_password: data.confirm_password || '',
+        }
+      ],
     }
     setProgressOpen(true)
-    const res = await api.callApi<EmailAuthToken>(
-      '/api/sign_password_reset',
-      'post',
+    console.log(dataRes)
+    const res = await api.callApi<string>(
+      '/api/new_password_update',
+      'put',
       dataRes
     )
 
@@ -91,14 +105,19 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
     } else {
       // 成功時のレスポンスの場合
       if (api.isOkResponse(res)) {
-        // const emailAuthToken = res.data.result as EmailAuthToken
-        // localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
-        // localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
-        // localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
         setProgressOpen(false)
-        router.push('/money_management/signup')
+        setSuccessOpen(true)
+        setSuccessOverlayOpen(true)
+        setSuccessMsg('パスワード更新成功。')
       }
     }
+  }
+
+  // トーストを閉じる処理
+  const successHandleClose = () => {
+    setSuccessOpen(false)
+    setSuccessOverlayOpen(false)
+    router.push('/money_management/signin')
   }
 
   // トーストを閉じる処理
@@ -106,7 +125,6 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
     setOpen(false)
     setOverlayOpen(false)
   }
-
   return (
     <div>
       <TWCommonCircularProgress open={progressOpen} />
@@ -173,18 +191,70 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
         </TWBox>
       </TWContainer>
       <>
-        <TWBox sx={{ width: 500 }}>
-          <TWBackDrop overlayOpen={overlayOpen} />
-          <TWToast
-            open={open}
-            handleClose={handleClose}
-            vertical={'top'}
-            horizontal={'center'}
-            severity={'error'}
-            message={errorMsg}
-          />
-        </TWBox>
+        <EmailAuthToast
+          successOverlayOpen={successOverlayOpen}
+          successOpen={successOpen}
+          successHandleClose={successHandleClose}
+          successMsg={successMsg}
+          overlayOpen={overlayOpen}
+          open={open}
+          handleClose={handleClose}
+          msg={errorMsg}
+        />
       </>
+    </div>
+  )
+}
+
+
+/**
+ * メール認証トーストコンポーネント
+ *
+ * @param {EmailAuthToastProps} props - コンポーネントが受け取るprops
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const EmailAuthToast: React.FC<EmailAuthToastProps> = (
+  props: EmailAuthToastProps
+): JSX.Element => {
+  const {
+    successOverlayOpen,
+    successOpen,
+    successHandleClose,
+    successMsg,
+    overlayOpen,
+    open,
+    handleClose,
+    msg,
+  } = props
+  const vertical = 'top'
+  const center = 'center'
+  const width = 500
+
+  return (
+    <div>
+      <TWBox sx={{ width: width }}>
+        <TWBackDrop overlayOpen={successOverlayOpen} />
+        <TWToast
+          open={successOpen}
+          handleClose={successHandleClose}
+          vertical={vertical}
+          horizontal={center}
+          severity={'success'}
+          message={successMsg}
+        />
+      </TWBox>
+      <TWBox sx={{ width: width }}>
+        <TWBackDrop overlayOpen={overlayOpen} />
+        <TWToast
+          open={open}
+          handleClose={handleClose}
+          vertical={vertical}
+          horizontal={center}
+          severity={'error'}
+          message={msg}
+        />
+      </TWBox>
     </div>
   )
 }

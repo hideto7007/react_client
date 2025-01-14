@@ -192,7 +192,7 @@ const SignIn: React.FC = () => {
               <Link href="/money_management/temporary_signup">こちら</Link>
             </TWTypography>
             <TWTypography sx={{ fontSize: '0.8rem' }}>
-              <Link href="/money_management/sign_register_email_check">
+              <Link href="/money_management/sign_register_email_check_notice">
                 サインインパスワード忘れた方
               </Link>
             </TWTypography>

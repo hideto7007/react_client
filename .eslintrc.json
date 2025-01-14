@@ -3,7 +3,8 @@
     "next/core-web-vitals",
     "plugin:jest/recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:prettier/recommended"
+    // "prettier"
   ],
   "plugins": ["prettier"],
   "rules": {
@@ -16,5 +17,6 @@
     "react": {
       "version": "detect"
     }
-  }
+  },
+  "parser": "@babel/eslint-parser"
 }

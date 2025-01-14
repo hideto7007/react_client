@@ -25,11 +25,11 @@ import { Response, ValidateError } from '@/src/common/presenter'
 import { useRouter } from 'next/router'
 
 /**
- * 登録済みのメールアドレスチェックコンポーネント
+ * 登録済みのメールアドレスチェックし通知するコンポーネント
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const SignRegisterEmailCheck: React.FC = (): JSX.Element => {
+const SignRegisterEmailCheckNotice: React.FC = (): JSX.Element => {
   const [successMsg, setSuccessMsg] = useState<string>('')
   const [successOpen, setSuccessOpen] = useState(false)
   const [successOverlayOpen, setSuccessOverlayOpen] = useState(false)
@@ -93,7 +93,7 @@ const SignRegisterEmailCheck: React.FC = (): JSX.Element => {
   ): Promise<void> => {
     setProgressOpen(true)
     const res = await api.callApi<string>(
-      '/api/sign_register_email_check',
+      '/api/register_email_check_notice',
       'get',
       {
         user_name: data.user_name,
@@ -106,12 +106,6 @@ const SignRegisterEmailCheck: React.FC = (): JSX.Element => {
   const successHandleClose = () => {
     setSuccessOpen(false)
     setSuccessOverlayOpen(false)
-    /**
-     *
-     * @todo :成功したらどうすか後々検討
-     *
-     */
-    router.push('/money_management/signin')
   }
 
   const handleClose = () => {
@@ -277,4 +271,4 @@ const EmailAuthToast: React.FC<EmailAuthToastProps> = (
   )
 }
 
-export default SignRegisterEmailCheck
+export default SignRegisterEmailCheckNotice

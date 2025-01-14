@@ -143,8 +143,13 @@ interface AuthFormProps {
   user_password: string
   confirm_password?: string // Sign Upの場合のみ必要
   nick_name?: string // Sign Upの場合のみ必要
-  current_password?: string
+}
+
+interface NewPasswordUpdateProps {
+  token_id: string
+  current_password: string
   new_user_password: string
+  confirm_password: string
 }
 
 interface EmailCheckProps {
@@ -339,6 +344,7 @@ export type {
   TextFormProps,
   PasswordFormProps,
   AuthFormProps,
+  NewPasswordUpdateProps,
   PasswordResetProps,
   PasswordResetReqProps,
   EmailCheckProps,

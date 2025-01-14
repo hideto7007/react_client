@@ -117,7 +117,7 @@ enum Auth {
   AuthToken = "auth_token",
   RefreshAuthToken = "refresh_auth_token",
   UserId = "user_id",
-  UserName = "user_name",
+  TokenId = "token_id",
   SignType = "sign_type",
   Error = "error",
   UserPassword = "user_password",
