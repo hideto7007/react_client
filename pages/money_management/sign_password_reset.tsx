@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  TWPasswordTextForm,
   TWToast,
   TWBackDrop,
   TWContainer,
@@ -10,19 +9,18 @@ import {
   TWTypography,
   TWButton,
   TWCommonCircularProgress,
+  TWPasswordUpdateTextForm,
 } from '@/src/common/component'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import Common from '@/src/common/common'
 import { validationRules } from '@/src/common/vaildation'
 import {
-  AuthFormProps,
   EmailAuthToastProps,
   NewPasswordUpdateProps,
   RequestDataProps,
-  SigninResProps,
 } from '@/src/common/entity'
 import { RiLockPasswordLine } from 'react-icons/ri'
-import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
+import { ValidateError } from '@/src/common/presenter'
 import { useRouter } from 'next/router'
 import { ApiClient } from '@/src/common/apiClient'
 import { Message } from '@/src/common/message'
@@ -162,7 +160,7 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
             }}
           >
             {/* currentPasswordフィールド */}
-            <TWPasswordTextForm
+            <TWPasswordUpdateTextForm
               name="current_password"
               label="現在のパスワード"
               control={control}
@@ -170,7 +168,7 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
             />
             <WholesaleLine />
             {/* newUserPasswordフィールド */}
-            <TWPasswordTextForm
+            <TWPasswordUpdateTextForm
               name="new_user_password"
               label="新しいパスワード"
               control={control}
@@ -178,7 +176,7 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
             />
 
             {/* confirmPasswordフィールド */}
-            <TWPasswordTextForm
+            <TWPasswordUpdateTextForm
               name="confirm_password"
               label="確認パスワード"
               control={control}

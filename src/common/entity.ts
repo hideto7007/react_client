@@ -203,6 +203,20 @@ interface PasswordFormProps {
   fullWidth?: boolean
 }
 
+interface PasswordUpdateFormProps {
+  name: keyof NewPasswordUpdateProps
+  label: string
+  control: Control<NewPasswordUpdateProps> // Tに依存するControl型
+  rules?:
+    | Omit<
+        RegisterOptions<NewPasswordUpdateProps>,
+        'disabled' | 'valueAsNumber' | 'valueAsDate' | 'setValueAs'
+      >
+    | undefined
+  fieldState?: ControllerFieldState
+  fullWidth?: boolean
+}
+
 interface TextFormProps<T extends FieldValues> {
   name: Path<T>
   label: string
@@ -368,4 +382,5 @@ export type {
   TWCircularProgressProps,
   ExternalSignButtonProps,
   TWExternalTextProps,
+  PasswordUpdateFormProps,
 }

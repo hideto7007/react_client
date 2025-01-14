@@ -51,6 +51,7 @@ import {
   TWCircularProgressProps,
   ExternalSignButtonProps,
   TWExternalTextProps,
+  PasswordUpdateFormProps,
 } from '@/src/common/entity'
 import { columns } from '@/src/common/columns'
 import ValidationCheck from '@/src/common/vaildation'
@@ -919,6 +920,65 @@ const TWPasswordTextForm: React.FC<PasswordFormProps> = (
 }
 
 /**
+ * パスワード更新フォームコンポーネント
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const TWPasswordUpdateTextForm: React.FC<PasswordUpdateFormProps> = (
+  props
+): JSX.Element => {
+  const { name, control, rules, label } = props
+  const [showPassword, setShowPassword] = React.useState(false)
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show)
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault()
+  }
+
+  return (
+    <FormControl variant="outlined" fullWidth>
+      <InputLabel htmlFor={name}>{label}</InputLabel>
+      <Controller
+        name={name}
+        control={control}
+        rules={rules}
+        render={({ field, fieldState }) => (
+          <>
+            <OutlinedInput
+              {...field}
+              id={name}
+              label={label}
+              type={showPassword ? 'text' : 'password'}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+            {/* エラーメッセージを表示 */}
+            {fieldState.error && (
+              <FormHelperText sx={{ color: 'red' }}>
+                {fieldState.error.message}
+              </FormHelperText>
+            )}
+          </>
+        )}
+      />
+    </FormControl>
+  )
+}
+
+/**
  * リンク用のコンポーネント
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
@@ -1019,4 +1079,5 @@ export {
   BoxLayoutPadding,
   TWToast,
   TWBackDrop,
+  TWPasswordUpdateTextForm,
 }
