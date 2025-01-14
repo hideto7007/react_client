@@ -134,7 +134,7 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
     const error = url.searchParams.get(Auth.Error)
     localStorage.clear()
 
-    if (signType) {
+    if (signType && error === null) {
       setProgressOpen(false)
       router.push('/money_management/signin')
     } else if (error !== null && signType !== null) {

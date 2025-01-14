@@ -79,6 +79,62 @@ describe('TemporarySignUp.tsx', () => {
     })
   })
 
+  it('Google サインインボタンをクリック', () => {
+    render(<TemporarySignUp />)
+    const googleButton = screen.getByText('Google')
+    Object.defineProperty(window, 'location', {
+      value: { href: '' },
+      writable: true,
+    })
+
+    fireEvent.click(googleButton)
+
+    expect(window.location.href).toContain('auth/google/signup')
+  })
+
+  it('LINE サインインボタンをクリック', () => {
+    render(<TemporarySignUp />)
+    const lineButton = screen.getByText('Line')
+    Object.defineProperty(window, 'location', {
+      value: { href: '' },
+      writable: true,
+    })
+
+    fireEvent.click(lineButton)
+
+    expect(window.location.href).toContain('auth/line/signup')
+  })
+
+  it('クエリパラメータでサインイン成功時にリダイレクト', () => {
+    Object.defineProperty(window, 'location', {
+      value: {
+        href: 'http://localhost/money_management/temporary_signup?sign_type=external',
+      },
+      writable: true,
+    })
+
+    render(<TemporarySignUp />)
+
+    expect(mockPush).toHaveBeenCalledWith('/money_management/signin')
+  })
+
+  it('クエリパラメータにエラーが含まれる場合', () => {
+    Object.defineProperty(window, 'location', {
+      value: {
+        href: 'http://localhost/money_management/temporary_signup?sign_type=external&error=認証エラー',
+      },
+      writable: true,
+    })
+
+    render(<TemporarySignUp />)
+
+    expect(
+      screen.getByText((content, element) => {
+        return content.includes('認証エラー')
+      })
+    ).toBeInTheDocument()
+  })
+
   it('ボタン押して失敗したら、エラーメッセージがセットされる 1', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,

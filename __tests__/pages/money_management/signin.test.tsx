@@ -101,7 +101,7 @@ describe('Singin.tsx', () => {
   it('クエリパラメータでサインイン成功時にリダイレクト', () => {
     Object.defineProperty(window, 'location', {
       value: {
-        href: 'http://localhost/money_management/signin?user_id=1&user_name=test@example.com&sign_type=google',
+        href: 'http://localhost/money_management/signin?user_id=1&user_name=test@example.com&sign_type=external',
       },
       writable: true,
     })
