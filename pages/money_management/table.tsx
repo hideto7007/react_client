@@ -1,22 +1,22 @@
-import * as React from "react";
-import Paper from "@mui/material/Paper";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
+import * as React from 'react'
+import Paper from '@mui/material/Paper'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TablePagination from '@mui/material/TablePagination'
+import TableRow from '@mui/material/TableRow'
+import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Checkbox,
   FormControlLabel,
   FormGroup,
   IconButton,
-} from "@mui/material";
+} from '@mui/material'
 
-import ApiEndpoint from "@/src/common/apiEndpoint";
+import ApiEndpoint from '@/src/common/apiEndpoint'
 import {
   ErrorConst,
   Type,
@@ -27,12 +27,12 @@ import {
   labelListConst,
   keyListConst,
   LabelConst,
-} from "@/src/common/const";
-import { Column, AnnualIncomeManagementData } from "@/src/common/entity";
-import { Mockresponse } from "@/src/common/data";
-import { Breadcrumbs } from "@/src/common/component";
+} from '@/src/common/const'
+import { Column, AnnualIncomeManagementData } from '@/src/common/entity'
+import { Mockresponse } from '@/src/common/data'
+import { Breadcrumbs } from '@/src/common/component'
 
-let serverErrorFlag: boolean = false;
+let serverErrorFlag: boolean = false
 
 const columns: readonly Column[] = [
   {
@@ -88,23 +88,23 @@ const columns: readonly Column[] = [
     required: false,
     disablePadding: false,
   },
-];
+]
 
 const getIncomeDataFetchData = async (
   startDate: string,
   endDate: string,
-  userId: number,
+  userId: number
 ): Promise<AnnualIncomeManagementData[] | void> => {
-  const queryList: string[] = [];
+  const queryList: string[] = []
   // 表示データの初期化
-  queryList.push("start_date=" + startDate);
-  queryList.push("end_date=" + endDate);
-  queryList.push("user_id=" + userId);
-  const fullPrames: string = "?" + queryList.join("&");
+  queryList.push('start_date=' + startDate)
+  queryList.push('end_date=' + endDate)
+  queryList.push('user_id=' + userId)
+  const fullPrames: string = '?' + queryList.join('&')
   try {
     //   const response = await ApiEndpoint.getIncomeData(fullPrames)
-    const response = Mockresponse;
-    const dataList = response.data.result; // レスポンスからデータを取得
+    const response = Mockresponse
+    const dataList = response.data.result // レスポンスからデータを取得
 
     const res: AnnualIncomeManagementData[] = dataList.map(
       (data: any, idx: number) => ({
@@ -116,80 +116,80 @@ const getIncomeDataFetchData = async (
         total_amount: data.TotalAmount,
         deduction_amount: data.DeductionAmount,
         take_home_amount: data.TakeHomeAmount,
-        update_user: "", // 必要に応じて設定
+        update_user: '', // 必要に応じて設定
         classification: data.Classification,
         user_id: data.UserID,
-      }),
-    );
+      })
+    )
 
-    return res;
+    return res
   } catch (error) {
-    serverErrorFlag = true;
-    console.error("Error fetching data:", error);
+    serverErrorFlag = true
+    console.error('Error fetching data:', error)
   }
-};
+}
 
 const create = async (row: AnnualIncomeManagementData): Promise<void> => {
-  await console.log("create", row);
-};
+  await console.log('create', row)
+}
 
 const deleteData = async (row: AnnualIncomeManagementData): Promise<void> => {
-  await console.log("delete", row);
-};
+  await console.log('delete', row)
+}
 
 export default function StickyHeadTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState<number>(10);
-  const [checkboxLabel, setCheckLabel] = React.useState<string>("off");
-  const [checkedFlag, setCheckedFlag] = React.useState<boolean>(false);
-  const [data, setData] = React.useState<AnnualIncomeManagementData[]>([]);
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState<number>(10)
+  const [checkboxLabel, setCheckLabel] = React.useState<string>('off')
+  const [checkedFlag, setCheckedFlag] = React.useState<boolean>(false)
+  const [data, setData] = React.useState<AnnualIncomeManagementData[]>([])
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const handleChange = (event: React.SyntheticEvent, checked: boolean) => {
-    setCheckLabel(checked ? "on" : "off");
-    setCheckedFlag(checked);
-  };
+    setCheckLabel(checked ? 'on' : 'off')
+    setCheckedFlag(checked)
+  }
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
+    setRowsPerPage(+event.target.value)
+    setPage(0)
+  }
 
   // 現像だとどこの列のレコード情報を受け取ったかわからないから、onClickからindex取得できないか確認する
   const createHandleChange = async (row: AnnualIncomeManagementData) => {
-    await create(row);
-  };
+    await create(row)
+  }
 
   const deleteDataHandleChange = async (row: AnnualIncomeManagementData) => {
-    await deleteData(row);
-  };
+    await deleteData(row)
+  }
 
   // TODO
   // 複数選択で削除
   // 編集アイコン押したらそのテーブルだけテキストにする
 
   React.useEffect(() => {
-    (async () => {
-      console.log("loaded");
+    ;(async () => {
+      console.log('loaded')
       // http通信の確認から
       const response = await getIncomeDataFetchData(
-        "2024-01-10",
-        "2024-07-22",
-        1,
-      );
+        '2024-01-10',
+        '2024-07-22',
+        1
+      )
       if (response !== undefined) {
-        setData(response);
+        setData(response)
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   return (
-    <Paper sx={{ width: "100%", overflow: "hidden" }}>
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
       <Breadcrumbs marginBottom="10px" /> {/* Include Breadcrumbs at the top */}
       <FormGroup>
         <FormControlLabel
@@ -212,9 +212,9 @@ export default function StickyHeadTable() {
                     >
                       {column.label}
                     </TableCell>
-                  );
+                  )
                 }
-                return null;
+                return null
               })}
             </TableRow>
           </TableHead>
@@ -230,7 +230,7 @@ export default function StickyHeadTable() {
                 >
                   {columns.map((column) => {
                     let value: React.ReactNode =
-                      row[column.id as keyof AnnualIncomeManagementData];
+                      row[column.id as keyof AnnualIncomeManagementData]
                     if (column.id === KeyConst.Edit && checkedFlag) {
                       value = (
                         <>
@@ -249,13 +249,13 @@ export default function StickyHeadTable() {
                             <DeleteIcon />
                           </IconButton>
                         </>
-                      );
+                      )
                     }
                     return (
                       <TableCell key={column.id} align={column.align}>
                         {value}
                       </TableCell>
-                    );
+                    )
                   })}
                 </TableRow>
               ))}
@@ -272,5 +272,5 @@ export default function StickyHeadTable() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </Paper>
-  );
+  )
 }

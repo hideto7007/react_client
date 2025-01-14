@@ -81,7 +81,7 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 const getIncomeDataFetchData = async (
   startDate: string,
   endDate: string,
-  userId: number,
+  userId: number
 ): Promise<AnnualIncomeManagementData[] | undefined> => {
   const queryList: string[] = []
   queryList.push('start_date=' + startDate)
@@ -106,7 +106,7 @@ const getIncomeDataFetchData = async (
         update_user: '',
         classification: data.Classification,
         user_id: data.UserID,
-      }),
+      })
     )
 
     return res
@@ -300,7 +300,7 @@ const TWExternalText: React.FC<TWExternalTextProps> = (
  */
 
 const TWCommonCircularProgress: React.FC<TWCircularProgressProps> = (
-  props: TWCircularProgressProps,
+  props: TWCircularProgressProps
 ): JSX.Element => {
   return <TWCircularProgress open={props.open} color="success" size={40} />
 }
@@ -322,7 +322,7 @@ const TWCommonCircularProgress: React.FC<TWCircularProgressProps> = (
  */
 
 const EnhancedTableHead: React.FC<EnhancedTableProps> = (
-  props: EnhancedTableProps,
+  props: EnhancedTableProps
 ): JSX.Element => {
   const {
     onSelectAllClick,
@@ -419,7 +419,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (
           bgcolor: (theme) =>
             alpha(
               theme.palette.primary.main,
-              theme.palette.action.activatedOpacity,
+              theme.palette.action.activatedOpacity
             ),
         }),
       }}
@@ -653,7 +653,7 @@ const EditDialog: React.FC<editDialogProps> = (
    */
   const handleFromChange = (
     field: string,
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (editRow) {
       if (

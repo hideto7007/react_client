@@ -14,7 +14,13 @@ import {
 import { useForm, SubmitHandler } from 'react-hook-form'
 import Common from '@/src/common/common'
 import { validationRules } from '@/src/common/vaildation'
-import { AuthFormProps, EmailAuthToastProps, NewPasswordUpdateProps, RequestDataProps, SigninResProps } from '@/src/common/entity'
+import {
+  AuthFormProps,
+  EmailAuthToastProps,
+  NewPasswordUpdateProps,
+  RequestDataProps,
+  SigninResProps,
+} from '@/src/common/entity'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
 import { useRouter } from 'next/router'
@@ -67,7 +73,7 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
           current_password: data.current_password || '',
           new_user_password: data.new_user_password,
           confirm_password: data.confirm_password || '',
-        }
+        },
       ],
     }
     setProgressOpen(true)
@@ -205,7 +211,6 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
     </div>
   )
 }
-
 
 /**
  * メール認証トーストコンポーネント

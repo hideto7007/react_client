@@ -1,5 +1,5 @@
-import React from "react";
-import { Breadcrumbs } from "@/src/common/component";
+import React from 'react'
+import { Breadcrumbs } from '@/src/common/component'
 
 const Version: React.FC = () => {
   return (
@@ -7,7 +7,7 @@ const Version: React.FC = () => {
       <Breadcrumbs marginBottom="5px" /> {/* パンくずを表示する */}
       <h1>バージョン 1.0.0</h1>
     </div>
-  );
-};
+  )
+}
 
-export default Version;
+export default Version

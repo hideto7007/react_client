@@ -1,6 +1,6 @@
-import React from "react";
-import AboutChild from "./AboutChild";
-import { Breadcrumbs } from "@/src/common/component";
+import React from 'react'
+import AboutChild from './AboutChild'
+import { Breadcrumbs } from '@/src/common/component'
 
 const About: React.FC = () => {
   return (
@@ -9,7 +9,7 @@ const About: React.FC = () => {
       <h1>about Child</h1>
       <AboutChild name="hideto" title="テスト ページ" />
     </div>
-  );
-};
+  )
+}
 
-export default About;
+export default About

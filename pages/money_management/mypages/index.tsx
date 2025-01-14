@@ -1,5 +1,5 @@
-import React from "react";
-import { BoxLayoutPadding, Breadcrumbs } from "@/src/common/component";
+import React from 'react'
+import { BoxLayoutPadding, Breadcrumbs } from '@/src/common/component'
 
 const Mypage: React.FC = () => {
   return (
@@ -7,7 +7,7 @@ const Mypage: React.FC = () => {
       <Breadcrumbs marginBottom="12px" /> {/* パンくずを表示する */}
       <h1>マイページ</h1>
     </BoxLayoutPadding>
-  );
-};
+  )
+}
 
-export default Mypage;
+export default Mypage

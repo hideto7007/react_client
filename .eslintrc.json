@@ -1,22 +1,14 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:jest/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
-    // "prettier"
-  ],
-  "plugins": ["prettier"],
-  "rules": {
-    "prettier/prettier": "error"
-  },
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
-  "parser": "@babel/eslint-parser"
+  // "extends": [
+  //   "eslint:recommended",
+  //   "plugin:react/recommended",
+  //   "plugin:@typescript-eslint/recommended",
+  //   "plugin:prettier/recommended" // これが重要
+  // ],
+  // "plugins": ["prettier"],
+  // "rules": {
+  //   "prettier/prettier": "error" // PrettierのエラーをESLintで表示
+  // }
+  "extends": ["next/core-web-vitals"],
+  "rules": {}
 }

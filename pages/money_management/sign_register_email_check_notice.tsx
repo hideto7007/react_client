@@ -22,7 +22,6 @@ import Common from '@/src/common/common'
 import { validationRules } from '@/src/common/vaildation'
 import { Message } from '@/src/common/message'
 import { Response, ValidateError } from '@/src/common/presenter'
-import { useRouter } from 'next/router'
 
 /**
  * 登録済みのメールアドレスチェックし通知するコンポーネント
@@ -48,7 +47,6 @@ const SignRegisterEmailCheckNotice: React.FC = (): JSX.Element => {
       user_name: '',
     },
   })
-  const router = useRouter()
   const api = new ApiClient()
   let errorMsgInfo: string
 

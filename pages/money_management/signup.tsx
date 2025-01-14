@@ -244,7 +244,7 @@ const EmailAuth: React.FC<EmailAuthProps> = (
   return (
     <div>
       <TWBox sx={sx}>
-        <TWTypography variant='h4'>メール認証コード</TWTypography>
+        <TWTypography variant="h4">メール認証コード</TWTypography>
       </TWBox>
       <br />
       <br />
@@ -254,7 +254,7 @@ const EmailAuth: React.FC<EmailAuthProps> = (
             key={i}
             autoFocus={i === 0}
             value={code[i]}
-            type='tel'
+            type="tel"
             inputRef={(el) => (inputRefs.current[i] = el)}
             disabled={isDisabled}
             sx={{
@@ -281,17 +281,17 @@ const EmailAuth: React.FC<EmailAuthProps> = (
       <br />
       <br />
       <TWBox sx={sx}>
-        <TWTypography variant='h6'>
+        <TWTypography variant="h6">
           仮サインアップ時に登録したメールアドレスに認証コードを送信しました。
         </TWTypography>
       </TWBox>
       <TWBox sx={sx}>
-        <TWTypography variant='h6'>
+        <TWTypography variant="h6">
           続けるにはコードを入力してください。
         </TWTypography>
       </TWBox>
       <TWBox sx={sx}>
-        <TWButton size='large' color='primary' onClick={handleEntryEmail}>
+        <TWButton size="large" color="primary" onClick={handleEntryEmail}>
           コードを再送信
         </TWButton>
       </TWBox>
@@ -352,6 +352,3 @@ const EmailAuthToast: React.FC<EmailAuthToastProps> = (
 }
 
 export default SignUp
-
-
-// リンターエラー解消から

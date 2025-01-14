@@ -21,6 +21,7 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { AuthFormProps, SigninResProps } from '@/src/common/entity'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { validationRules } from '@/src/common/vaildation'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Response } from '@/src/common/presenter'
 import { Auth } from '@/src/common/const'
 import { ApiClient } from '@/src/common/apiClient'
