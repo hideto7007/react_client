@@ -18,4 +18,4 @@ jobs:
           npm install
       - name: Run eslint
         run: |
-          npx eslint --ext ".js,.ts" --ignore-path .gitignore .
+          npx eslint --ignore-path .gitignore .
