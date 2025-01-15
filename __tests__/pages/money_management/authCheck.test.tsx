@@ -114,7 +114,7 @@ describe('AuthCheck API テスト', () => {
     }
   })
 
-  it('トーストが閉じられるとrouter.pushが呼び出される', async () => {
+  it('トーストが閉じられるとrouter.pushが呼び出される 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 401,
       error_data: { error_msg: '認証エラー' },
@@ -126,6 +126,61 @@ describe('AuthCheck API テスト', () => {
     await waitFor(() => {
       expect(
         screen.getByText((content) => content.includes('認証エラー'))
+      ).toBeInTheDocument()
+    })
+
+    // トーストを閉じるボタンをクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // router.pushが呼び出されることを確認
+    expect(mockPush).toHaveBeenCalledWith('/money_management/signin')
+  })
+
+  it('トーストが閉じられるとrouter.pushが呼び出される バリデーションエラー', async () => {
+    mockedApiClient.prototype.callApi.mockResolvedValueOnce({
+      status: 400,
+      error_data: {
+        result: [
+          {
+            field: 'user_name',
+            message: 'ユーザー名は必須です。',
+          },
+        ],
+      },
+    } as ErrorResponse)
+
+    render(<AuthCheck />)
+
+    // トーストのエラーメッセージを確認
+    await waitFor(() => {
+      expect(
+        screen.getByText((content) =>
+          content.includes('ユーザー名は必須です。')
+        )
+      ).toBeInTheDocument()
+    })
+
+    // トーストを閉じるボタンをクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // router.pushが呼び出されることを確認
+    expect(mockPush).toHaveBeenCalledWith('/money_management/signin')
+  })
+
+  it('トーストが閉じられるとrouter.pushが呼び出される サーバーエラー', async () => {
+    mockedApiClient.prototype.callApi.mockResolvedValueOnce({
+      status: 500,
+      error_data: { error_msg: 'サーバーエラー' },
+    } as ErrorResponse)
+
+    render(<AuthCheck />)
+
+    // トーストのエラーメッセージを確認
+    await waitFor(() => {
+      expect(
+        screen.getByText((content) => content.includes('サーバーエラー'))
       ).toBeInTheDocument()
     })
 
