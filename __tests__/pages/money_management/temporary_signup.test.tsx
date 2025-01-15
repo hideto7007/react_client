@@ -134,9 +134,9 @@ describe('TemporarySignUp.tsx', () => {
     ).toBeInTheDocument()
   })
 
-  it('ボタン押して失敗したら、エラーメッセージがセットされる 1', async () => {
+  it('ボタン押して失敗したら、エラーメッセージがセットされる コンフリクトエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
-      status: 401,
+      status: 409,
       error_data: { error_msg: '既に登録されたメールアドレスです。' },
     } as ErrorResponse)
 
@@ -168,10 +168,10 @@ describe('TemporarySignUp.tsx', () => {
     })
   })
 
-  it('ボタン押して失敗したら、エラーメッセージがセットされる 2', async () => {
+  it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      error_data: { error_msg: '既に登録されたメールアドレスです。' },
+      error_data: { error_msg: 'サーバーエラー' },
     } as ErrorResponse)
 
     render(<TemporarySignUp />)
@@ -194,15 +194,13 @@ describe('TemporarySignUp.tsx', () => {
       fireEvent.click(screen.getByRole('button', { name: 'SIGN UP' }))
       expect(
         screen.getByText((content, element) => {
-          return content.includes(
-            'エラー内容：既に登録されたメールアドレスです。'
-          )
+          return content.includes('エラー内容：サーバーエラー')
         })
       ).toBeInTheDocument()
     })
   })
 
-  it('ボタン押して失敗したら、エラーメッセージがセットされる 3', async () => {
+  it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 400,
       error_data: {

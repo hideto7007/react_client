@@ -131,7 +131,7 @@ describe('Singin.tsx', () => {
     expect(mockPush).toHaveBeenCalledWith('/money_management/signin')
   })
 
-  it('ボタン押して失敗したら、エラーメッセージがセットされる 1', async () => {
+  it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
       error_data: { error_msg: 'テスト エラー' },
@@ -157,7 +157,7 @@ describe('Singin.tsx', () => {
     })
   })
 
-  it('ボタン押して失敗したら、エラーメッセージがセットされる 2', async () => {
+  it('ボタン押して失敗したら、エラーメッセージがセットされる 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
       error_data: { error_msg: 'テスト エラー' },
@@ -183,7 +183,7 @@ describe('Singin.tsx', () => {
     })
   })
 
-  it('ボタン押して失敗したら、エラーメッセージがセットされる 3', async () => {
+  it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 400,
       error_data: {
