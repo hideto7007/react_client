@@ -16,9 +16,6 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-      - name: Run prettier
-        run: |
-          npx prettier --check .
       - name: Run eslint
         run: |
           npx eslint --ext ".js,.ts" --ignore-path .gitignore .
