@@ -20,8 +20,8 @@ describe('Singin.tsx', () => {
 
   ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
   beforeEach(() => {
+    mockedApiClient.mockClear()
     mockedApiClient.prototype.callApi.mockClear()
-    mockedApiClient.prototype.isOkResponse.mockClear()
     mockPush.mockClear()
     localStorage.clear()
   })
@@ -185,7 +185,7 @@ describe('Singin.tsx', () => {
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる 3', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
-      status: 401,
+      status: 400,
       error_data: {
         result: [
           {

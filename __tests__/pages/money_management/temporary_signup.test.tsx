@@ -16,10 +16,9 @@ describe('TemporarySignUp.tsx', () => {
 
   beforeEach(() => {
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
-    mockedApiClient.prototype.callApi.mockClear()
-    mockedApiClient.prototype.isOkResponse.mockClear()
     mockPush.mockClear()
     mockedApiClient.mockClear()
+    mockedApiClient.prototype.callApi.mockClear()
   })
 
   it('サインアップ 入力フォームのレンダリングチェック', () => {
@@ -205,7 +204,7 @@ describe('TemporarySignUp.tsx', () => {
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる 3', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
-      status: 401,
+      status: 400,
       error_data: {
         result: [
           {
