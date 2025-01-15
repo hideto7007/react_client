@@ -75,7 +75,6 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
       ],
     }
     setProgressOpen(true)
-    console.log(dataRes)
     const res = await api.callApi<string>(
       '/api/new_password_update',
       'put',
