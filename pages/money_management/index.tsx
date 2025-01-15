@@ -1,13 +1,12 @@
-import React from 'react';
+import React from 'react'
 import ToolBar from './tooolBar'
-
 
 const Home: React.FC = () => {
   return (
     <div>
-      <ToolBar/>
+      <ToolBar />
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

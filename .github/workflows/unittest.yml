@@ -12,7 +12,7 @@ jobs:
       - name: Set up Nodejs
         uses: actions/setup-node@v3
         with:
-          node-version: "20"
+          node-version: '20'
 
       - name: Build Docker image
         run: docker build -f Dockerfile -t unittest .
@@ -21,8 +21,6 @@ jobs:
         run: |
           docker run --rm -v ${{ github.workspace }}:/react_client --name unittest unittest /bin/bash -c "\
             cd /react_client && \
-            npm install -g n && \
-            npm install -g @mui/material @emotion/react @emotion/styled && \
             npm install --save-dev jest ts-jest @types/jest @testing-library/react @testing-library/jest-dom && \
             echo "================= test start ================= && \
             npm test --coverage && \

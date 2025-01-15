@@ -1,23 +1,23 @@
-
+import { ValidateError } from '@/src/common/presenter'
 
 class Common {
-    ErrorMsgInfo(flg: boolean, ...msgArray: string[]): string {
-        var msg: string = ''
-        if (flg) {
-            if (msgArray.length == 1) {
-                msg = `【認証エラー】<br />エラー内容：${msgArray[0]}`
-            } else if (msgArray.length == 2) {
-                msg = `【${msgArray[0]}】<br />エラー内容：${msgArray[1]}`
-            }
-        } else {
-            if (msgArray.length == 1) {
-                msg = `【サーバーエラー】<br />エラー内容：${msgArray[0]}`
-            }
-        }
-        return msg
+  ErrorMsgInfo(info: string, text: string): string {
+    const msg = `【${info}】<br />エラー内容：${text}`
+    return msg
+  }
+
+  ErrorMsgInfoArray(msgArray: ValidateError): string {
+    let msg: string = ''
+    if (msgArray.recode_rows !== undefined && msgArray.recode_rows >= 1) {
+      msg += `【${msgArray.recode_rows}行目にエラーがあります】<br />`
     }
+    for (const msgField of msgArray.result) {
+      msg += `<br />【${msgField.field}】<br />エラー内容：${msgField.message}</<br />`
+    }
+    return msg
+  }
 }
 
 const common = new Common()
 
-export default common;
+export default common

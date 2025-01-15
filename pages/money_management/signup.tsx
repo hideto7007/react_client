@@ -1,149 +1,354 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router'; // useRouterをインポート
-import { FATextForm, FAPasswordTextForm, FAButton, FAContainer, FACssBaseline, FABox, FAAvatar, FATypography, FABackDrop, FAToast } from '@/src/common/component';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { AuthFormProps, SingUpResProps } from '@/src/common/entity';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { validationRules } from '@/src/common/vaildation';
-import ApiClient from '@/src/common/apiClient';
-import Common from '@/src/common/common';
+import { ApiClient } from '@/src/common/apiClient'
+import {
+  TWBackDrop,
+  TWBox,
+  TWButton,
+  TWCard,
+  TWCardActions,
+  TWCardContent,
+  TWCommonCircularProgress,
+  TWTextField,
+  TWToast,
+  TWTypography,
+} from '@/src/common/component'
+import { Auth } from '@/src/common/const'
+import {
+  RequestDataProps,
+  SingUpProps,
+  EmailAuthProps,
+  EmailAuthToastProps,
+} from '@/src/common/entity'
+import Common from '@/src/common/common'
+import React, { useRef, useState } from 'react'
+import { Message } from '@/src/common/message'
+import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
+import { useRouter } from 'next/router'
 
-const SignUp: React.FC = () => {
-    const { control, handleSubmit, watch, formState: { isValid } } = useForm<AuthFormProps>({
-        mode: 'onChange',
-        defaultValues: {
-            user_name: '',
-            user_password: '',
-            confirm_password: '',
-            nick_name: ''
-        },
-    });
-    const router = useRouter();
-    const [errorMsg, setErrorMsg] = useState<string>('')
-    const [open, setOpen] = useState(false);
-    const [overlayOpen, setOverlayOpen] = useState(false);
-    var errorMsgInfo: string;
+/**
+ * サインアップコンポーネント
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const SignUp: React.FC = (): JSX.Element => {
+  const inputNum: number = 4
+  const [code, setCode] = useState<string[]>(Array(inputNum).fill(''))
+  const [successMsg, setSuccessMsg] = useState<string>('')
+  const [successOpen, setSuccessOpen] = useState(false)
+  const [successOverlayOpen, setSuccessOverlayOpen] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string>('')
+  const [open, setOpen] = useState(false)
+  const [progressOpen, setProgressOpen] = useState(false)
+  const [overlayOpen, setOverlayOpen] = useState(false)
+  const [isDisabled, setIsDisabled] = useState(false)
+  const router = useRouter()
+  const api = new ApiClient()
+  let errorMsgInfo: string
 
-    // passwordフィールドの値を監視
-    const password = watch('user_password');
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
-    const onSubmit: SubmitHandler<AuthFormProps> = async(data: AuthFormProps) => {
-        // console.log(`data: ${JSON.stringify(data)}`);
-        const dataRes: SingUpResProps = {
-          data: [data]
-        }
-        const api = new ApiClient()
-        const res = await api.callApi("/api/singup", "post", dataRes);
-        if (res.status !== 200) {
-          if (res.data.error_msg) {
-            errorMsgInfo = Common.ErrorMsgInfo(true, res.data.error_msg);
-            setErrorMsg(errorMsgInfo);
-          } else {
-            const msg = res.data.result[0]
-            errorMsgInfo = Common.ErrorMsgInfo(true, msg.field, msg.message);
-            setErrorMsg(errorMsgInfo);
-          }
-          setOpen(true);
-          setOverlayOpen(true);
+  const handleEntryEmail = async (): Promise<void> => {
+    setProgressOpen(true)
+    const res = await api.callApi<EmailAuthToken>(
+      'api/retry_auth_email',
+      'get',
+      {
+        redis_key: localStorage.getItem(Auth.RedisKey),
+        user_name: localStorage.getItem(Auth.TmpUserName),
+        nick_name: localStorage.getItem(Auth.TmpNickName),
+      }
+    )
+
+    if ('error_data' in res && res.status !== 200) {
+      // エラーレスポンスの場合
+      const errorData = res.error_data
+      if ('result' in errorData) {
+        // バリデーションエラー
+        const validateError = errorData as ValidateError
+        setErrorMsg(Common.ErrorMsgInfoArray(validateError))
+      } else {
+        if (res.status === 500) {
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.ServerError,
+            errorData.error_msg
+          )
         } else {
-          router.push('signin');
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.AuthError,
+            errorData.error_msg
+          )
         }
-    };
+        setErrorMsg(errorMsgInfo)
+      }
+      setOpen(true)
+      setOverlayOpen(true)
+    } else {
+      // 成功時のレスポンスの場合
+      if (api.isOkResponse(res)) {
+        const emailAuthToken = res.data.result as EmailAuthToken
+        localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
+        localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
+        localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
+      }
+    }
+    setProgressOpen(false)
+  }
 
-    // トーストを閉じる処理
-    const handleClose = () => {
-      setOpen(false);
-      setOverlayOpen(false);
-    };
+  React.useEffect(() => {
+    const fetchData = async () => {
+      let errorMsgInfo: string
+      if (code.every((c) => c !== '')) {
+        const authCheck = localStorage.getItem(Auth.RedisKey)?.split(':')
+        if (authCheck !== undefined && authCheck[0] === code.join('')) {
+          const data: RequestDataProps<SingUpProps[]> = {
+            data: [
+              {
+                redis_key: authCheck.join(':'),
+                auth_email_code: code.join(''),
+              },
+            ],
+          }
+          setProgressOpen(true)
+          const res = await api.callApi<string>('/api/signup', 'post', data)
+
+          if ('error_data' in res && res.status !== 200) {
+            // エラーレスポンスの場合
+            const errorData = res.error_data
+            if ('result' in errorData) {
+              // バリデーションエラー
+              const validateError = errorData as ValidateError
+              setErrorMsg(Common.ErrorMsgInfoArray(validateError))
+            } else {
+              if (res.status === 500) {
+                errorMsgInfo = Common.ErrorMsgInfo(
+                  Message.ServerError,
+                  errorData.error_msg
+                )
+              } else {
+                errorMsgInfo = Common.ErrorMsgInfo(
+                  Message.AuthError,
+                  errorData.error_msg
+                )
+              }
+              setErrorMsg(errorMsgInfo)
+            }
+            setOpen(true)
+            setOverlayOpen(true)
+            setCode(Array(inputNum).fill(''))
+          } else {
+            // 成功時のレスポンスの場合
+            setSuccessMsg('認証に成功しました。')
+            setSuccessOpen(true)
+            setSuccessOverlayOpen(true)
+            // 仮登録情報削除
+            localStorage.clear()
+          }
+          setProgressOpen(false)
+        } else {
+          errorMsgInfo = Common.ErrorMsgInfo(
+            Message.AuthError,
+            '認証コードが一致しません。'
+          )
+          setErrorMsg(errorMsgInfo)
+          setOpen(true)
+          setOverlayOpen(true)
+          setCode(Array(inputNum).fill(''))
+          setIsDisabled(false)
+        }
+      }
+    }
+
+    fetchData()
+  }, [code])
+
+  // トーストを閉じる処理
+  const successHandleClose = () => {
+    setSuccessOpen(false)
+    setSuccessOverlayOpen(false)
+    router.push('/money_management/signin')
+  }
+
+  const handleClose = () => {
+    setOpen(false)
+    setOverlayOpen(false)
+  }
 
   return (
     <div>
-      <FAContainer component='main' maxWidth='xs'>
-        <FACssBaseline />
-        <FABox
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column', // 縦に並べる設定
-            alignItems: 'center',
-          }}
-        >
-          <FAAvatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <PersonAddIcon />
-          </FAAvatar>
-          <FATypography component='h1' variant='h5'>
-            Sign Up
-          </FATypography>
-          <FABox
-            component='form'
-            noValidate
-            onSubmit={handleSubmit(onSubmit)}
-            sx={{
-              mt: 1,
-              display: 'flex',
-              flexDirection: 'column', // 入力フィールドを縦に並べる
-              gap: 2, // 各要素間のスペースを追加
-            }}
-          >
-            {/* Emailフィールド */}
-            <FATextForm<AuthFormProps>
-              name="nick_name"
-              label="ニックネーム"
-              control={control}
-              rules={validationRules.nickName}
-            />
-            {/* Emailフィールド */}
-            <FATextForm<AuthFormProps>
-              name="user_name"
-              label="メールアドレス"
-              control={control}
-              rules={validationRules.email}
-            />
-
-            {/* Passwordフィールド */}
-            <FAPasswordTextForm
-              name="user_password"
-              label="パスワード"
-              control={control}
-              rules={validationRules.password}
-            />
-
-            {/* confirmPasswordフィールド */}
-            <FAPasswordTextForm
-              name="confirm_password"
-              label="確認パスワード"
-              control={control}
-              rules={validationRules.confirmPassword(password)}
-            />
-            <FAButton
-              type="submit"
-              disabled={!isValid}
-              fullWidth
-              variant='contained'
-              sx={{ mt: 3, mb: 2 }}
-            >
-              SIGN UP
-            </FAButton>
-          </FABox>
-        </FABox>
-      </FAContainer>
+      <TWCommonCircularProgress open={progressOpen} />
+      <TWCard
+        sx={{
+          maxWidth: 800,
+          height: 500,
+          margin: 'auto',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <TWCardContent>
+          <EmailAuth
+            inputNum={inputNum}
+            inputRefs={inputRefs}
+            code={code}
+            setCode={setCode}
+            handleEntryEmail={handleEntryEmail}
+            isDisabled={isDisabled}
+            setIsDisabled={setIsDisabled}
+          />
+        </TWCardContent>
+        <br />
+        <TWCardActions></TWCardActions>
+      </TWCard>
       <>
-        <FABox sx={{ width: 500 }}>
-            <FABackDrop
-              overlayOpen={overlayOpen}
-            />
-            <FAToast
-              open={open}
-              handleClose={handleClose}
-              vertical={'top'}
-              horizontal={'center'}
-              severity={'error'}
-              message={errorMsg}              
-            />
-        </FABox>
+        <EmailAuthToast
+          successOverlayOpen={successOverlayOpen}
+          successOpen={successOpen}
+          successHandleClose={successHandleClose}
+          successMsg={successMsg}
+          overlayOpen={overlayOpen}
+          open={open}
+          handleClose={handleClose}
+          msg={errorMsg}
+        />
       </>
     </div>
-  );
-};
+  )
+}
 
-export default SignUp;
+/**
+ * メール認証コンポーネント
+ *
+ * @param {EmailAuthProps} props - コンポーネントが受け取るprops
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const EmailAuth: React.FC<EmailAuthProps> = (
+  props: EmailAuthProps
+): JSX.Element => {
+  const {
+    inputNum,
+    inputRefs,
+    code,
+    setCode,
+    handleEntryEmail,
+    isDisabled,
+    setIsDisabled,
+  } = props
+
+  const sx = {
+    display: 'flex',
+    justifyContent: 'center', // 水平方向の中央揃え
+    alignItems: 'center', // 垂直方向の中央揃え
+  }
+
+  return (
+    <div>
+      <TWBox sx={sx}>
+        <TWTypography variant="h4">メール認証コード</TWTypography>
+      </TWBox>
+      <br />
+      <br />
+      <TWBox sx={sx}>
+        {[...Array(inputNum)].map((_, i) => (
+          <TWTextField
+            key={i}
+            autoFocus={i === 0}
+            value={code[i]}
+            type="tel"
+            inputRef={(el) => (inputRefs.current[i] = el)}
+            disabled={isDisabled}
+            sx={{
+              width: 50,
+              marginRight: 4,
+            }}
+            onChange={(e) => {
+              const newCode = [...code]
+              newCode[i] = e.target.value
+              setCode(newCode)
+
+              // 次の入力欄にフォーカス
+              if (e.target.value !== '' && i < inputNum - 1) {
+                inputRefs.current[i + 1]?.focus()
+              }
+
+              if (i == inputNum - 1) {
+                setIsDisabled(true)
+              }
+            }}
+          />
+        ))}
+      </TWBox>
+      <br />
+      <br />
+      <TWBox sx={sx}>
+        <TWTypography variant="h6">
+          仮サインアップ時に登録したメールアドレスに認証コードを送信しました。
+        </TWTypography>
+      </TWBox>
+      <TWBox sx={sx}>
+        <TWTypography variant="h6">
+          続けるにはコードを入力してください。
+        </TWTypography>
+      </TWBox>
+      <TWBox sx={sx}>
+        <TWButton size="large" color="primary" onClick={handleEntryEmail}>
+          コードを再送信
+        </TWButton>
+      </TWBox>
+    </div>
+  )
+}
+
+/**
+ * メール認証トーストコンポーネント
+ *
+ * @param {EmailAuthToastProps} props - コンポーネントが受け取るprops
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const EmailAuthToast: React.FC<EmailAuthToastProps> = (
+  props: EmailAuthToastProps
+): JSX.Element => {
+  const {
+    successOverlayOpen,
+    successOpen,
+    successHandleClose,
+    successMsg,
+    overlayOpen,
+    open,
+    handleClose,
+    msg,
+  } = props
+  const vertical = 'top'
+  const center = 'center'
+  const width = 500
+
+  return (
+    <div>
+      <TWBox sx={{ width: width }}>
+        <TWBackDrop overlayOpen={successOverlayOpen} />
+        <TWToast
+          open={successOpen}
+          handleClose={successHandleClose}
+          vertical={vertical}
+          horizontal={center}
+          severity={'success'}
+          message={successMsg}
+        />
+      </TWBox>
+      <TWBox sx={{ width: width }}>
+        <TWBackDrop overlayOpen={overlayOpen} />
+        <TWToast
+          open={open}
+          handleClose={handleClose}
+          vertical={vertical}
+          horizontal={center}
+          severity={'error'}
+          message={msg}
+        />
+      </TWBox>
+    </div>
+  )
+}
+
+export default SignUp

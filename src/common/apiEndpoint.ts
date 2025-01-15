@@ -1,52 +1,52 @@
-import http from "./httpCommon";
+import http from './httpCommon'
 
 class ApiEndpoint {
   getPriceManagement(params: any): Promise<any> {
-    return http.get(`/api/price/` + params);
+    return http.get(`/api/price/` + params)
   }
-  
+
   getIncomeData(params: any): Promise<any> {
-    return http.get(`/api/income_data/` + params);
+    return http.get(`/api/income_data/` + params)
   }
 
   getRangeDate(params: any): Promise<any> {
-    return http.get(`/api/range_date/` + params);
+    return http.get(`/api/range_date/` + params)
   }
 
   getYearsIncomeDate(params: any): Promise<any> {
-    return http.get(`/api/years_income_date/` + params);
+    return http.get(`/api/years_income_date/` + params)
   }
 
   incomeCreate(data: any): Promise<any> {
-    return http.post(`/api/income_create/`, data);
+    return http.post(`/api/income_create/`, data)
   }
 
   incomeUpdate(data: any): Promise<any> {
-    return http.put(`/api/income_update/`, data);
+    return http.put(`/api/income_update/`, data)
   }
 
   incomeDelete(id: any): Promise<any> {
-    return http.delete(`/api/income_delete/?income_forecast_id=${id}`);
+    return http.delete(`/api/income_delete/?income_forecast_id=${id}`)
   }
 
   singin(data: any): Promise<any> {
-    return http.post(`api/singin`, data);
+    return http.post(`api/singin`, data)
   }
 
   refreshToken(params: any): Promise<any> {
-    return http.get(`api/refresh_token/` + params);
+    return http.get(`api/refresh_token/` + params)
   }
 
-  singup(data: any): Promise<any> {
-    return http.post(`api/singup`, data);
+  SignUp(data: any): Promise<any> {
+    return http.post(`api/SignUp`, data)
   }
 
   singinEdit(data: any): Promise<any> {
-    return http.put(`/api/singin_edit`, data);
+    return http.put(`/api/singin_edit`, data)
   }
 
   singinDelete(data: any): Promise<any> {
-    return http.delete(`/api/books/`, data);
+    return http.delete(`/api/books/`, data)
   }
 
   // deleteAll(): Promise<any> {
@@ -59,7 +59,7 @@ class ApiEndpoint {
 }
 
 // インスタンスを変数に代入
-const apiEndpoint = new ApiEndpoint();
+const apiEndpoint = new ApiEndpoint()
 
 // 変数をデフォルトエクスポート
-export default apiEndpoint;
+export default apiEndpoint

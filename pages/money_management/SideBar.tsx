@@ -1,15 +1,12 @@
-import { Divider, Drawer, List } from '@mui/material';
-import Box from '@mui/material/Box';
-import React from 'react';
+import { Drawer, List } from '@mui/material'
+import Box from '@mui/material/Box'
+import React from 'react'
 import { ClassesProps } from '@/src/common/entity'
-import { LinkBar } from '@/src/common/component';
+import { LinkBar } from '@/src/common/component'
 
-
-export const SIDEBARWIDTH: number = 140;
-
+export const SIDEBARWIDTH: number = 140
 
 export const SideBar: React.FC<ClassesProps> = (props) => {
-
   return (
     <>
       <Drawer
@@ -26,14 +23,9 @@ export const SideBar: React.FC<ClassesProps> = (props) => {
           <List>
             {props.classes.map((val, idx) => {
               return (
-                <LinkBar
-                  key={idx}
-                  name={val.name}
-                  link={val.link}
-                ></LinkBar>
-              );
-            }
-          )}
+                <LinkBar key={idx} name={val.name} link={val.link}></LinkBar>
+              )
+            })}
           </List>
           {/* TODO:今後各カテゴリ毎にリンクを分ける際に Divider を使用してアンダーラインを引いて分ける */}
           {/* <Divider /> */}
@@ -52,5 +44,5 @@ export const SideBar: React.FC<ClassesProps> = (props) => {
         </Box>
       </Drawer>
     </>
-  );
-};
+  )
+}

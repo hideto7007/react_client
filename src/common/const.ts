@@ -1,6 +1,3 @@
-import { PathMapProps } from '@/src/common/entity'
-
-
 // 貯金額計算固定値
 enum PriceManagementConst {
   SavingsPeriod = '貯蓄期間',
@@ -9,16 +6,14 @@ enum PriceManagementConst {
   FixedCost = '固定費(家賃、光熱費、通信費、サブスクリプション、積み立て投資などなど・・・)',
   Loan = 'ローン(教育、車)',
   Privates = 'プライベート(月に自身が自由に使える)',
-  Insurance = '保険(生命保険、任意保険など)'
+  Insurance = '保険(生命保険、任意保険など)',
 }
-
 
 // エラー定数
 enum ErrorConst {
   InterServerError = 'サーバーエラー',
-  ErrorMessage = 'サーバーダウン。もしくは、サーバー側で何か不具合が発生しました。'
+  ErrorMessage = 'サーバーダウン。もしくは、サーバー側で何か不具合が発生しました。',
 }
-
 
 // 位置調整定数
 enum Align {
@@ -28,12 +23,10 @@ enum Align {
   End = 'end',
 }
 
-
 // サイズ定数
 enum Size {
-  Small = 'small'
+  Small = 'small',
 }
-
 
 // Type定数
 enum Type {
@@ -52,9 +45,8 @@ enum Type {
   UpdateJp = '更新',
   CreateJp = '新規登録',
   On = 'on',
-  Off = 'off'
+  Off = 'off',
 }
-
 
 // 年収管理表
 // 定数定義
@@ -63,7 +55,7 @@ enum ClassificationConst {
   Bonus = '賞与',
   OneTimePayment = '一時金',
   SmallToken = '寸志',
-  Other = 'その他'
+  Other = 'その他',
 }
 
 enum LabelConst {
@@ -74,7 +66,7 @@ enum LabelConst {
   DeductionAmount = '差引額',
   TakeHomeAmount = '手取り',
   Classification = '分類',
-  Edit = '編集'
+  Edit = '編集',
 }
 
 enum KeyConst {
@@ -89,7 +81,7 @@ enum KeyConst {
   UpdateUser = 'update_user',
   UserId = 'user_id',
   Edit = 'edit',
-  Delete = 'delete'
+  Delete = 'delete',
 }
 
 // 定数リストを配列として作成
@@ -98,8 +90,8 @@ const classificationListConst = [
   ClassificationConst.Bonus,
   ClassificationConst.OneTimePayment,
   ClassificationConst.SmallToken,
-  ClassificationConst.Other
-] as const;
+  ClassificationConst.Other,
+] as const
 
 const labelListConst = [
   LabelConst.PaymentDate,
@@ -108,8 +100,8 @@ const labelListConst = [
   LabelConst.TotalAmount,
   LabelConst.DeductionAmount,
   LabelConst.TakeHomeAmount,
-  LabelConst.Classification
-] as const;
+  LabelConst.Classification,
+] as const
 
 const keyListConst = [
   KeyConst.PaymentDate,
@@ -118,30 +110,35 @@ const keyListConst = [
   KeyConst.TotalAmount,
   KeyConst.DeductionAmount,
   KeyConst.TakeHomeAmount,
-  KeyConst.Classification
-] as const;
+  KeyConst.Classification,
+] as const
 
 enum Auth {
-  AuthToken = 'AuthToken',
-  RefreshAuthToken = 'RefreshAuthToken',
+  AuthToken = 'auth_token',
+  RefreshAuthToken = 'refresh_auth_token',
   UserId = 'user_id',
+  TokenId = 'token_id',
   UserName = 'user_name',
-  UserPassword = 'user_password'
+  SignType = 'sign_type',
+  Error = 'error',
+  UserPassword = 'user_password',
+  RedisKey = 'redis_key',
+  TmpUserName = 'tmp_user_name',
+  TmpNickName = 'tmp_nick_name',
 }
 
 // パス名とタイトルのマッピングを定義
 const pathMap: { [key: string]: string } = {
-  about: "アバウト",
-  posts: "ポスト",
-  signup: "サインアップ",
-  signin: "サインイン",
-  table: "テーブル",
-  table1: "テーブル1",
-  csvimport: "CSVインポート",
-};
+  about: 'アバウト',
+  posts: 'ポスト',
+  signup: 'サインアップ',
+  signin: 'サインイン',
+  table: 'テーブル',
+  table1: 'テーブル1',
+  csvimport: 'CSVインポート',
+}
 
-
-export { 
+export {
   PriceManagementConst,
   ErrorConst,
   Align,
@@ -153,5 +150,5 @@ export {
   keyListConst,
   LabelConst,
   Auth,
-  pathMap
-};
+  pathMap,
+}

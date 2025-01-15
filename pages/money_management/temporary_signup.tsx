@@ -1,46 +1,51 @@
-import Link from 'next/link'
 import React, { useState } from 'react'
 import { useRouter } from 'next/router' // useRouterをインポート
 import {
   TWTextForm,
   TWPasswordTextForm,
-  TWToast,
-  TWBackDrop,
+  TWButton,
   TWContainer,
   TWCssBaseline,
   TWBox,
   TWAvatar,
   TWTypography,
-  TWButton,
+  TWBackDrop,
+  TWToast,
   TWCommonCircularProgress,
   ExternalSignButton,
   TWExternalText,
 } from '@/src/common/component'
-import { UserInfo, ValidateError } from '@/src/common/presenter'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { AuthFormProps, SigninResProps } from '@/src/common/entity'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import { AuthFormProps, TmpSignUpResProps } from '@/src/common/entity'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { validationRules } from '@/src/common/vaildation'
-import { Response } from '@/src/common/presenter'
-import { Auth } from '@/src/common/const'
 import { ApiClient } from '@/src/common/apiClient'
 import Common from '@/src/common/common'
+import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
 import { Message } from '@/src/common/message'
+import { Auth } from '@/src/common/const'
 import { FcGoogle } from 'react-icons/fc'
 import { FaLine } from 'react-icons/fa6'
-import { GOOGLE_SIGN_IN, LINE_SIGN_IN } from '@/src/utils/redirectPath'
+import { GOOGLE_SIGN_UP, LINE_SIGN_UP } from '@/src/utils/redirectPath'
 
-const SignIn: React.FC = () => {
+/**
+ * 仮サインアップコンポーネント
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const TemporarySignUp: React.FC = (): JSX.Element => {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { isValid },
   } = useForm<AuthFormProps>({
-    mode: 'onChange', // ユーザーが入力するたびにバリデーション
-    // mode: 'onBlur', // 入力フィールドがフォーカスを失ったときにバリデーション
+    mode: 'onChange',
     defaultValues: {
       user_name: '',
       user_password: '',
+      confirm_password: '',
+      nick_name: '',
     },
   })
   const router = useRouter()
@@ -51,7 +56,22 @@ const SignIn: React.FC = () => {
   let errorMsgInfo: string
   const api = new ApiClient()
 
-  const handlerResult = (res: Response<UserInfo[]>): void => {
+  // passwordフィールドの値を監視
+  const password = watch('user_password')
+
+  const onSubmit: SubmitHandler<AuthFormProps> = async (
+    data: AuthFormProps
+  ) => {
+    const dataRes: TmpSignUpResProps = {
+      data: [data],
+    }
+    setProgressOpen(true)
+    const res = await api.callApi<EmailAuthToken>(
+      '/api/temporay_signup',
+      'post',
+      dataRes
+    )
+
     if ('error_data' in res && res.status !== 200) {
       // エラーレスポンスの場合
       const errorData = res.error_data
@@ -79,25 +99,14 @@ const SignIn: React.FC = () => {
     } else {
       // 成功時のレスポンスの場合
       if (api.isOkResponse(res)) {
-        const userInfo = res.data.result[0] as UserInfo
-        localStorage.clear()
-        localStorage.setItem(Auth.UserId, userInfo.user_id)
-        localStorage.setItem(Auth.UserName, userInfo.user_name)
+        const emailAuthToken = res.data.result as EmailAuthToken
+        localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
+        localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
+        localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
         setProgressOpen(false)
-        router.push('/money_management')
+        router.push('/money_management/signup')
       }
     }
-  }
-
-  const onSubmit: SubmitHandler<AuthFormProps> = async (
-    data: AuthFormProps
-  ) => {
-    const dataRes: SigninResProps = {
-      data: [data],
-    }
-    setProgressOpen(true)
-    const res = await api.callApi<UserInfo[]>('/api/signin', 'post', dataRes)
-    handlerResult(res)
   }
 
   // トーストを閉じる処理
@@ -109,38 +118,31 @@ const SignIn: React.FC = () => {
   const googleHandler = async () => {
     setProgressOpen(true)
     // リダイレクト
-    window.location.href = GOOGLE_SIGN_IN
+    window.location.href = GOOGLE_SIGN_UP
   }
 
   const lineHandler = async () => {
     setProgressOpen(true)
     // リダイレクト
-    window.location.href = LINE_SIGN_IN
+    window.location.href = LINE_SIGN_UP
   }
 
   React.useEffect(() => {
     const url = new URL(location.href)
 
-    const userId = url.searchParams.get(Auth.UserId)
-    const UserName = url.searchParams.get(Auth.UserName)
     const signType = url.searchParams.get(Auth.SignType)
     const error = url.searchParams.get(Auth.Error)
     localStorage.clear()
 
-    if (userId && UserName && signType) {
-      localStorage.setItem(Auth.UserId, userId)
-      localStorage.setItem(Auth.UserName, UserName)
-      localStorage.setItem(Auth.SignType, signType)
+    if (signType && error === null) {
       setProgressOpen(false)
-      router.push('/money_management')
-    } else if (error && signType) {
+      router.push('/money_management/signin')
+    } else if (error !== null && signType !== null) {
       setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error))
       setOpen(true)
       setOverlayOpen(true)
-      // ページをリロードする
-      router.push('/money_management/signin')
     }
-  }, [])
+  }, [router])
 
   return (
     <div>
@@ -156,10 +158,10 @@ const SignIn: React.FC = () => {
           }}
         >
           <TWAvatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
+            <PersonAddIcon />
           </TWAvatar>
           <TWTypography component="h1" variant="h5">
-            サインイン
+            仮サインアップ
           </TWTypography>
           <TWBox
             component="form"
@@ -172,6 +174,13 @@ const SignIn: React.FC = () => {
               gap: 2, // 各要素間のスペースを追加
             }}
           >
+            {/* Emailフィールド */}
+            <TWTextForm<AuthFormProps>
+              name="nick_name"
+              label="ニックネーム"
+              control={control}
+              rules={validationRules.nickName}
+            />
             {/* Emailフィールド */}
             <TWTextForm<AuthFormProps>
               name="user_name"
@@ -187,15 +196,14 @@ const SignIn: React.FC = () => {
               control={control}
               rules={validationRules.password}
             />
-            <TWTypography>
-              サインアップがまだの場合は
-              <Link href="/money_management/temporary_signup">こちら</Link>
-            </TWTypography>
-            <TWTypography sx={{ fontSize: '0.8rem' }}>
-              <Link href="/money_management/sign_register_email_check_notice">
-                サインインパスワード忘れた方
-              </Link>
-            </TWTypography>
+
+            {/* confirmPasswordフィールド */}
+            <TWPasswordTextForm
+              name="confirm_password"
+              label="確認パスワード"
+              control={control}
+              rules={validationRules.confirmPassword(password)}
+            />
             <TWButton
               type="submit"
               disabled={!isValid}
@@ -203,10 +211,10 @@ const SignIn: React.FC = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              SIGN IN
+              SIGN UP
             </TWButton>
           </TWBox>
-          <TWExternalText text="サインイン" />
+          <TWExternalText text="サインアップ" />
           <ExternalSignButton
             icon={<FcGoogle />}
             label="Google"
@@ -237,4 +245,4 @@ const SignIn: React.FC = () => {
   )
 }
 
-export default SignIn
+export default TemporarySignUp
