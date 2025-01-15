@@ -11,44 +11,146 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }))
 
-// describe('SignUp.tsx コード再送信', () => {
-//   const mockPush = jest.fn()
-//   const mockedApiClient = jest.mocked(ApiClient)
-//   localStorage.setItem(
-//     Auth.RedisKey,
-//     '3456:7ef09a51-6dc2-48ba-a611-b89cbd563f1c'
-//   )
-//   localStorage.setItem(Auth.TmpUserName, 'test@example.com')
-//   localStorage.setItem(Auth.TmpNickName, 'test')
+describe('SignUp.tsx コード再送信', () => {
+  const mockPushCode = jest.fn()
+  const mockedApiClientCode = jest.mocked(ApiClient)
+  localStorage.setItem(
+    Auth.RedisKey,
+    '9876:7ef76a51-6dc2-48ca-a611-b89cba563f1c'
+  )
+  localStorage.setItem(Auth.TmpUserName, 'test_code@example.com')
+  localStorage.setItem(Auth.TmpNickName, 'test_code')
 
-//   beforeEach(() => {
-//     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
-//     mockPush.mockClear()
-//     mockedApiClient.mockClear()
-//     mockedApiClient.prototype.callApi.mockClear()
-//     mockedApiClient.prototype.isOkResponse.mockClear()
-//   })
+  beforeEach(() => {
+    ;(useRouter as jest.Mock).mockReturnValue({ push: mockPushCode })
+    jest.clearAllMocks()
+    mockPushCode.mockClear()
+    mockedApiClientCode.mockClear()
+    mockedApiClientCode.prototype.callApi.mockClear()
+    mockedApiClientCode.prototype.isOkResponse.mockClear()
+  })
 
-//   it('メール再送信ができること', async () => {
-//     mockedApiClient.prototype.isOkResponse.mockReturnValue(true)
-//     // mockedApiClient.prototype.callApi.mockResolvedValueOnce({
-//     //   status: 200,
-//     //   data: {
-//     //     result: {
-//     //       redis_key: localStorage.getItem(Auth.RedisKey),
-//     //       user_name: localStorage.getItem(Auth.TmpUserName),
-//     //       nick_name: localStorage.getItem(Auth.TmpNickName),
-//     //     },
-//     //   },
-//     // })
+  it('メール再送信ができること', async () => {
+    mockedApiClientCode.prototype.isOkResponse.mockReturnValue(true)
+    mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
+      status: 200,
+      data: {
+        result: {
+          redis_key: localStorage.getItem(Auth.RedisKey),
+          user_name: localStorage.getItem(Auth.TmpUserName),
+          nick_name: localStorage.getItem(Auth.TmpNickName),
+        },
+      },
+    })
 
-//     render(<SignUp />)
+    render(<SignUp />)
 
-//     // ボタンを取得してクリック
-//     const closeButton = screen.getByRole('button', { name: 'コードを再送信' })
-//     fireEvent.click(closeButton)
-//   })
-// })
+    // ボタンを取得してクリック
+    const codeSendButton = screen.getByRole('button', {
+      name: 'コードを再送信',
+    })
+    fireEvent.click(codeSendButton)
+  })
+
+  it('メール再送信が失敗 バリデーションエラー', async () => {
+    mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
+      status: 400,
+      error_data: {
+        result: [
+          {
+            field: 'user_name',
+            message: 'ユーザー名は必須です。',
+          },
+        ],
+      },
+    } as ErrorResponse)
+
+    render(<SignUp />)
+
+    // ボタンを取得してクリック
+    const codeSendButton = screen.getByRole('button', {
+      name: 'コードを再送信',
+    })
+    await waitFor(() => {
+      fireEvent.click(codeSendButton)
+    })
+
+    expect(
+      screen.getByText((content) =>
+        content.includes('エラー内容：ユーザー名は必須です。')
+      )
+    ).toBeInTheDocument()
+
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
+  })
+
+  it('メール再送信が失敗 認証エラー', async () => {
+    mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
+      status: 401,
+      error_data: {
+        error_msg: '認証エラー',
+      },
+    } as ErrorResponse)
+
+    render(<SignUp />)
+
+    // ボタンを取得してクリック
+    const codeSendButton = screen.getByRole('button', {
+      name: 'コードを再送信',
+    })
+    await waitFor(() => {
+      fireEvent.click(codeSendButton)
+    })
+
+    expect(
+      screen.getByText((content) => content.includes('エラー内容：認証エラー'))
+    ).toBeInTheDocument()
+
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
+  })
+
+  it('メール再送信が失敗 サーバーエラー', async () => {
+    mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
+      status: 500,
+      error_data: {
+        error_msg: 'サーバーエラー',
+      },
+    } as ErrorResponse)
+
+    render(<SignUp />)
+
+    // ボタンを取得してクリック
+    const codeSendButton = screen.getByRole('button', {
+      name: 'コードを再送信',
+    })
+    await waitFor(() => {
+      fireEvent.click(codeSendButton)
+    })
+
+    expect(
+      screen.getByText((content) =>
+        content.includes('エラー内容：サーバーエラー')
+      )
+    ).toBeInTheDocument()
+
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
+  })
+})
 
 describe('SignUp.tsx 認証コード', () => {
   const mockPush = jest.fn()
@@ -62,6 +164,7 @@ describe('SignUp.tsx 認証コード', () => {
 
   beforeEach(() => {
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
+    jest.clearAllMocks()
     mockPush.mockClear()
     mockedApiClient.mockClear()
     mockedApiClient.prototype.callApi.mockClear()
@@ -141,7 +244,7 @@ describe('SignUp.tsx 認証コード', () => {
     expect(mockPush).toHaveBeenCalledWith('/money_management/signin')
   })
 
-  it('登録処理APIでエラーになること 1', async () => {
+  it('登録処理APIでエラーになること バリデーションエラー', async () => {
     mockedApiClient.prototype.callApi.mockClear()
     localStorage.setItem(
       Auth.RedisKey,
@@ -166,7 +269,6 @@ describe('SignUp.tsx 認証コード', () => {
       fireEvent.change(input, { target: { value: String(index + 1) } })
     })
 
-    // サインインページへのリダイレクトを確認
     await waitFor(() => {
       expect(
         screen.getByText((content) =>
@@ -183,7 +285,7 @@ describe('SignUp.tsx 認証コード', () => {
     expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 
-  it('登録処理APIでエラーになること 2', async () => {
+  it('登録処理APIでエラーになること 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockClear()
     localStorage.setItem(
       Auth.RedisKey,
@@ -206,6 +308,41 @@ describe('SignUp.tsx 認証コード', () => {
       expect(
         screen.getByText((content) =>
           content.includes('エラー内容：Invalid Code')
+        )
+      ).toBeInTheDocument()
+    })
+
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
+  })
+
+  it('登録処理APIでエラーになること サーバーエラー', async () => {
+    mockedApiClient.prototype.callApi.mockClear()
+    localStorage.setItem(
+      Auth.RedisKey,
+      '1234:7ef09a51-6dc2-48ba-a611-b89cbd563f1c'
+    )
+    mockedApiClient.prototype.callApi.mockResolvedValueOnce({
+      status: 500,
+      error_data: { error_msg: 'サーバーエラー' },
+    })
+
+    render(<SignUp />)
+
+    const inputFields = screen.getAllByRole('textbox')
+    inputFields.forEach((input, index) => {
+      fireEvent.change(input, { target: { value: String(index + 1) } })
+    })
+
+    // エラーメッセージが表示されることを確認
+    await waitFor(() => {
+      expect(
+        screen.getByText((content) =>
+          content.includes('エラー内容：サーバーエラー')
         )
       ).toBeInTheDocument()
     })

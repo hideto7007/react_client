@@ -80,7 +80,7 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
         const validateError = errorData as ValidateError
         setErrorMsg(Common.ErrorMsgInfoArray(validateError))
       } else {
-        if (res.status !== 401 && res.status !== 409) {
+        if (res.status === 500) {
           errorMsgInfo = Common.ErrorMsgInfo(
             Message.ServerError,
             errorData.error_msg
