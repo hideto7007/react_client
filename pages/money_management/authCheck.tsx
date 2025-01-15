@@ -43,12 +43,6 @@ const AuthCheck: React.FC = () => {
         }
         setOpen(true)
         setOverlayOpen(true)
-      } else {
-        // 成功時のレスポンスの場合
-        if (api.isOkResponse(res)) {
-          const result = res.data.result as string
-          console.log(result)
-        }
       }
     })()
   }, [router])
