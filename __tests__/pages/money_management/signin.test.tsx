@@ -2,11 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignIn from '../../../pages/money_management/signin'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import {
-  ErrorResponse,
-  OkResponse,
-  UserInfo,
-} from '../../../src/common/presenter'
+import { Response, OkResponse, UserInfo } from '../../../src/common/presenter'
 
 // モックを定義
 jest.mock('@/src/common/apiClient')
@@ -43,7 +39,7 @@ describe('Singin.tsx', () => {
 
   it('ボタン押下して成功したら、router.push が呼び出される', async () => {
     mockedApiClient.prototype.isOkResponse.mockReturnValue(true)
-    const res: OkResponse<UserInfo[]> = {
+    const res: Response<UserInfo[]> = {
       data: {
         result: [
           {
@@ -134,8 +130,8 @@ describe('Singin.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      error_data: { error_msg: 'テスト エラー' },
-    } as ErrorResponse)
+      data: { error_msg: 'テスト エラー' },
+    } as Response<unknown>)
 
     render(<SignIn />)
 
@@ -160,8 +156,8 @@ describe('Singin.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
-      error_data: { error_msg: 'テスト エラー' },
-    } as ErrorResponse)
+      data: { error_msg: 'テスト エラー' },
+    } as Response<unknown>)
 
     render(<SignIn />)
 
@@ -186,7 +182,7 @@ describe('Singin.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 400,
-      error_data: {
+      data: {
         result: [
           {
             field: 'user_password',
@@ -194,7 +190,7 @@ describe('Singin.tsx', () => {
           },
         ],
       },
-    } as ErrorResponse)
+    } as Response<unknown>)
 
     render(<SignIn />)
 

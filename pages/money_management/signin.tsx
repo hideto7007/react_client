@@ -16,7 +16,7 @@ import {
   ExternalSignButton,
   TWExternalText,
 } from '@/src/common/component'
-import { UserInfo, ValidateError } from '@/src/common/presenter'
+import { Result, UserInfo, ValidateError } from '@/src/common/presenter'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { AuthFormProps, SigninResProps } from '@/src/common/entity'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
@@ -51,41 +51,28 @@ const SignIn: React.FC = () => {
   let errorMsgInfo: string
   const api = new ApiClient()
 
-  const handlerResult = (res: Response<UserInfo[]>): void => {
-    if ('error_data' in res && res.status !== 200) {
-      // エラーレスポンスの場合
-      const errorData = res.error_data
-      if ('result' in errorData) {
-        // バリデーションエラー
-        const validateError = errorData as ValidateError
-        setErrorMsg(Common.ErrorMsgInfoArray(validateError))
-      } else {
-        if (res.status === 500) {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.ServerError,
-            errorData.error_msg
-          )
-        } else {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.AuthError,
-            errorData.error_msg
-          )
-        }
+  const handlerResult = (res: Response<UserInfo[] | unknown>): void => {
+    if (res.status !== 200) {
+      if ('error_msg' in res.data) {
+        errorMsgInfo = Common.ErrorMsgInfo(
+          Message.AuthError,
+          res.data.error_msg
+        )
         setErrorMsg(errorMsgInfo)
+      } else {
+        setErrorMsg(Common.ErrorMsgInfoArray(res.data as ValidateError))
       }
       setProgressOpen(false)
       setOpen(true)
       setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      if (api.isOkResponse(res)) {
-        const userInfo = res.data.result[0] as UserInfo
-        localStorage.clear()
-        localStorage.setItem(Auth.UserId, userInfo.user_id)
-        localStorage.setItem(Auth.UserName, userInfo.user_name)
-        setProgressOpen(false)
-        router.push('/money_management')
-      }
+      const userInfo = (res.data as Result<UserInfo>).result as UserInfo
+      localStorage.clear()
+      localStorage.setItem(Auth.UserId, userInfo.user_id)
+      localStorage.setItem(Auth.UserName, userInfo.user_name)
+      setProgressOpen(false)
+      router.push('/money_management')
     }
   }
 
