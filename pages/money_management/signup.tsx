@@ -21,7 +21,7 @@ import {
 import Common from '@/src/common/common'
 import React, { useRef, useState } from 'react'
 import { Message } from '@/src/common/message'
-import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
+import { EmailAuthToken } from '@/src/common/presenter'
 import { useRouter } from 'next/router'
 import { Utils } from '@/src/utils/utils'
 
@@ -90,27 +90,9 @@ const SignUp: React.FC = (): JSX.Element => {
           setProgressOpen(true)
           const res = await api.callApi<string>('/api/signup', 'post', data)
 
-          if ('data' in res && res.status !== 200) {
+          if (res.status !== 200) {
             // エラーレスポンスの場合
-            const errorData = res.data
-            if ('result' in errorData) {
-              // バリデーションエラー
-              const validateError = errorData as ValidateError
-              setErrorMsg(Common.ErrorMsgInfoArray(validateError))
-            } else {
-              if (res.status === 500) {
-                errorMsgInfo = Common.ErrorMsgInfo(
-                  Message.ServerError,
-                  errorData.error_msg
-                )
-              } else {
-                errorMsgInfo = Common.ErrorMsgInfo(
-                  Message.AuthError,
-                  errorData.error_msg
-                )
-              }
-              setErrorMsg(errorMsgInfo)
-            }
+            setErrorMsg(Utils.generateErrorMsg(res))
             setOpen(true)
             setOverlayOpen(true)
             setCode(Array(inputNum).fill(''))
