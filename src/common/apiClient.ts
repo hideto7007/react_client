@@ -1,5 +1,12 @@
 import axios, { AxiosInstance, Method } from 'axios'
-import { Response, OkResponse, Result } from '@/src/common/presenter'
+import {
+  Response,
+  OkResponse,
+  Result,
+  ValidateError,
+} from '@/src/common/presenter'
+import Common from '@/src/common/common'
+import { Message } from './message'
 
 const BASE_URL: string | undefined =
   process.env.API_BASE_URL || 'http://localhost:8080'
@@ -62,7 +69,23 @@ class ApiClient {
   }
 
   public isOkResponse<T>(response: Response<T>): response is OkResponse<T> {
-    return 'data' in response && 'result' in response.data
+    return (
+      response.status === 200 && 'data' in response && 'result' in response.data
+    )
+  }
+
+  public typeAssertion<T>(response: Response<T> | Response<unknown>): T {
+    if (this.isOkResponse(response)) {
+      return (response.data as Result<T>).result as T
+    }
+    throw new Error('アサーション失敗しました。')
+  }
+
+  public generateErrorMsg(response: Response<unknown>): string {
+    if ('error_msg' in response.data) {
+      return Common.ErrorMsgInfo(Message.AuthError, response.data.error_msg)
+    }
+    return Common.ErrorMsgInfoArray(response.data as ValidateError)
   }
 }
 

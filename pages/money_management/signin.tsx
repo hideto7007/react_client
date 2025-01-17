@@ -16,7 +16,7 @@ import {
   ExternalSignButton,
   TWExternalText,
 } from '@/src/common/component'
-import { Result, UserInfo, ValidateError } from '@/src/common/presenter'
+import { UserInfo } from '@/src/common/presenter'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { AuthFormProps, SigninResProps } from '@/src/common/entity'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
@@ -48,26 +48,17 @@ const SignIn: React.FC = () => {
   const [open, setOpen] = useState(false)
   const [overlayOpen, setOverlayOpen] = useState(false)
   const [progressOpen, setProgressOpen] = useState(false)
-  let errorMsgInfo: string
   const api = new ApiClient()
 
   const handlerResult = (res: Response<UserInfo[] | unknown>): void => {
     if (res.status !== 200) {
-      if ('error_msg' in res.data) {
-        errorMsgInfo = Common.ErrorMsgInfo(
-          Message.AuthError,
-          res.data.error_msg
-        )
-        setErrorMsg(errorMsgInfo)
-      } else {
-        setErrorMsg(Common.ErrorMsgInfoArray(res.data as ValidateError))
-      }
+      setErrorMsg(api.generateErrorMsg(res))
       setProgressOpen(false)
       setOpen(true)
       setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      const userInfo = (res.data as Result<UserInfo>).result as UserInfo
+      const userInfo = api.typeAssertion<UserInfo[]>(res)[0]
       localStorage.clear()
       localStorage.setItem(Auth.UserId, userInfo.user_id)
       localStorage.setItem(Auth.UserName, userInfo.user_name)

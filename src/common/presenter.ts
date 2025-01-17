@@ -69,4 +69,5 @@ export type {
   Response,
   UserInfo,
   EmailAuthToken,
+  ErrorMsg,
 }
