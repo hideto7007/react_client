@@ -38,7 +38,6 @@ describe('Singin.tsx', () => {
   })
 
   it('ボタン押下して成功したら、router.push が呼び出される', async () => {
-    mockedApiClient.prototype.isOkResponse.mockReturnValue(true)
     const res: Response<UserInfo[]> = {
       data: {
         result: [

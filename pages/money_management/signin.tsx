@@ -29,6 +29,7 @@ import { Message } from '@/src/common/message'
 import { FcGoogle } from 'react-icons/fc'
 import { FaLine } from 'react-icons/fa6'
 import { GOOGLE_SIGN_IN, LINE_SIGN_IN } from '@/src/utils/redirectPath'
+import { Utils } from '@/src/utils/utils'
 
 const SignIn: React.FC = () => {
   const {
@@ -52,13 +53,13 @@ const SignIn: React.FC = () => {
 
   const handlerResult = (res: Response<UserInfo[] | unknown>): void => {
     if (res.status !== 200) {
-      setErrorMsg(api.generateErrorMsg(res))
+      setErrorMsg(Utils.generateErrorMsg(res))
       setProgressOpen(false)
       setOpen(true)
       setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      const userInfo = api.typeAssertion<UserInfo[]>(res)[0]
+      const userInfo = Utils.typeAssertion<UserInfo>(res)[0]
       localStorage.clear()
       localStorage.setItem(Auth.UserId, userInfo.user_id)
       localStorage.setItem(Auth.UserName, userInfo.user_name)

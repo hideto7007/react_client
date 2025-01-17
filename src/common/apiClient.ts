@@ -1,12 +1,5 @@
 import axios, { AxiosInstance, Method } from 'axios'
-import {
-  Response,
-  OkResponse,
-  Result,
-  ValidateError,
-} from '@/src/common/presenter'
-import Common from '@/src/common/common'
-import { Message } from './message'
+import { Response, Result } from '@/src/common/presenter'
 
 const BASE_URL: string | undefined =
   process.env.API_BASE_URL || 'http://localhost:8080'
@@ -57,7 +50,7 @@ class ApiClient {
       })
 
       const okRes: Response<T> = {
-        data: res.data.result as Result<T>,
+        data: res.data as Result<T>,
         status: res.status,
         statusText: res.statusText,
         headers: res.headers,
@@ -66,26 +59,6 @@ class ApiClient {
     } catch (error) {
       return this.handleError(error)
     }
-  }
-
-  public isOkResponse<T>(response: Response<T>): response is OkResponse<T> {
-    return (
-      response.status === 200 && 'data' in response && 'result' in response.data
-    )
-  }
-
-  public typeAssertion<T>(response: Response<T> | Response<unknown>): T {
-    if (this.isOkResponse(response)) {
-      return (response.data as Result<T>).result as T
-    }
-    throw new Error('アサーション失敗しました。')
-  }
-
-  public generateErrorMsg(response: Response<unknown>): string {
-    if ('error_msg' in response.data) {
-      return Common.ErrorMsgInfo(Message.AuthError, response.data.error_msg)
-    }
-    return Common.ErrorMsgInfoArray(response.data as ValidateError)
   }
 }
 
