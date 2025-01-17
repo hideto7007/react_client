@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignRegisterEmailCheckNotice from '../../../pages/money_management/sign_register_email_check_notice'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { ErrorResponse, OkResponse } from '../../../src/common/presenter'
+import { Response, OkResponse } from '../../../src/common/presenter'
 
 // モックを定義
 jest.mock('../../../src/common/apiClient')
@@ -33,7 +33,6 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
   })
 
   it('ボタン押下して送信成功', async () => {
-    mockedApiClient.prototype.isOkResponse.mockReturnValue(true)
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 200,
       data: {
@@ -64,8 +63,8 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      error_data: { error_msg: 'サーバーエラー' },
-    } as ErrorResponse)
+      data: { error_msg: 'サーバーエラー' },
+    } as Response<unknown>)
 
     render(<SignRegisterEmailCheckNotice />)
 
@@ -92,7 +91,7 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 400,
-      error_data: {
+      data: {
         result: [
           {
             field: 'user_name',
@@ -100,7 +99,7 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
           },
         ],
       },
-    } as ErrorResponse)
+    } as Response<unknown>)
 
     render(<SignRegisterEmailCheckNotice />)
 
@@ -132,8 +131,8 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
-      error_data: { error_msg: '認証エラー' },
-    } as ErrorResponse)
+      data: { error_msg: '認証エラー' },
+    } as Response<unknown>)
 
     render(<SignRegisterEmailCheckNotice />)
 

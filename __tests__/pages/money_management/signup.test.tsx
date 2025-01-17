@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignUp from '../../../pages/money_management/signup'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { ErrorResponse, OkResponse } from '../../../src/common/presenter'
+import { Response, OkResponse } from '../../../src/common/presenter'
 import { Auth } from '../../../src/common/const'
 
 // モックを定義
@@ -27,11 +27,9 @@ describe('SignUp.tsx コード再送信', () => {
     mockPushCode.mockClear()
     mockedApiClientCode.mockClear()
     mockedApiClientCode.prototype.callApi.mockClear()
-    mockedApiClientCode.prototype.isOkResponse.mockClear()
   })
 
   it('メール再送信ができること', async () => {
-    mockedApiClientCode.prototype.isOkResponse.mockReturnValue(true)
     mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
       status: 200,
       data: {
@@ -55,7 +53,7 @@ describe('SignUp.tsx コード再送信', () => {
   it('メール再送信が失敗 バリデーションエラー', async () => {
     mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
       status: 400,
-      error_data: {
+      data: {
         result: [
           {
             field: 'user_name',
@@ -63,7 +61,7 @@ describe('SignUp.tsx コード再送信', () => {
           },
         ],
       },
-    } as ErrorResponse)
+    } as Response<unknown>)
 
     render(<SignUp />)
 
@@ -92,10 +90,10 @@ describe('SignUp.tsx コード再送信', () => {
   it('メール再送信が失敗 認証エラー', async () => {
     mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
       status: 401,
-      error_data: {
+      data: {
         error_msg: '認証エラー',
       },
-    } as ErrorResponse)
+    } as Response<unknown>)
 
     render(<SignUp />)
 
@@ -122,10 +120,10 @@ describe('SignUp.tsx コード再送信', () => {
   it('メール再送信が失敗 サーバーエラー', async () => {
     mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
       status: 500,
-      error_data: {
+      data: {
         error_msg: 'サーバーエラー',
       },
-    } as ErrorResponse)
+    } as Response<unknown>)
 
     render(<SignUp />)
 
@@ -168,7 +166,6 @@ describe('SignUp.tsx 認証コード', () => {
     mockPush.mockClear()
     mockedApiClient.mockClear()
     mockedApiClient.prototype.callApi.mockClear()
-    mockedApiClient.prototype.isOkResponse.mockClear()
   })
 
   it('サインアップ 認証コード入力欄が4つあること', () => {
@@ -252,7 +249,7 @@ describe('SignUp.tsx 認証コード', () => {
     )
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 400,
-      error_data: {
+      data: {
         result: [
           {
             field: 'redisキー',
@@ -260,7 +257,7 @@ describe('SignUp.tsx 認証コード', () => {
           },
         ],
       },
-    } as ErrorResponse)
+    } as Response<unknown>)
 
     render(<SignUp />)
 
@@ -293,7 +290,7 @@ describe('SignUp.tsx 認証コード', () => {
     )
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 401,
-      error_data: { error_msg: 'Invalid Code' },
+      data: { error_msg: 'Invalid Code' },
     })
 
     render(<SignUp />)
@@ -328,7 +325,7 @@ describe('SignUp.tsx 認証コード', () => {
     )
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 500,
-      error_data: { error_msg: 'サーバーエラー' },
+      data: { error_msg: 'サーバーエラー' },
     })
 
     render(<SignUp />)

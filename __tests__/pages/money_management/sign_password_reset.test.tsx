@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignPasswordReset from '../../../pages/money_management/sign_password_reset'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { ErrorResponse, OkResponse } from '../../../src/common/presenter'
+import { Response } from '../../../src/common/presenter'
 
 // モックを定義
 jest.mock('../../../src/common/apiClient')
@@ -39,13 +39,12 @@ describe('SignPasswordReset.tsx', () => {
   })
 
   it('ボタン押下して更新が成功しrouter.push が呼び出される', async () => {
-    mockedApiClient.prototype.isOkResponse.mockReturnValue(true)
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 200,
       data: {
         result: 'パスワード更新成功',
       },
-    } as OkResponse<string>)
+    } as Response<string>)
 
     render(<SignPasswordReset />)
 
@@ -70,8 +69,8 @@ describe('SignPasswordReset.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      error_data: { error_msg: 'サーバーエラー' },
-    } as ErrorResponse)
+      data: { error_msg: 'サーバーエラー' },
+    } as Response<unknown>)
 
     render(<SignPasswordReset />)
 
@@ -104,7 +103,7 @@ describe('SignPasswordReset.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 400,
-      error_data: {
+      data: {
         result: [
           {
             field: 'user_password',
@@ -112,7 +111,7 @@ describe('SignPasswordReset.tsx', () => {
           },
         ],
       },
-    } as ErrorResponse)
+    } as Response<unknown>)
 
     render(<SignPasswordReset />)
 
@@ -150,8 +149,8 @@ describe('SignPasswordReset.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
-      error_data: { error_msg: '認証エラー' },
-    } as ErrorResponse)
+      data: { error_msg: '認証エラー' },
+    } as Response<unknown>)
 
     render(<SignPasswordReset />)
 

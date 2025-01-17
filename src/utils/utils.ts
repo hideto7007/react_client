@@ -16,17 +16,18 @@ class Utils {
     )
   }
 
-  public static typeAssertion<T>(
-    response: Response<T> | Response<unknown>
-  ): T[] {
+  public static typeAssertion<T>(response: Response<T> | Response<unknown>): T {
     if (this.isOkResponse(response)) {
-      return (response.data as Result<T>).result as T[]
+      return (response.data as Result<T>).result as T
     }
     throw new Error('アサーション失敗しました。')
   }
 
   public static generateErrorMsg(response: Response<unknown>): string {
     if ('error_msg' in response.data) {
+      if (response.status === 500) {
+        return Common.ErrorMsgInfo(Message.ServerError, response.data.error_msg)
+      }
       return Common.ErrorMsgInfo(Message.AuthError, response.data.error_msg)
     }
     return Common.ErrorMsgInfoArray(response.data as ValidateError)

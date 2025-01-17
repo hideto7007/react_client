@@ -59,7 +59,7 @@ const SignIn: React.FC = () => {
       setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      const userInfo = Utils.typeAssertion<UserInfo>(res)[0]
+      const userInfo = Utils.typeAssertion<UserInfo[]>(res)[0]
       localStorage.clear()
       localStorage.setItem(Auth.UserId, userInfo.user_id)
       localStorage.setItem(Auth.UserName, userInfo.user_name)
