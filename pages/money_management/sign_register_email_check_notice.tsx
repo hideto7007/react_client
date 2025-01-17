@@ -18,10 +18,9 @@ import {
   EmailAuthToastProps,
   EmailCheckProps,
 } from '@/src/common/entity'
-import Common from '@/src/common/common'
 import { validationRules } from '@/src/common/vaildation'
-import { Message } from '@/src/common/message'
-import { Response, ValidateError } from '@/src/common/presenter'
+import { Response } from '@/src/common/presenter'
+import { Utils } from '@/src/utils/utils'
 
 /**
  * 登録済みのメールアドレスチェックし通知するコンポーネント
@@ -48,41 +47,18 @@ const SignRegisterEmailCheckNotice: React.FC = (): JSX.Element => {
     },
   })
   const api = new ApiClient()
-  let errorMsgInfo: string
 
-  const handlerResult = (res: Response<string>): void => {
-    if ('error_data' in res && res.status !== 200) {
-      // エラーレスポンスの場合
-      const errorData = res.error_data
-      if ('result' in errorData) {
-        // バリデーションエラー
-        const validateError = errorData as ValidateError
-        setErrorMsg(Common.ErrorMsgInfoArray(validateError))
-      } else {
-        if (res.status === 500) {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.ServerError,
-            errorData.error_msg
-          )
-        } else {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.AuthError,
-            errorData.error_msg
-          )
-        }
-        setErrorMsg(errorMsgInfo)
-      }
+  const handlerResult = (res: Response<string> | Response<unknown>): void => {
+    if (res.status !== 200 && !Utils.isOkResponse(res)) {
+      setErrorMsg(Utils.generateErrorMsg(res))
       setProgressOpen(false)
       setOpen(true)
-      setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      if (api.isOkResponse(res)) {
-        setProgressOpen(false)
-        setSuccessOpen(true)
-        setSuccessOverlayOpen(true)
-        setSuccessMsg('送信に成功しました。')
-      }
+      setProgressOpen(false)
+      setSuccessOpen(true)
+      setSuccessOverlayOpen(true)
+      setSuccessMsg('送信に成功しました。')
     }
   }
 

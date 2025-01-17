@@ -19,11 +19,6 @@ interface ValidateError {
   result: FieldError[]
 }
 
-interface ErrorResponse {
-  status: number
-  error_data: ErrorMsg | ValidateError
-}
-
 interface Result<T> {
   result: T[] | T
 }
@@ -37,7 +32,17 @@ interface OkResponse<T> {
   request?: unknown
 }
 
-type Response<T> = OkResponse<T> | ErrorResponse
+// type Response<T> = OkResponse<T> | Response<unknown>
+
+// レスポンス型
+interface Response<T> {
+  status: number // HTTPステータスコード
+  data: Result<T> | ErrorMsg | ValidateError // 成功時またはエラー時のデータ
+  statusText?: string
+  headers?: RawAxiosResponseHeaders | AxiosResponseHeaders
+  config?: InternalAxiosRequestConfig<unknown>
+  request?: unknown
+}
 
 // レスポンス要素の定義
 interface UserInfo {
@@ -53,10 +58,10 @@ interface EmailAuthToken {
 
 export type {
   ValidateError,
-  ErrorResponse,
   OkResponse,
   Result,
   Response,
   UserInfo,
   EmailAuthToken,
+  ErrorMsg,
 }

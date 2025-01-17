@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import TemporarySignUp from '../../../pages/money_management/temporary_signup'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { ErrorResponse, OkResponse } from '../../../src/common/presenter'
+import { Response, OkResponse } from '../../../src/common/presenter'
 
 // モックを定義
 jest.mock('../../../src/common/apiClient')
@@ -46,7 +46,6 @@ describe('TemporarySignUp.tsx', () => {
   })
 
   it('ボタン押下して成功したら、router.push が呼び出される', async () => {
-    mockedApiClient.prototype.isOkResponse.mockReturnValue(true)
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 200,
       data: {
@@ -137,8 +136,8 @@ describe('TemporarySignUp.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる コンフリクトエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 409,
-      error_data: { error_msg: '既に登録されたメールアドレスです。' },
-    } as ErrorResponse)
+      data: { error_msg: '既に登録されたメールアドレスです。' },
+    } as Response<unknown>)
 
     render(<TemporarySignUp />)
 
@@ -171,8 +170,8 @@ describe('TemporarySignUp.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      error_data: { error_msg: 'サーバーエラー' },
-    } as ErrorResponse)
+      data: { error_msg: 'サーバーエラー' },
+    } as Response<unknown>)
 
     render(<TemporarySignUp />)
 
@@ -203,7 +202,7 @@ describe('TemporarySignUp.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 400,
-      error_data: {
+      data: {
         result: [
           {
             field: 'user_password',
@@ -211,7 +210,7 @@ describe('TemporarySignUp.tsx', () => {
           },
         ],
       },
-    } as ErrorResponse)
+    } as Response<unknown>)
 
     render(<TemporarySignUp />)
 

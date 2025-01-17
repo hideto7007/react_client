@@ -21,12 +21,13 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { validationRules } from '@/src/common/vaildation'
 import { ApiClient } from '@/src/common/apiClient'
 import Common from '@/src/common/common'
-import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
+import { EmailAuthToken } from '@/src/common/presenter'
 import { Message } from '@/src/common/message'
 import { Auth } from '@/src/common/const'
 import { FcGoogle } from 'react-icons/fc'
 import { FaLine } from 'react-icons/fa6'
 import { GOOGLE_SIGN_UP, LINE_SIGN_UP } from '@/src/utils/redirectPath'
+import { Utils } from '@/src/utils/utils'
 
 /**
  * 仮サインアップコンポーネント
@@ -53,7 +54,6 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [overlayOpen, setOverlayOpen] = useState(false)
   const [progressOpen, setProgressOpen] = useState(false)
-  let errorMsgInfo: string
   const api = new ApiClient()
 
   // passwordフィールドの値を監視
@@ -72,40 +72,19 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
       dataRes
     )
 
-    if ('error_data' in res && res.status !== 200) {
+    if (res.status !== 200) {
       // エラーレスポンスの場合
-      const errorData = res.error_data
-      if ('result' in errorData) {
-        // バリデーションエラー
-        const validateError = errorData as ValidateError
-        setErrorMsg(Common.ErrorMsgInfoArray(validateError))
-      } else {
-        if (res.status === 500) {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.ServerError,
-            errorData.error_msg
-          )
-        } else {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.AuthError,
-            errorData.error_msg
-          )
-        }
-        setErrorMsg(errorMsgInfo)
-      }
+      setErrorMsg(Utils.generateErrorMsg(res))
       setProgressOpen(false)
       setOpen(true)
-      setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      if (api.isOkResponse(res)) {
-        const emailAuthToken = res.data.result as EmailAuthToken
-        localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
-        localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
-        localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
-        setProgressOpen(false)
-        router.push('/money_management/signup')
-      }
+      const emailAuthToken = Utils.typeAssertion<EmailAuthToken>(res)
+      localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
+      localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
+      localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
+      setProgressOpen(false)
+      router.push('/money_management/signup')
     }
   }
 

@@ -23,6 +23,7 @@ import React, { useRef, useState } from 'react'
 import { Message } from '@/src/common/message'
 import { EmailAuthToken, ValidateError } from '@/src/common/presenter'
 import { useRouter } from 'next/router'
+import { Utils } from '@/src/utils/utils'
 
 /**
  * サインアップコンポーネント
@@ -42,7 +43,6 @@ const SignUp: React.FC = (): JSX.Element => {
   const [isDisabled, setIsDisabled] = useState(false)
   const router = useRouter()
   const api = new ApiClient()
-  let errorMsgInfo: string
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
@@ -58,37 +58,17 @@ const SignUp: React.FC = (): JSX.Element => {
       }
     )
 
-    if ('error_data' in res && res.status !== 200) {
+    if (res.status !== 200) {
       // エラーレスポンスの場合
-      const errorData = res.error_data
-      if ('result' in errorData) {
-        // バリデーションエラー
-        const validateError = errorData as ValidateError
-        setErrorMsg(Common.ErrorMsgInfoArray(validateError))
-      } else {
-        if (res.status === 500) {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.ServerError,
-            errorData.error_msg
-          )
-        } else {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.AuthError,
-            errorData.error_msg
-          )
-        }
-        setErrorMsg(errorMsgInfo)
-      }
+      setErrorMsg(Utils.generateErrorMsg(res))
+      setProgressOpen(false)
       setOpen(true)
-      setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      if (api.isOkResponse(res)) {
-        const emailAuthToken = res.data.result as EmailAuthToken
-        localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
-        localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
-        localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
-      }
+      const emailAuthToken = Utils.typeAssertion<EmailAuthToken>(res)
+      localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
+      localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
+      localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
     }
     setProgressOpen(false)
   }
@@ -110,9 +90,9 @@ const SignUp: React.FC = (): JSX.Element => {
           setProgressOpen(true)
           const res = await api.callApi<string>('/api/signup', 'post', data)
 
-          if ('error_data' in res && res.status !== 200) {
+          if ('data' in res && res.status !== 200) {
             // エラーレスポンスの場合
-            const errorData = res.error_data
+            const errorData = res.data
             if ('result' in errorData) {
               // バリデーションエラー
               const validateError = errorData as ValidateError

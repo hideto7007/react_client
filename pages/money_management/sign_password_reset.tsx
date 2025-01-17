@@ -12,7 +12,6 @@ import {
   TWPasswordUpdateTextForm,
 } from '@/src/common/component'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import Common from '@/src/common/common'
 import { validationRules } from '@/src/common/vaildation'
 import {
   EmailAuthToastProps,
@@ -20,11 +19,10 @@ import {
   RequestDataProps,
 } from '@/src/common/entity'
 import { RiLockPasswordLine } from 'react-icons/ri'
-import { ValidateError } from '@/src/common/presenter'
 import { useRouter } from 'next/router'
 import { ApiClient } from '@/src/common/apiClient'
-import { Message } from '@/src/common/message'
 import { Auth } from '@/src/common/const'
+import { Utils } from '@/src/utils/utils'
 
 /**
  * パスワード再設定コンポーネント
@@ -53,7 +51,6 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
   const [successMsg, setSuccessMsg] = useState<string>('')
   const [successOpen, setSuccessOpen] = useState(false)
   const [successOverlayOpen, setSuccessOverlayOpen] = useState(false)
-  let errorMsgInfo: string
   const api = new ApiClient()
 
   // passwordフィールドの値を監視
@@ -81,38 +78,16 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
       dataRes
     )
 
-    if ('error_data' in res && res.status !== 200) {
-      // エラーレスポンスの場合
-      const errorData = res.error_data
-      if ('result' in errorData) {
-        // バリデーションエラー
-        const validateError = errorData as ValidateError
-        setErrorMsg(Common.ErrorMsgInfoArray(validateError))
-      } else {
-        if (res.status === 500) {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.ServerError,
-            errorData.error_msg
-          )
-        } else {
-          errorMsgInfo = Common.ErrorMsgInfo(
-            Message.AuthError,
-            errorData.error_msg
-          )
-        }
-        setErrorMsg(errorMsgInfo)
-      }
+    if (res.status !== 200 && !Utils.isOkResponse(res)) {
+      setErrorMsg(Utils.generateErrorMsg(res))
       setProgressOpen(false)
       setOpen(true)
-      setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      if (api.isOkResponse(res)) {
-        setProgressOpen(false)
-        setSuccessOpen(true)
-        setSuccessOverlayOpen(true)
-        setSuccessMsg('パスワード更新成功。')
-      }
+      setProgressOpen(false)
+      setSuccessOpen(true)
+      setSuccessOverlayOpen(true)
+      setSuccessMsg('パスワード更新成功。')
     }
   }
 

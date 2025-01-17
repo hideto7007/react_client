@@ -1,10 +1,5 @@
 import axios, { AxiosInstance, Method } from 'axios'
-import {
-  ErrorResponse,
-  Response,
-  OkResponse,
-  Result,
-} from '@/src/common/presenter'
+import { Response, Result } from '@/src/common/presenter'
 
 const BASE_URL: string | undefined =
   process.env.API_BASE_URL || 'http://localhost:8080'
@@ -23,28 +18,27 @@ class ApiClient {
     })
   }
 
-  private handleError(error: unknown): ErrorResponse {
-    if (axios.isAxiosError(error)) {
-      const errorResponse: ErrorResponse = {
-        status: error.response?.status || 500,
-        error_data: error.response?.data || 'サーバーエラーが発生しました',
-      }
-      return errorResponse
-    } else {
-      return {
-        status: 500,
-        error_data: {
-          error_msg: '予期しないエラーが発生しました',
-        },
-      } as ErrorResponse
+  private handleError(error: unknown): Response<unknown> {
+    let res: Response<unknown> = {
+      status: 500,
+      data: {
+        error_msg: '予期せぬエラー',
+      },
     }
+    if (axios.isAxiosError(error)) {
+      res = {
+        status: error.response?.status || 500,
+        data: error.response?.data || 'サーバーエラー',
+      }
+    }
+    return res
   }
 
   public async callApi<T>(
     endpoint: string,
     method: Method = 'get',
     data?: unknown
-  ): Promise<Response<T>> {
+  ): Promise<Response<T> | Response<unknown>> {
     try {
       const res = await this.apiInstance.request({
         url: endpoint,
@@ -55,7 +49,7 @@ class ApiClient {
         params: method === 'get' ? data : undefined,
       })
 
-      const okRes: OkResponse<T> = {
+      const okRes: Response<T> = {
         data: res.data as Result<T>,
         status: res.status,
         statusText: res.statusText,
@@ -65,10 +59,6 @@ class ApiClient {
     } catch (error) {
       return this.handleError(error)
     }
-  }
-
-  public isOkResponse<T>(response: Response<T>): response is OkResponse<T> {
-    return 'data' in response && 'result' in response.data
   }
 }
 
