@@ -7,14 +7,13 @@ import { useRouter } from 'next/router'
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter() // ルーターを使って現在のパスを取得
 
-  // signinとsignupのページではAuthCheckを表示しないようにする
   const isAuthPage = router.pathname.includes('sign')
 
   return (
     <>
-      <ToolBar /> {/* どのページでもツールバーを表示 */}
+      {!isAuthPage && <ToolBar />} {/* 認証画面では表示させないようにする */}
       <Component {...pageProps} /> {/* 各ページのコンポーネントを表示 */}
-      {/* signinとsignup以外のページでのみAuthCheckを表示 */}
+      {/* signinとsignup以外のページでのみ認証チェックを行う */}
       {!isAuthPage && <AuthCheck />}
     </>
   )
