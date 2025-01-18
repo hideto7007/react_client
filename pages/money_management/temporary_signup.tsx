@@ -153,7 +153,7 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
               gap: 2, // 各要素間のスペースを追加
             }}
           >
-            {/* Emailフィールド */}
+            {/* UserNameフィールド */}
             <TWTextForm<AuthFormProps>
               name="user_name"
               label="ユーザー名"
