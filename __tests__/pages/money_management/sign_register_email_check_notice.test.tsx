@@ -94,7 +94,7 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
       data: {
         result: [
           {
-            field: 'user_name',
+            field: 'user_email',
             message: 'メールアドレスは必須です。',
           },
         ],
@@ -111,7 +111,7 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
       fireEvent.click(screen.getByRole('button', { name: 'send' }))
       expect(
         screen.getByText((content, element) => {
-          return content.includes('【user_name】')
+          return content.includes('【user_email】')
         })
       ).toBeInTheDocument()
       expect(

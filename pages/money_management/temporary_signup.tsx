@@ -43,10 +43,10 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
   } = useForm<AuthFormProps>({
     mode: 'onChange',
     defaultValues: {
-      user_name: '',
+      user_email: '',
       user_password: '',
       confirm_password: '',
-      nick_name: '',
+      user_name: '',
     },
   })
   const router = useRouter()
@@ -81,8 +81,8 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
       // 成功時のレスポンスの場合
       const emailAuthToken = Utils.typeAssertion<EmailAuthToken>(res)
       localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
+      localStorage.setItem(Auth.TmpUserEmail, emailAuthToken.user_email)
       localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
-      localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
       setProgressOpen(false)
       router.push('/money_management/signup')
     }
@@ -155,14 +155,14 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
           >
             {/* Emailフィールド */}
             <TWTextForm<AuthFormProps>
-              name="nick_name"
-              label="ニックネーム"
+              name="user_name"
+              label="ユーザー名"
               control={control}
-              rules={validationRules.nickName}
+              rules={validationRules.UserName}
             />
             {/* Emailフィールド */}
             <TWTextForm<AuthFormProps>
-              name="user_name"
+              name="user_email"
               label="メールアドレス"
               control={control}
               rules={validationRules.email}

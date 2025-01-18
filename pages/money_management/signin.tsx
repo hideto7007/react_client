@@ -40,7 +40,7 @@ const SignIn: React.FC = () => {
     mode: 'onChange', // ユーザーが入力するたびにバリデーション
     // mode: 'onBlur', // 入力フィールドがフォーカスを失ったときにバリデーション
     defaultValues: {
-      user_name: '',
+      user_email: '',
       user_password: '',
     },
   })
@@ -62,7 +62,7 @@ const SignIn: React.FC = () => {
       const userInfo = Utils.typeAssertion<UserInfo[]>(res)[0]
       localStorage.clear()
       localStorage.setItem(Auth.UserId, userInfo.user_id)
-      localStorage.setItem(Auth.UserName, userInfo.user_name)
+      localStorage.setItem(Auth.UserEmail, userInfo.user_email)
       setProgressOpen(false)
       router.push('/money_management')
     }
@@ -101,14 +101,14 @@ const SignIn: React.FC = () => {
     const url = new URL(location.href)
 
     const userId = url.searchParams.get(Auth.UserId)
-    const UserName = url.searchParams.get(Auth.UserName)
+    const UserEmail = url.searchParams.get(Auth.UserEmail)
     const signType = url.searchParams.get(Auth.SignType)
     const error = url.searchParams.get(Auth.Error)
     localStorage.clear()
 
-    if (userId && UserName && signType) {
+    if (userId && UserEmail && signType) {
       localStorage.setItem(Auth.UserId, userId)
-      localStorage.setItem(Auth.UserName, UserName)
+      localStorage.setItem(Auth.UserEmail, UserEmail)
       localStorage.setItem(Auth.SignType, signType)
       setProgressOpen(false)
       router.push('/money_management')
@@ -153,7 +153,7 @@ const SignIn: React.FC = () => {
           >
             {/* Emailフィールド */}
             <TWTextForm<AuthFormProps>
-              name="user_name"
+              name="user_email"
               label="メールアドレス"
               control={control}
               rules={validationRules.email}

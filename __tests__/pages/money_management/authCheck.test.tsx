@@ -52,8 +52,8 @@ describe('AuthCheck API テスト', () => {
       data: {
         result: [
           {
-            field: 'user_name',
-            message: 'ユーザー名は必須です。',
+            field: 'user_email',
+            message: 'メールアドレスは必須です。',
           },
         ],
       },
@@ -73,7 +73,9 @@ describe('AuthCheck API テスト', () => {
       const errorData = res.data
       if ('result' in errorData) {
         const validateError = errorData as ValidateError
-        expect(validateError.result[0].message).toBe('ユーザー名は必須です。')
+        expect(validateError.result[0].message).toBe(
+          'メールアドレスは必須です。'
+        )
       }
     }
   })
@@ -130,8 +132,8 @@ describe('AuthCheck API テスト', () => {
       data: {
         result: [
           {
-            field: 'user_name',
-            message: 'ユーザー名は必須です。',
+            field: 'user_email',
+            message: 'メールアドレスは必須です。',
           },
         ],
       },
@@ -143,7 +145,7 @@ describe('AuthCheck API テスト', () => {
     await waitFor(() => {
       expect(
         screen.getByText((content) =>
-          content.includes('ユーザー名は必須です。')
+          content.includes('メールアドレスは必須です。')
         )
       ).toBeInTheDocument()
     })

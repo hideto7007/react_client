@@ -104,9 +104,9 @@ const REQUIRED_MSG: string = '必須入力です。'
 
 // Validation rules for login form
 export const validationRules = {
-  nickName: {
-    required: `ニックネームは${REQUIRED_MSG}`,
-    maxLength: { value: 254, message: 'ニックネームが長すぎます' },
+  UserName: {
+    required: `ユーザー名は${REQUIRED_MSG}`,
+    maxLength: { value: 254, message: 'ユーザー名が長すぎます' },
   },
   email: {
     required: `メールアドレスは${REQUIRED_MSG}`,

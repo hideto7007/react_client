@@ -43,7 +43,7 @@ describe('Singin.tsx', () => {
         result: [
           {
             user_id: '1',
-            user_name: 'test@example.com',
+            user_email: 'test@example.com',
           },
         ],
       },
@@ -96,7 +96,7 @@ describe('Singin.tsx', () => {
   it('クエリパラメータでサインイン成功時にリダイレクト', () => {
     Object.defineProperty(window, 'location', {
       value: {
-        href: 'http://localhost/money_management/signin?user_id=1&user_name=test@example.com&sign_type=external',
+        href: 'http://localhost/money_management/signin?user_id=1&user_email=test@example.com&sign_type=external',
       },
       writable: true,
     })
@@ -104,7 +104,7 @@ describe('Singin.tsx', () => {
     render(<SignIn />)
 
     expect(localStorage.getItem('user_id')).toBe('1')
-    expect(localStorage.getItem('user_name')).toBe('test@example.com')
+    expect(localStorage.getItem('user_email')).toBe('test@example.com')
     expect(mockPush).toHaveBeenCalledWith('/money_management')
   })
 
