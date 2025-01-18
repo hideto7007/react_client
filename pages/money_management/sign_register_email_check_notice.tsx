@@ -43,7 +43,7 @@ const SignRegisterEmailCheckNotice: React.FC = (): JSX.Element => {
     mode: 'onChange', // ユーザーが入力するたびにバリデーション
     // mode: 'onBlur', // 入力フィールドがフォーカスを失ったときにバリデーション
     defaultValues: {
-      user_name: '',
+      user_email: '',
     },
   })
   const api = new ApiClient()
@@ -70,7 +70,7 @@ const SignRegisterEmailCheckNotice: React.FC = (): JSX.Element => {
       '/api/register_email_check_notice',
       'get',
       {
-        user_name: data.user_name,
+        user_email: data.user_email,
       }
     )
     handlerResult(res)
@@ -174,7 +174,7 @@ const EmailSend: React.FC<EmailSendProps> = (
       >
         {/* Emailフィールド */}
         <TWTextForm<EmailCheckProps>
-          name="user_name"
+          name="user_email"
           label="メールアドレス"
           control={control}
           rules={validationRules.email}

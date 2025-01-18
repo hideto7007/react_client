@@ -47,13 +47,13 @@ interface Response<T> {
 // レスポンス要素の定義
 interface UserInfo {
   user_id: string
-  user_name: string
+  user_email: string
 }
 
 interface EmailAuthToken {
   redis_key: string
+  user_email: string
   user_name: string
-  nick_name: string
 }
 
 export type {

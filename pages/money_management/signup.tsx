@@ -53,8 +53,8 @@ const SignUp: React.FC = (): JSX.Element => {
       'get',
       {
         redis_key: localStorage.getItem(Auth.RedisKey),
+        user_email: localStorage.getItem(Auth.TmpUserEmail),
         user_name: localStorage.getItem(Auth.TmpUserName),
-        nick_name: localStorage.getItem(Auth.TmpNickName),
       }
     )
 
@@ -67,8 +67,8 @@ const SignUp: React.FC = (): JSX.Element => {
       // 成功時のレスポンスの場合
       const emailAuthToken = Utils.typeAssertion<EmailAuthToken>(res)
       localStorage.setItem(Auth.RedisKey, emailAuthToken.redis_key)
+      localStorage.setItem(Auth.TmpUserEmail, emailAuthToken.user_email)
       localStorage.setItem(Auth.TmpUserName, emailAuthToken.user_name)
-      localStorage.setItem(Auth.TmpNickName, emailAuthToken.nick_name)
     }
     setProgressOpen(false)
   }

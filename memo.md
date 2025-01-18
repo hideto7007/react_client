@@ -48,7 +48,7 @@
 // recode_rows: 2,
 // result: [
 // {
-// field: "user_name",
+// field: "user_email",
 // message: "メールアドレスが存在しません",
 // },
 // {

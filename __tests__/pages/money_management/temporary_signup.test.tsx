@@ -24,8 +24,8 @@ describe('TemporarySignUp.tsx', () => {
   it('サインアップ 入力フォームのレンダリングチェック', () => {
     render(<TemporarySignUp />)
 
-    // ニックネーム入力フィールドの確認
-    const nikcNameInput = screen.getByLabelText('ニックネーム')
+    // ユーザー名入力フィールドの確認
+    const nikcNameInput = screen.getByLabelText('ユーザー名')
     expect(nikcNameInput).toBeInTheDocument()
 
     // メールアドレス入力フィールドの確認
@@ -55,7 +55,7 @@ describe('TemporarySignUp.tsx', () => {
 
     render(<TemporarySignUp />)
 
-    fireEvent.change(screen.getByLabelText('ニックネーム'), {
+    fireEvent.change(screen.getByLabelText('ユーザー名'), {
       target: { value: 'test' },
     })
     fireEvent.change(screen.getByLabelText('メールアドレス'), {
@@ -141,7 +141,7 @@ describe('TemporarySignUp.tsx', () => {
 
     render(<TemporarySignUp />)
 
-    fireEvent.change(screen.getByLabelText('ニックネーム'), {
+    fireEvent.change(screen.getByLabelText('ユーザー名'), {
       target: { value: 'test' },
     })
     fireEvent.change(screen.getByLabelText('メールアドレス'), {
@@ -175,7 +175,7 @@ describe('TemporarySignUp.tsx', () => {
 
     render(<TemporarySignUp />)
 
-    fireEvent.change(screen.getByLabelText('ニックネーム'), {
+    fireEvent.change(screen.getByLabelText('ユーザー名'), {
       target: { value: 'test' },
     })
     fireEvent.change(screen.getByLabelText('メールアドレス'), {
@@ -214,7 +214,7 @@ describe('TemporarySignUp.tsx', () => {
 
     render(<TemporarySignUp />)
 
-    fireEvent.change(screen.getByLabelText('ニックネーム'), {
+    fireEvent.change(screen.getByLabelText('ユーザー名'), {
       target: { value: 'test' },
     })
     fireEvent.change(screen.getByLabelText('メールアドレス'), {

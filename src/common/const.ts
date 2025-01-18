@@ -118,13 +118,13 @@ enum Auth {
   RefreshAuthToken = 'refresh_auth_token',
   UserId = 'user_id',
   TokenId = 'token_id',
-  UserName = 'user_name',
+  UserEmail = 'user_email',
   SignType = 'sign_type',
   Error = 'error',
   UserPassword = 'user_password',
   RedisKey = 'redis_key',
+  TmpUserEmail = 'tmp_user_email',
   TmpUserName = 'tmp_user_name',
-  TmpNickName = 'tmp_nick_name',
 }
 
 // パス名とタイトルのマッピングを定義

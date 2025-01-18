@@ -18,8 +18,8 @@ describe('SignUp.tsx コード再送信', () => {
     Auth.RedisKey,
     '9876:7ef76a51-6dc2-48ca-a611-b89cba563f1c'
   )
-  localStorage.setItem(Auth.TmpUserName, 'test_code@example.com')
-  localStorage.setItem(Auth.TmpNickName, 'test_code')
+  localStorage.setItem(Auth.TmpUserEmail, 'test_code@example.com')
+  localStorage.setItem(Auth.TmpUserName, 'test_code')
 
   beforeEach(() => {
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPushCode })
@@ -35,8 +35,8 @@ describe('SignUp.tsx コード再送信', () => {
       data: {
         result: {
           redis_key: localStorage.getItem(Auth.RedisKey),
+          user_email: localStorage.getItem(Auth.TmpUserEmail),
           user_name: localStorage.getItem(Auth.TmpUserName),
-          nick_name: localStorage.getItem(Auth.TmpNickName),
         },
       },
     })
@@ -56,8 +56,8 @@ describe('SignUp.tsx コード再送信', () => {
       data: {
         result: [
           {
-            field: 'user_name',
-            message: 'ユーザー名は必須です。',
+            field: 'user_email',
+            message: 'メールアドレスは必須です。',
           },
         ],
       },
@@ -75,7 +75,7 @@ describe('SignUp.tsx コード再送信', () => {
 
     expect(
       screen.getByText((content) =>
-        content.includes('エラー内容：ユーザー名は必須です。')
+        content.includes('エラー内容：メールアドレスは必須です。')
       )
     ).toBeInTheDocument()
 
@@ -157,8 +157,8 @@ describe('SignUp.tsx 認証コード', () => {
     Auth.RedisKey,
     '3456:7ef09a51-6dc2-48ba-a611-b89cbd563f1c'
   )
-  localStorage.setItem(Auth.TmpUserName, 'test@example.com')
-  localStorage.setItem(Auth.TmpNickName, 'test')
+  localStorage.setItem(Auth.TmpUserEmail, 'test@example.com')
+  localStorage.setItem(Auth.TmpUserName, 'test')
 
   beforeEach(() => {
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })

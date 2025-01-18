@@ -139,10 +139,10 @@ interface FileSelectProps {
 }
 
 interface AuthFormProps {
-  user_name: string
+  user_email: string
   user_password: string
   confirm_password?: string // Sign Upの場合のみ必要
-  nick_name?: string // Sign Upの場合のみ必要
+  user_name?: string // Sign Upの場合のみ必要
 }
 
 interface NewPasswordUpdateProps {
@@ -153,7 +153,7 @@ interface NewPasswordUpdateProps {
 }
 
 interface EmailCheckProps {
-  user_name: string
+  user_email: string
 }
 
 interface PasswordResetProps {
@@ -169,8 +169,8 @@ interface SingUpProps {
 
 interface EntryAuthEmailProps {
   redis_key: string
+  user_email: string
   user_name: string
-  nick_name: string
 }
 
 interface SigninResProps {
