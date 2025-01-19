@@ -8,6 +8,18 @@ import Common from '@/src/common/common'
 import { Message } from '@/src/common/message'
 
 class Utils {
+  private static MessageEachResponse(statusCode: number): string {
+    const messages: { [key: number]: string } = {
+      400: Message.VaildationError,
+      401: Message.AuthError,
+      404: Message.NotRegisterExisitDataError,
+      409: Message.DuplicationError,
+      500: Message.ServerError,
+    }
+
+    return messages[statusCode] || Message.UnknownError
+  }
+
   public static isOkResponse<T>(
     response: Response<T>
   ): response is OkResponse<T> {
@@ -25,10 +37,10 @@ class Utils {
 
   public static generateErrorMsg(response: Response<unknown>): string {
     if ('error_msg' in response.data) {
-      if (response.status === 500) {
-        return Common.ErrorMsgInfo(Message.ServerError, response.data.error_msg)
-      }
-      return Common.ErrorMsgInfo(Message.AuthError, response.data.error_msg)
+      return Common.ErrorMsgInfo(
+        this.MessageEachResponse(response.status),
+        response.data.error_msg
+      )
     }
     return Common.ErrorMsgInfoArray(response.data as ValidateError)
   }
