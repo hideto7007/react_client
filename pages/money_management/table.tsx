@@ -16,7 +16,6 @@ import {
   IconButton,
 } from '@mui/material'
 
-import ApiEndpoint from '@/src/common/apiEndpoint'
 import {
   ErrorConst,
   Type,
