@@ -2,8 +2,8 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignUp from '../../../pages/money_management/signup'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { Response, OkResponse } from '../../../src/common/presenter'
-import { Auth } from '../../../src/common/const'
+import { Response, OkResponse } from '../../../src/constants/presenter'
+import { Auth } from '../../../src/constants/const'
 
 // モックを定義
 jest.mock('../../../src/common/apiClient')

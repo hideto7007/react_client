@@ -13,13 +13,13 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Switch from '@mui/material/Switch'
 import EditIcon from '@mui/icons-material/Edit'
 
-import { KeyConst, Align, Size, LabelConst } from '@/src/common/const'
+import { KeyConst, Align, Size, LabelConst } from '@/src/constants/const'
 import {
   AnnualIncomeManagementData,
   Order,
   AnnualIncomeManagementKeyNotEdit,
   AnnualIncomeManagementDeleteData,
-} from '@/src/common/entity'
+} from '@/src/constants/entity'
 import {
   getIncomeDataFetchData,
   EnhancedTableHead,

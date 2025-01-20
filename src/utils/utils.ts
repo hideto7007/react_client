@@ -3,9 +3,9 @@ import {
   OkResponse,
   Result,
   ValidateError,
-} from '@/src/common/presenter'
+} from '@/src/constants/presenter'
 import Common from '@/src/common/common'
-import { Message } from '@/src/common/message'
+import { Message } from '@/src/config/message'
 
 class Utils {
   private static MessageEachResponse(statusCode: number): string {

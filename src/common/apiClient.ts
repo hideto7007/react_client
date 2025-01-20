@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, Method } from 'axios'
-import { Response, Result } from '@/src/common/presenter'
+import { Response, Result } from '@/src/constants/presenter'
 
 const BASE_URL: string | undefined =
   process.env.API_BASE_URL || 'http://localhost:8080'

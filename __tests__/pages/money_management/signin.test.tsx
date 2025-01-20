@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignIn from '../../../pages/money_management/signin'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { Response, UserInfo } from '../../../src/common/presenter'
+import { Response, UserInfo } from '../../../src/constants/presenter'
 
 // モックを定義
 jest.mock('@/src/common/apiClient')

@@ -52,11 +52,11 @@ import {
   ExternalSignButtonProps,
   TWExternalTextProps,
   PasswordUpdateFormProps,
-} from '@/src/common/entity'
-import { columns } from '@/src/common/columns'
+} from '@/src/constants/entity'
+import { columns } from '@/src/constants/columns'
 import ValidationCheck from '@/src/common/vaildation'
-import { Mockresponse } from '@/src/common/data'
-import { classificationListConst, LabelConst } from '@/src/common/const'
+import { Mockresponse } from '@/src/config/data'
+import { classificationListConst, LabelConst } from '@/src/constants/const'
 import {
   Alert,
   Avatar,

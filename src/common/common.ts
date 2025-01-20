@@ -1,4 +1,4 @@
-import { ValidateError } from '@/src/common/presenter'
+import { ValidateError } from '@/src/constants/presenter'
 
 class Common {
   ErrorMsgInfo(info: string, text: string): string {

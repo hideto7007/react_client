@@ -6,7 +6,7 @@ import FaceIcon from '@mui/icons-material/Face'
 import {
   money_management_classes,
   mypage_classes,
-} from '@/src/common/linkpages'
+} from '@/src/config/linkpages'
 import { SideBar, SIDEBARWIDTH } from './SideBar'
 
 const ToolBar: React.FC<ToolbarProps> = () => {

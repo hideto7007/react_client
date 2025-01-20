@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignPasswordReset from '../../../pages/money_management/sign_password_reset'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { Response } from '../../../src/common/presenter'
+import { Response } from '../../../src/constants/presenter'
 
 // モックを定義
 jest.mock('../../../src/common/apiClient')

@@ -1,7 +1,7 @@
 import { Drawer, List } from '@mui/material'
 import Box from '@mui/material/Box'
 import React from 'react'
-import { ClassesProps } from '@/src/common/entity'
+import { ClassesProps } from '@/src/constants/entity'
 import { LinkBar } from '@/src/common/component'
 
 export const SIDEBARWIDTH: number = 140

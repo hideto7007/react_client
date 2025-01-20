@@ -17,11 +17,11 @@ import {
   EmailAuthToastProps,
   NewPasswordUpdateProps,
   RequestDataProps,
-} from '@/src/common/entity'
+} from '@/src/constants/entity'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { useRouter } from 'next/router'
 import { ApiClient } from '@/src/common/apiClient'
-import { Auth } from '@/src/common/const'
+import { Auth } from '@/src/constants/const'
 import { Utils } from '@/src/utils/utils'
 
 /**
