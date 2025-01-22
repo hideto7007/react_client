@@ -9,6 +9,11 @@ import {
 } from '@/src/config/linkpages'
 import { SideBar, SIDEBARWIDTH } from './SideBar'
 
+/**
+ * ツールバーコンポーネント
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
 const ToolBar: React.FC<ToolbarProps> = () => {
   // サイドバーの開閉状態を管理
   const [isMenuDrawerOpen, setMenuDrawerOpen] = useState(false) // メニューサイドバーの開閉状態
