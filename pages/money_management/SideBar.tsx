@@ -6,6 +6,11 @@ import { LinkBar } from '@/src/common/component'
 
 export const SIDEBARWIDTH: number = 140
 
+/**
+ * サイドバーコンポーネント
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
 export const SideBar: React.FC<ClassesProps> = (props) => {
   return (
     <>
