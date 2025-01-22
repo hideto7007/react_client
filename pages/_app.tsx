@@ -1,7 +1,7 @@
 import React from 'react'
 import { AppProps } from 'next/app'
-import ToolBar from './money_management/tooolBar' // ツールバーのパスを正しく指定
-import AuthCheck from './money_management/authCheck'
+import ToolBar from './money_management/TooolBar' // ツールバーのパスを正しく指定
+import AuthCheck from './money_management/AuthCheck'
 import { useRouter } from 'next/router'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {

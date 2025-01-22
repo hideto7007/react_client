@@ -1,7 +1,7 @@
 import React from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
-import ToolBar from '../../../pages/money_management/tooolBar'
-import { SIDEBARWIDTH } from '../../../pages/money_management/sideBar'
+import ToolBar from '../../../pages/money_management/TooolBar'
+import { SIDEBARWIDTH } from '../../../pages/money_management/SideBar'
 
 describe('ToolBar Component', () => {
   const open = `width: calc(100% - ${SIDEBARWIDTH}px)`

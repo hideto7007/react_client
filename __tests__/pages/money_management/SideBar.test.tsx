@@ -1,6 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import { SideBar } from '../../../pages/money_management/sideBar'
+import { SideBar } from '../../../pages/money_management/SideBar'
 import { ClassesProps } from '../../../src/constants/entity'
 
 describe('SideBar Component', () => {

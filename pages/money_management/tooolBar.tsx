@@ -7,7 +7,7 @@ import {
   money_management_classes,
   mypage_classes,
 } from '@/src/config/linkpages'
-import { SideBar, SIDEBARWIDTH } from './sideBar'
+import { SideBar, SIDEBARWIDTH } from './SideBar'
 
 const ToolBar: React.FC<ToolbarProps> = () => {
   // サイドバーの開閉状態を管理
