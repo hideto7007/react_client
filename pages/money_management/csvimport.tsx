@@ -4,7 +4,7 @@ import {
   CsvFileSetting,
   FileSelectProps,
   CsvImportMainProps,
-} from '@/src/common/entity'
+} from '@/src/constants/entity'
 import { Box, Button, Typography } from '@mui/material'
 import { BoxLayoutPadding, Breadcrumbs } from '@/src/common/component'
 

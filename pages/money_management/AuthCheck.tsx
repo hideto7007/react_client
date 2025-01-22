@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Auth } from '@/src/common/const'
+import { Auth } from '@/src/constants/const'
 import { TWBackDrop, TWBox, TWToast } from '@/src/common/component'
 import { ApiClient } from '@/src/common/apiClient'
 import { Utils } from '@/src/utils/utils'

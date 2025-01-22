@@ -2,8 +2,8 @@ import { ApiClient } from '../../../src/common/apiClient'
 import { Utils } from '../../../src/utils/utils'
 import { useRouter } from 'next/router'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import AuthCheck from '../../../pages/money_management/authCheck'
-import { Response, ValidateError } from '../../../src/common/presenter'
+import AuthCheck from '../../../pages/money_management/AuthCheck'
+import { Response, ValidateError } from '../../../src/constants/presenter'
 
 // モックを定義
 jest.mock('../../../src/common/apiClient')

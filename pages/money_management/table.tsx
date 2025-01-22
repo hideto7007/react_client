@@ -16,7 +16,6 @@ import {
   IconButton,
 } from '@mui/material'
 
-import ApiEndpoint from '@/src/common/apiEndpoint'
 import {
   ErrorConst,
   Type,
@@ -27,9 +26,9 @@ import {
   labelListConst,
   keyListConst,
   LabelConst,
-} from '@/src/common/const'
-import { Column, AnnualIncomeManagementData } from '@/src/common/entity'
-import { Mockresponse } from '@/src/common/data'
+} from '@/src/constants/const'
+import { Column, AnnualIncomeManagementData } from '@/src/constants/entity'
+import { Mockresponse } from '@/src/config/data'
 import { Breadcrumbs } from '@/src/common/component'
 
 let serverErrorFlag: boolean = false

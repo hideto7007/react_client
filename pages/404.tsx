@@ -1,4 +1,11 @@
-const Custom404 = () => {
+import React from 'react'
+
+/**
+ * パスワード再設定コンポーネント
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
+const Custom404: React.FC = (): JSX.Element => {
   return (
     <div>
       <h2>404 - ページが見つかりません</h2>

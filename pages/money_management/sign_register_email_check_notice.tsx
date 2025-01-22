@@ -17,9 +17,9 @@ import {
   EmailSendProps,
   EmailAuthToastProps,
   EmailCheckProps,
-} from '@/src/common/entity'
+} from '@/src/constants/entity'
 import { validationRules } from '@/src/common/vaildation'
-import { Response } from '@/src/common/presenter'
+import { Response } from '@/src/constants/presenter'
 import { Utils } from '@/src/utils/utils'
 
 /**

@@ -6,9 +6,14 @@ import FaceIcon from '@mui/icons-material/Face'
 import {
   money_management_classes,
   mypage_classes,
-} from '@/src/common/linkpages'
+} from '@/src/config/linkpages'
 import { SideBar, SIDEBARWIDTH } from './SideBar'
 
+/**
+ * ツールバーコンポーネント
+ *
+ * @returns {JSX.Element} - ダイアログのJSX要素を返す
+ */
 const ToolBar: React.FC<ToolbarProps> = () => {
   // サイドバーの開閉状態を管理
   const [isMenuDrawerOpen, setMenuDrawerOpen] = useState(false) // メニューサイドバーの開閉状態

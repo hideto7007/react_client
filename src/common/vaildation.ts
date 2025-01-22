@@ -1,4 +1,4 @@
-import { AnnualIncomeManagementData } from './entity'
+import { AnnualIncomeManagementData } from '../constants/entity'
 
 class Validation {
   private regexp: RegExp
@@ -138,5 +138,4 @@ export const validationRules = {
   }),
 }
 
-// eslint-disable-next-line import/no-anonymous-default-export
 export default new ValidationCheck()

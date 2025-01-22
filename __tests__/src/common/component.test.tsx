@@ -8,7 +8,7 @@ import {
   EnhancedTableToolbar,
   EditDialog,
 } from '../../../src/common/component'
-import { LabelConst } from '../../../src/common/const'
+import { LabelConst } from '../../../src/constants/const'
 
 describe('component.tsx', () => {
   it('fetches and processes income data correctly', async () => {

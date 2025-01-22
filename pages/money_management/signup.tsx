@@ -11,17 +11,17 @@ import {
   TWToast,
   TWTypography,
 } from '@/src/common/component'
-import { Auth } from '@/src/common/const'
+import { Auth } from '@/src/constants/const'
 import {
   RequestDataProps,
   SingUpProps,
   EmailAuthProps,
   EmailAuthToastProps,
-} from '@/src/common/entity'
+} from '@/src/constants/entity'
 import Common from '@/src/common/common'
 import React, { useRef, useState } from 'react'
-import { Message } from '@/src/common/message'
-import { EmailAuthToken } from '@/src/common/presenter'
+import { Message } from '@/src/config/message'
+import { EmailAuthToken } from '@/src/constants/presenter'
 import { useRouter } from 'next/router'
 import { Utils } from '@/src/utils/utils'
 
