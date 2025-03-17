@@ -119,6 +119,12 @@ describe('Singin.tsx', () => {
         })
       ).toBeInTheDocument()
     })
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる 認証エラー', async () => {
@@ -145,6 +151,12 @@ describe('Singin.tsx', () => {
         })
       ).toBeInTheDocument()
     })
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
@@ -183,5 +195,11 @@ describe('Singin.tsx', () => {
         })
       ).toBeInTheDocument()
     })
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 })

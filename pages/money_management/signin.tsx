@@ -25,8 +25,6 @@ import { Response } from '@/src/constants/presenter'
 import { Auth } from '@/src/constants/const'
 import { ApiClient } from '@/src/common/apiClient'
 import { google, line } from '@/pages/money_management/auth/ExternalAuth'
-import Common from '@/src/common/common'
-import { Message } from '@/src/config/message'
 import { FcGoogle } from 'react-icons/fc'
 import { FaLine } from 'react-icons/fa6'
 import { Utils } from '@/src/utils/utils'
@@ -97,30 +95,6 @@ const SignIn: React.FC = () => {
     // リダイレクト
     line.signIn()
   }
-
-  React.useEffect(() => {
-    const url = new URL(location.href)
-
-    const userId = url.searchParams.get(Auth.UserId)
-    const UserEmail = url.searchParams.get(Auth.UserEmail)
-    const signType = url.searchParams.get(Auth.SignType)
-    const error = url.searchParams.get(Auth.Error)
-    localStorage.clear()
-
-    if (userId && UserEmail && signType) {
-      localStorage.setItem(Auth.UserId, userId)
-      localStorage.setItem(Auth.UserEmail, UserEmail)
-      localStorage.setItem(Auth.SignType, signType)
-      setProgressOpen(false)
-      router.push('/money_management')
-    } else if (error && signType) {
-      setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error))
-      setOpen(true)
-      setOverlayOpen(true)
-      // ページをリロードする
-      router.push('/money_management/signin')
-    }
-  }, [])
 
   return (
     <div>

@@ -20,10 +20,8 @@ import { AuthFormProps, RequestTmpSignUpResProps } from '@/src/constants/entity'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { validationRules } from '@/src/common/vaildation'
 import { ApiClient } from '@/src/common/apiClient'
-import Common from '@/src/common/common'
 import { google, line } from '@/pages/money_management/auth/ExternalAuth'
 import { EmailAuthToken } from '@/src/constants/presenter'
-import { Message } from '@/src/config/message'
 import { Auth } from '@/src/constants/const'
 import { FcGoogle } from 'react-icons/fc'
 import { FaLine } from 'react-icons/fa6'
@@ -104,23 +102,6 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
     // リダイレクト
     line.signUp()
   }
-
-  React.useEffect(() => {
-    const url = new URL(location.href)
-
-    const signType = url.searchParams.get(Auth.SignType)
-    const error = url.searchParams.get(Auth.Error)
-    localStorage.clear()
-
-    if (signType && error === null) {
-      setProgressOpen(false)
-      router.push('/money_management/signin')
-    } else if (error !== null && signType !== null) {
-      setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error))
-      setOpen(true)
-      setOverlayOpen(true)
-    }
-  }, [router])
 
   return (
     <div>
