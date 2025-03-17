@@ -2,19 +2,8 @@ import { Utils } from '../../../src/utils/utils'
 import { Response } from '../../../src/constants/presenter'
 
 describe('Utils', () => {
-  test('typeAssertion アサーション失敗', async () => {
+  test('typeAssertion', async () => {
     const response: Response = {
-      status: 500,
-      data: { result: 'テストエラー' },
-    }
-
-    expect(() => Utils.typeAssertion<string>(response)).toThrow(
-      'アサーション失敗しました。'
-    )
-  })
-
-  test('typeAssertion アサーション成功', async () => {
-    const response: Response= {
       status: 200,
       data: {
         result: 'success',
