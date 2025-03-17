@@ -1,21 +1,30 @@
+import '@/styles/global.css' // スタイルを適用
+
 import React from 'react'
 import { AppProps } from 'next/app'
-import ToolBar from './money_management/TooolBar' // ツールバーのパスを正しく指定
+import ToolBar from './money_management/TooolBar'
+import Footer from './money_management/Footer'
 import AuthCheck from './money_management/AuthCheck'
 import { useRouter } from 'next/router'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter() // ルーターを使って現在のパスを取得
 
-  const isAuthPage = router.pathname.includes('sign')
+  // 除外するパスのキーワードリスト
+  const authPaths = ['sign', 'auth', 'google', 'line', 'callback']
+
+  // 現在のパスに上記の単語のいずれかが含まれているかチェック
+  const isAuthPage = authPaths.some((path) => router.pathname.includes(path))
 
   return (
-    <>
-      {!isAuthPage && <ToolBar />} {/* 認証画面では表示させないようにする */}
-      <Component {...pageProps} /> {/* 各ページのコンポーネントを表示 */}
-      {/* signinとsignup以外のページでのみ認証チェックを行う */}
-      {!isAuthPage && <AuthCheck />}
-    </>
+    <div className="wrapper">
+      <div className="content">
+        {!isAuthPage && <ToolBar />}
+        <Component {...pageProps} />
+        {!isAuthPage && <AuthCheck />}
+      </div>
+      <Footer />
+    </div>
   )
 }
 

@@ -13,15 +13,14 @@ import {
 } from '@/src/common/component'
 import { Auth } from '@/src/constants/const'
 import {
-  RequestDataProps,
-  SingUpProps,
   EmailAuthProps,
-  EmailAuthToastProps,
+  SignUpToastProps,
+  RequestSignUpProps,
 } from '@/src/constants/entity'
 import Common from '@/src/common/common'
 import React, { useRef, useState } from 'react'
 import { Message } from '@/src/config/message'
-import { EmailAuthToken } from '@/src/constants/presenter'
+import { EmailAuthToken, UserInfo } from '@/src/constants/presenter'
 import { useRouter } from 'next/router'
 import { Utils } from '@/src/utils/utils'
 
@@ -33,9 +32,6 @@ import { Utils } from '@/src/utils/utils'
 const SignUp: React.FC = (): JSX.Element => {
   const inputNum: number = 4
   const [code, setCode] = useState<string[]>(Array(inputNum).fill(''))
-  const [successMsg, setSuccessMsg] = useState<string>('')
-  const [successOpen, setSuccessOpen] = useState(false)
-  const [successOverlayOpen, setSuccessOverlayOpen] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string>('')
   const [open, setOpen] = useState(false)
   const [progressOpen, setProgressOpen] = useState(false)
@@ -48,15 +44,11 @@ const SignUp: React.FC = (): JSX.Element => {
 
   const handleEntryEmail = async (): Promise<void> => {
     setProgressOpen(true)
-    const res = await api.callApi<EmailAuthToken>(
-      'api/retry_auth_email',
-      'get',
-      {
-        redis_key: localStorage.getItem(Auth.RedisKey),
-        user_email: localStorage.getItem(Auth.TmpUserEmail),
-        user_name: localStorage.getItem(Auth.TmpUserName),
-      }
-    )
+    const res = await api.callApi('api/retry_auth_email', 'get', {
+      redis_key: localStorage.getItem(Auth.RedisKey),
+      user_email: localStorage.getItem(Auth.TmpUserEmail),
+      user_name: localStorage.getItem(Auth.TmpUserName),
+    })
 
     if (res.status !== 200) {
       // エラーレスポンスの場合
@@ -79,16 +71,12 @@ const SignUp: React.FC = (): JSX.Element => {
       if (code.every((c) => c !== '')) {
         const authCheck = localStorage.getItem(Auth.RedisKey)?.split(':')
         if (authCheck !== undefined && authCheck[0] === code.join('')) {
-          const data: RequestDataProps<SingUpProps[]> = {
-            data: [
-              {
-                redis_key: authCheck.join(':'),
-                auth_email_code: code.join(''),
-              },
-            ],
+          const data: RequestSignUpProps = {
+            redis_key: authCheck.join(':'),
+            auth_email_code: code.join(''),
           }
           setProgressOpen(true)
-          const res = await api.callApi<string>('/api/signup', 'post', data)
+          const res = await api.callApi('/api/signup', 'post', data)
 
           if (res.status !== 200) {
             // エラーレスポンスの場合
@@ -96,15 +84,16 @@ const SignUp: React.FC = (): JSX.Element => {
             setOpen(true)
             setOverlayOpen(true)
             setCode(Array(inputNum).fill(''))
+            setProgressOpen(false)
           } else {
             // 成功時のレスポンスの場合
-            setSuccessMsg('認証に成功しました。')
-            setSuccessOpen(true)
-            setSuccessOverlayOpen(true)
-            // 仮登録情報削除
+            const userInfo = Utils.typeAssertion<UserInfo>(res)
             localStorage.clear()
+            localStorage.setItem(Auth.UserId, userInfo.user_id)
+            localStorage.setItem(Auth.UserEmail, userInfo.user_email)
+            setProgressOpen(false)
+            router.push('/money_management')
           }
-          setProgressOpen(false)
         } else {
           errorMsgInfo = Common.ErrorMsgInfo(
             Message.AuthError,
@@ -121,13 +110,6 @@ const SignUp: React.FC = (): JSX.Element => {
 
     fetchData()
   }, [code])
-
-  // トーストを閉じる処理
-  const successHandleClose = () => {
-    setSuccessOpen(false)
-    setSuccessOverlayOpen(false)
-    router.push('/money_management/signin')
-  }
 
   const handleClose = () => {
     setOpen(false)
@@ -162,11 +144,7 @@ const SignUp: React.FC = (): JSX.Element => {
         <TWCardActions></TWCardActions>
       </TWCard>
       <>
-        <EmailAuthToast
-          successOverlayOpen={successOverlayOpen}
-          successOpen={successOpen}
-          successHandleClose={successHandleClose}
-          successMsg={successMsg}
+        <SignUpToast
           overlayOpen={overlayOpen}
           open={open}
           handleClose={handleClose}
@@ -262,42 +240,22 @@ const EmailAuth: React.FC<EmailAuthProps> = (
 }
 
 /**
- * メール認証トーストコンポーネント
+ * サインアップトーストコンポーネント
  *
- * @param {EmailAuthToastProps} props - コンポーネントが受け取るprops
+ * @param {SignUpToastProps} props - コンポーネントが受け取るprops
  *
  * @returns {JSX.Element} - ダイアログのJSX要素を返す
  */
-const EmailAuthToast: React.FC<EmailAuthToastProps> = (
-  props: EmailAuthToastProps
+const SignUpToast: React.FC<SignUpToastProps> = (
+  props: SignUpToastProps
 ): JSX.Element => {
-  const {
-    successOverlayOpen,
-    successOpen,
-    successHandleClose,
-    successMsg,
-    overlayOpen,
-    open,
-    handleClose,
-    msg,
-  } = props
+  const { overlayOpen, open, handleClose, msg } = props
   const vertical = 'top'
   const center = 'center'
   const width = 500
 
   return (
     <div>
-      <TWBox sx={{ width: width }}>
-        <TWBackDrop overlayOpen={successOverlayOpen} />
-        <TWToast
-          open={successOpen}
-          handleClose={successHandleClose}
-          vertical={vertical}
-          horizontal={center}
-          severity={'success'}
-          message={successMsg}
-        />
-      </TWBox>
       <TWBox sx={{ width: width }}>
         <TWBackDrop overlayOpen={overlayOpen} />
         <TWToast

@@ -21,7 +21,7 @@ describe('ApiClient', () => {
 
     mock.onGet(endpoint).reply(200, mockData)
 
-    const response = await apiClient.callApi<typeof mockData>(endpoint, 'get')
+    const response = await apiClient.callApi(endpoint, 'get')
 
     expect(response.status).toBe(200)
     expect(response.data).toEqual(mockData)
@@ -33,11 +33,7 @@ describe('ApiClient', () => {
 
     mock.onPost(endpoint, postData).reply(200, mockData)
 
-    const response = await apiClient.callApi<typeof mockData>(
-      endpoint,
-      'post',
-      postData
-    )
+    const response = await apiClient.callApi(endpoint, 'post', postData)
 
     expect(response.status).toBe(200)
     expect(response.data).toEqual(mockData)
@@ -49,11 +45,7 @@ describe('ApiClient', () => {
 
     mock.onPut(endpoint, putData).reply(200, mockData)
 
-    const response = await apiClient.callApi<typeof mockData>(
-      endpoint,
-      'put',
-      putData
-    )
+    const response = await apiClient.callApi(endpoint, 'put', putData)
 
     expect(response.status).toBe(200)
     expect(response.data).toEqual(mockData)
@@ -65,11 +57,7 @@ describe('ApiClient', () => {
 
     mock.onDelete(endpoint).reply(200, mockData)
 
-    const response = await apiClient.callApi<typeof mockData>(
-      endpoint,
-      'delete',
-      deleteData
-    )
+    const response = await apiClient.callApi(endpoint, 'delete', deleteData)
 
     expect(response.status).toBe(200)
     expect(response.data).toEqual(mockData)
@@ -77,7 +65,7 @@ describe('ApiClient', () => {
 
   test('エラー時のレスポンス', async () => {
     const endpoint = '/test-endpoint'
-    const error = { error_msg: 'Internal Server Error' }
+    const error = { result: 'Internal Server Error' }
 
     mock.onGet(endpoint).reply(500, error)
 

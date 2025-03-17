@@ -147,7 +147,6 @@ interface AuthFormProps {
 
 interface NewPasswordUpdateProps {
   token_id: string
-  current_password: string
   new_user_password: string
   confirm_password: string
 }
@@ -173,12 +172,15 @@ interface EntryAuthEmailProps {
   user_name: string
 }
 
-interface SigninResProps {
-  data: AuthFormProps[]
-}
+type RequestSigninProps = AuthFormProps
 
-interface TmpSignUpResProps {
-  data: AuthFormProps[]
+type RequestTmpSignUpResProps = AuthFormProps
+
+type RequestNewPasswordUpdateProps = NewPasswordUpdateProps
+
+interface RequestSignUpProps {
+  redis_key: string
+  auth_email_code: string
 }
 
 interface PasswordResetReqProps {
@@ -187,6 +189,11 @@ interface PasswordResetReqProps {
 
 interface RequestDataProps<T> {
   data: T
+}
+
+interface RequestExternalAuth {
+  user_email: string
+  user_name: string
 }
 
 interface PasswordFormProps {
@@ -318,6 +325,16 @@ interface EmailAuthToastProps {
   msg: string
 }
 
+interface BaseCallbaclToastProps {
+  overlayOpen: boolean
+  open: boolean
+  handleClose: () => void
+  msg: string
+}
+
+type SignInToastProps = BaseCallbaclToastProps
+type SignUpToastProps = BaseCallbaclToastProps
+
 interface EmailSendProps {
   handleSubmit: UseFormHandleSubmit<EmailCheckProps, undefined>
   control: Control<EmailCheckProps, unknown>
@@ -370,15 +387,20 @@ export type {
   ClassesProps,
   ToolbarProps,
   TWToastProps,
-  SigninResProps,
-  TmpSignUpResProps,
+  RequestSigninProps,
+  RequestExternalAuth,
+  RequestTmpSignUpResProps,
   RequestDataProps,
+  RequestSignUpProps,
+  RequestNewPasswordUpdateProps,
   SingUpProps,
   EntryAuthEmailProps,
   TWBackdropProps,
   TWBoxProps,
   EmailAuthProps,
   EmailAuthToastProps,
+  SignInToastProps,
+  SignUpToastProps,
   TWCircularProgressProps,
   ExternalSignButtonProps,
   TWExternalTextProps,

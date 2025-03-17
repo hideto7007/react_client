@@ -22,5 +22,8 @@
     "editor.quickSuggestions": {
       "strings": "on",
     },
+    "eslint.rules": {
+      "@typescript-eslint/no-explicit-any": "off",
+    },
   },
 }

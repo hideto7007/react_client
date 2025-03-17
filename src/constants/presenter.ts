@@ -1,13 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   AxiosResponseHeaders,
   InternalAxiosRequestConfig,
   RawAxiosResponseHeaders,
 } from 'axios'
-
-// レスポンスの型定義
-interface ErrorMsg {
-  error_msg: string
-}
 
 interface FieldError {
   field: string
@@ -19,12 +15,8 @@ interface ValidateError {
   result: FieldError[]
 }
 
-interface Result<T> {
-  result: T[] | T
-}
-
-interface OkResponse<T> {
-  data: Result<T>
+interface OkResponse {
+  data: any
   status: number
   statusText?: string
   headers?: RawAxiosResponseHeaders | AxiosResponseHeaders
@@ -32,12 +24,10 @@ interface OkResponse<T> {
   request?: unknown
 }
 
-// type Response<T> = OkResponse<T> | Response<unknown>
-
 // レスポンス型
-interface Response<T> {
-  status: number // HTTPステータスコード
-  data: Result<T> | ErrorMsg | ValidateError // 成功時またはエラー時のデータ
+interface Response {
+  status: number
+  data: any
   statusText?: string
   headers?: RawAxiosResponseHeaders | AxiosResponseHeaders
   config?: InternalAxiosRequestConfig<unknown>
@@ -56,12 +46,4 @@ interface EmailAuthToken {
   user_name: string
 }
 
-export type {
-  ValidateError,
-  OkResponse,
-  Result,
-  Response,
-  UserInfo,
-  EmailAuthToken,
-  ErrorMsg,
-}
+export type { ValidateError, OkResponse, Response, UserInfo, EmailAuthToken }

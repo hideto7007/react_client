@@ -1,5 +1,4 @@
 import { ApiClient } from '../../../src/common/apiClient'
-import { Utils } from '../../../src/utils/utils'
 import { useRouter } from 'next/router'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import AuthCheck from '../../../pages/money_management/AuthCheck'
@@ -29,9 +28,9 @@ describe('AuthCheck API テスト', () => {
       data: {
         result: '新しいトークンを取得しました',
       },
-    } as Response<string>)
+    } as Response)
 
-    const res = await apiInstance.callApi<string>('/api/refresh_token', 'get', {
+    const res = await apiInstance.callApi('/api/refresh_token', 'get', {
       user_id: '1',
     })
 
@@ -41,9 +40,7 @@ describe('AuthCheck API テスト', () => {
       'get',
       { user_id: '1' }
     )
-    expect(Utils.typeAssertion<string>(res)).toBe(
-      '新しいトークンを取得しました'
-    )
+    expect(res.data.result).toBe('新しいトークンを取得しました')
   })
 
   it('リフレッシュトークンがバリデーションエラーの場合', async () => {
@@ -57,9 +54,9 @@ describe('AuthCheck API テスト', () => {
           },
         ],
       },
-    } as Response<unknown>)
+    } as Response)
 
-    const res = await apiInstance.callApi<string>('/api/refresh_token', 'get', {
+    const res = await apiInstance.callApi('/api/refresh_token', 'get', {
       user_id: '1',
     })
 
@@ -69,26 +66,18 @@ describe('AuthCheck API テスト', () => {
       'get',
       { user_id: '1' }
     )
-    if ('data' in res) {
-      const errorData = res.data
-      if ('result' in errorData) {
-        const validateError = errorData as ValidateError
-        expect(validateError.result[0].message).toBe(
-          'メールアドレスは必須です。'
-        )
-      }
-    }
+    expect(res.data.result[0].message).toBe('メールアドレスは必須です。')
   })
 
   it('リフレッシュトークンがサーバーエラーの場合', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 500,
       data: {
-        error_msg: 'サーバーエラー',
+        result: 'サーバーエラー',
       },
-    } as Response<unknown>)
+    } as Response)
 
-    const res = await apiInstance.callApi<string>('/api/refresh_token', 'get', {
+    const res = await apiInstance.callApi('/api/refresh_token', 'get', {
       user_id: '1',
     })
 
@@ -98,16 +87,14 @@ describe('AuthCheck API テスト', () => {
       'get',
       { user_id: '1' }
     )
-    if ('data' in res && 'error_msg' in res.data) {
-      expect(res.data.error_msg).toBe('サーバーエラー')
-    }
+    expect(res.data.result).toBe('サーバーエラー')
   })
 
   it('トーストが閉じられるとrouter.pushが呼び出される 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 401,
-      data: { error_msg: '認証エラー' },
-    } as Response<unknown>)
+      data: { result: '認証エラー' },
+    } as Response)
 
     render(<AuthCheck />)
 
@@ -137,7 +124,7 @@ describe('AuthCheck API テスト', () => {
           },
         ],
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<AuthCheck />)
 
@@ -161,8 +148,8 @@ describe('AuthCheck API テスト', () => {
   it('トーストが閉じられるとrouter.pushが呼び出される サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 500,
-      data: { error_msg: 'サーバーエラー' },
-    } as Response<unknown>)
+      data: { result: 'サーバーエラー' },
+    } as Response)
 
     render(<AuthCheck />)
 

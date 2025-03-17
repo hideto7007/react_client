@@ -42,7 +42,7 @@
 //   </ul> */}
 ```
 
-// const res: Response<unknown> = {
+// const res: Response = {
 // status: 500,
 // data: {
 // recode_rows: 2,
@@ -59,7 +59,7 @@
 // }
 // }
 
-// const res: Response<unknown> = {
+// const res: Response = {
 // status: 401,
 // data: {
 // error_msg: "サーバーエラーが発生しました",

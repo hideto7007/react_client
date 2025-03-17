@@ -48,8 +48,8 @@ const SignRegisterEmailCheckNotice: React.FC = (): JSX.Element => {
   })
   const api = new ApiClient()
 
-  const handlerResult = (res: Response<string> | Response<unknown>): void => {
-    if (res.status !== 200 && !Utils.isOkResponse(res)) {
+  const handlerResult = (res: Response): void => {
+    if (res.status !== 200) {
       setErrorMsg(Utils.generateErrorMsg(res))
       setProgressOpen(false)
       setOpen(true)
@@ -66,13 +66,9 @@ const SignRegisterEmailCheckNotice: React.FC = (): JSX.Element => {
     data: EmailCheckProps
   ): Promise<void> => {
     setProgressOpen(true)
-    const res = await api.callApi<string>(
-      '/api/register_email_check_notice',
-      'get',
-      {
-        user_email: data.user_email,
-      }
-    )
+    const res = await api.callApi('/api/register_email_check_notice', 'get', {
+      user_email: data.user_email,
+    })
     handlerResult(res)
   }
 

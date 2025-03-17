@@ -14,7 +14,7 @@ const AuthCheck: React.FC = () => {
 
   useEffect(() => {
     ;(async () => {
-      const res = await api.callApi<string>('/api/refresh_token', 'get', {
+      const res = await api.callApi('/api/refresh_token', 'get', {
         user_id: localStorage.getItem(Auth.UserId),
       })
       if (res.status !== 200) {

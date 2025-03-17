@@ -18,17 +18,17 @@ import {
 } from '@/src/common/component'
 import { UserInfo } from '@/src/constants/presenter'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { AuthFormProps, SigninResProps } from '@/src/constants/entity'
+import { AuthFormProps, RequestSigninProps } from '@/src/constants/entity'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import { validationRules } from '@/src/common/vaildation'
 import { Response } from '@/src/constants/presenter'
 import { Auth } from '@/src/constants/const'
 import { ApiClient } from '@/src/common/apiClient'
+import { google, line } from '@/pages/money_management/auth/ExternalAuth'
 import Common from '@/src/common/common'
 import { Message } from '@/src/config/message'
 import { FcGoogle } from 'react-icons/fc'
 import { FaLine } from 'react-icons/fa6'
-import { GOOGLE_SIGN_IN, LINE_SIGN_IN } from '@/src/utils/redirectPath'
 import { Utils } from '@/src/utils/utils'
 
 const SignIn: React.FC = () => {
@@ -51,7 +51,7 @@ const SignIn: React.FC = () => {
   const [progressOpen, setProgressOpen] = useState(false)
   const api = new ApiClient()
 
-  const handlerResult = (res: Response<UserInfo[] | unknown>): void => {
+  const handlerResult = (res: Response): void => {
     if (res.status !== 200) {
       setErrorMsg(Utils.generateErrorMsg(res))
       setProgressOpen(false)
@@ -59,7 +59,7 @@ const SignIn: React.FC = () => {
       setOverlayOpen(true)
     } else {
       // 成功時のレスポンスの場合
-      const userInfo = Utils.typeAssertion<UserInfo[]>(res)[0]
+      const userInfo = Utils.typeAssertion<UserInfo>(res)
       localStorage.clear()
       localStorage.setItem(Auth.UserId, userInfo.user_id)
       localStorage.setItem(Auth.UserEmail, userInfo.user_email)
@@ -71,11 +71,12 @@ const SignIn: React.FC = () => {
   const onSubmit: SubmitHandler<AuthFormProps> = async (
     data: AuthFormProps
   ) => {
-    const dataRes: SigninResProps = {
-      data: [data],
+    const dataReq: RequestSigninProps = {
+      user_email: data.user_email,
+      user_password: data.user_password,
     }
     setProgressOpen(true)
-    const res = await api.callApi<UserInfo[]>('/api/signin', 'post', dataRes)
+    const res = await api.callApi('/api/signin', 'post', dataReq)
     handlerResult(res)
   }
 
@@ -88,13 +89,13 @@ const SignIn: React.FC = () => {
   const googleHandler = async () => {
     setProgressOpen(true)
     // リダイレクト
-    window.location.href = GOOGLE_SIGN_IN
+    google.signIn()
   }
 
   const lineHandler = async () => {
     setProgressOpen(true)
     // リダイレクト
-    window.location.href = LINE_SIGN_IN
+    line.signIn()
   }
 
   React.useEffect(() => {
