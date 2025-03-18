@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import TemporarySignUp from '../../../pages/money_management/temporary_signup'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { Response, OkResponse } from '../../../src/constants/presenter'
+import { Response } from '../../../src/constants/presenter'
 import { google, line } from '../../../pages/money_management/auth/ExternalAuth'
 
 // モックを定義
