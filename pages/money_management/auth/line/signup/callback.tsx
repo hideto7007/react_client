@@ -54,9 +54,8 @@ const LineSignUpCallback: React.FC = (): JSX.Element => {
         } else {
           setUserEmail(decoded.email)
           setUserName(decoded.name)
-
-          router.replace(router.pathname, undefined, { shallow: true })
         }
+        router.replace(router.pathname, undefined, { shallow: true })
       } catch (error) {
         console.error(error)
         const msg = Common.ErrorMsgInfo('認証エラー', 'Line外部認証エラー')

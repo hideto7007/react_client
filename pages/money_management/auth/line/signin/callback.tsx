@@ -75,9 +75,9 @@ const LineSignInCallback: React.FC = (): JSX.Element => {
             router.push('/money_management')
           }
 
-          router.replace(router.pathname, undefined, { shallow: true })
           setProgressOpen(false)
         }
+        router.replace(router.pathname, undefined, { shallow: true })
       } catch (error) {
         console.error(error)
         const msg = Common.ErrorMsgInfo('認証エラー', 'Line外部認証エラー')
