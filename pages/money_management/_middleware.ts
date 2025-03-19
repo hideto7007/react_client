@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-explicit-any: off */
 // pages/money_management/_middleware.ts
 
 import { NextResponse } from 'next/server'
