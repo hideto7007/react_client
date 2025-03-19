@@ -123,6 +123,48 @@ describe('google/signup/callback.tsx', () => {
     expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 
+  it('googleの認証情報から登録ユーザーが取得できなかった場合、仮サインアップ画面に遷移する', async () => {
+    // useRouterのモック設定
+    ;(useRouter as jest.Mock).mockReturnValue({
+      push: mockPush,
+      query: { code: 'test-code' },
+      replace: mockReplace,
+    })
+
+    mockedGoogleGetToken.mockResolvedValue({
+      data: {
+        access_token: 'sample_token',
+      },
+    } as Response)
+
+    mockedGoogleGetInfo.mockResolvedValue({
+      data: {
+        email: null,
+        name: 'test',
+      },
+    } as Response)
+
+    render(<GoogleSignUpCallback />)
+
+    await waitFor(() => {
+      // 登録メールアドレスを取得できなく認証中のまま
+      expect(
+        screen.getByText((content, element) => {
+          return content.includes('認証中。。。')
+        })
+      ).toBeInTheDocument()
+      // ボタンを取得してクリック
+      fireEvent.click(screen.getByRole('button', { name: '戻る' }))
+      // 仮サインアップ画面に遷移
+      expect(mockPush).toHaveBeenCalledWith(
+        '/money_management/temporary_signup'
+      )
+    })
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
+  })
+
   it('認証が成功してホーム画面に遷移できる', async () => {
     // useRouterのモック設定
     ;(useRouter as jest.Mock).mockReturnValue({
