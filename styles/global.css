@@ -1,0 +1,27 @@
+/* ページ全体をフレックスボックスで調整 */
+html,
+body,
+#__next {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* メインのラッパー */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* メインコンテンツ部分 */
+.content {
+  flex: 1; /* コンテンツ部分を広げる */
+}
+
+/* フッター */
+footer {
+  width: 100%;
+}

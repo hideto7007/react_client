@@ -1,9 +1,4 @@
-import {
-  Response,
-  OkResponse,
-  Result,
-  ValidateError,
-} from '@/src/constants/presenter'
+import { Response, ValidateError } from '@/src/constants/presenter'
 import Common from '@/src/common/common'
 import { Message } from '@/src/config/message'
 
@@ -20,26 +15,15 @@ class Utils {
     return messages[statusCode] || Message.UnknownError
   }
 
-  public static isOkResponse<T>(
-    response: Response<T>
-  ): response is OkResponse<T> {
-    return (
-      response.status === 200 && 'data' in response && 'result' in response.data
-    )
+  public static typeAssertion<T>(response: Response): T {
+    return response.data.result as T
   }
 
-  public static typeAssertion<T>(response: Response<T> | Response<unknown>): T {
-    if (this.isOkResponse(response)) {
-      return (response.data as Result<T>).result as T
-    }
-    throw new Error('アサーション失敗しました。')
-  }
-
-  public static generateErrorMsg(response: Response<unknown>): string {
-    if ('error_msg' in response.data) {
+  public static generateErrorMsg(response: Response): string {
+    if (typeof response.data.result === 'string') {
       return Common.ErrorMsgInfo(
         this.MessageEachResponse(response.status),
-        response.data.error_msg
+        response.data.result
       )
     }
     return Common.ErrorMsgInfoArray(response.data as ValidateError)

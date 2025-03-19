@@ -16,7 +16,7 @@ import { validationRules } from '@/src/common/vaildation'
 import {
   EmailAuthToastProps,
   NewPasswordUpdateProps,
-  RequestDataProps,
+  RequestNewPasswordUpdateProps,
 } from '@/src/constants/entity'
 import { RiLockPasswordLine } from 'react-icons/ri'
 import { useRouter } from 'next/router'
@@ -38,7 +38,6 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
   } = useForm<NewPasswordUpdateProps>({
     mode: 'onChange',
     defaultValues: {
-      current_password: '',
       new_user_password: '',
       confirm_password: '',
     },
@@ -56,29 +55,20 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
   // passwordフィールドの値を監視
   const newUserPassword = watch('new_user_password')
 
-  const onSubmit: SubmitHandler<NewPasswordUpdateProps> = async (
-    data: NewPasswordUpdateProps
+  const onSubmit: SubmitHandler<RequestNewPasswordUpdateProps> = async (
+    data: RequestNewPasswordUpdateProps
   ) => {
     const url = new URL(location.href)
     const TokenId = url.searchParams.get(Auth.TokenId) || ''
-    const dataRes: RequestDataProps<NewPasswordUpdateProps[]> = {
-      data: [
-        {
-          token_id: TokenId,
-          current_password: data.current_password || '',
-          new_user_password: data.new_user_password,
-          confirm_password: data.confirm_password || '',
-        },
-      ],
+    const dataReq: RequestNewPasswordUpdateProps = {
+      token_id: TokenId,
+      new_user_password: data.new_user_password,
+      confirm_password: data.confirm_password || '',
     }
     setProgressOpen(true)
-    const res = await api.callApi<string>(
-      '/api/new_password_update',
-      'put',
-      dataRes
-    )
+    const res = await api.callApi('/api/new_password_update', 'put', dataReq)
 
-    if (res.status !== 200 && !Utils.isOkResponse(res)) {
+    if (res.status !== 200) {
       setErrorMsg(Utils.generateErrorMsg(res))
       setProgressOpen(false)
       setOpen(true)
@@ -133,13 +123,6 @@ const SignPasswordReset: React.FC = (): JSX.Element => {
               gap: 2, // 各要素間のスペースを追加
             }}
           >
-            {/* currentPasswordフィールド */}
-            <TWPasswordUpdateTextForm
-              name="current_password"
-              label="現在のパスワード"
-              control={control}
-              rules={validationRules.password}
-            />
             <WholesaleLine />
             {/* newUserPasswordフィールド */}
             <TWPasswordUpdateTextForm

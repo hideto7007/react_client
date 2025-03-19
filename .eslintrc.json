@@ -1,14 +1,6 @@
 {
-  // "extends": [
-  //   "eslint:recommended",
-  //   "plugin:react/recommended",
-  //   "plugin:@typescript-eslint/recommended",
-  //   "plugin:prettier/recommended" // これが重要
-  // ],
-  // "plugins": ["prettier"],
-  // "rules": {
-  //   "prettier/prettier": "error" // PrettierのエラーをESLintで表示
-  // }
-  "extends": ["next/core-web-vitals"],
-  "rules": {}
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off"
+  }
 }

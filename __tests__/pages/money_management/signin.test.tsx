@@ -2,10 +2,21 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignIn from '../../../pages/money_management/signin'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { Response, UserInfo } from '../../../src/constants/presenter'
+import { google, line } from '../../../pages/money_management/auth/ExternalAuth'
+import { Response } from '../../../src/constants/presenter'
 
 // モックを定義
 jest.mock('@/src/common/apiClient')
+jest.mock('@/pages/money_management/auth/ExternalAuth', () => {
+  return {
+    google: {
+      signIn: jest.fn(),
+    },
+    line: {
+      signIn: jest.fn(),
+    },
+  }
+})
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }))
@@ -13,6 +24,8 @@ jest.mock('next/router', () => ({
 describe('Singin.tsx', () => {
   const mockPush = jest.fn()
   const mockedApiClient = jest.mocked(ApiClient)
+  const mockedGoogleSignIn = google.signIn as jest.Mock
+  const mockedLineSignIn = line.signIn as jest.Mock
 
   ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
   beforeEach(() => {
@@ -38,14 +51,12 @@ describe('Singin.tsx', () => {
   })
 
   it('ボタン押下して成功したら、router.push が呼び出される', async () => {
-    const res: Response<UserInfo[]> = {
+    const res: Response = {
       data: {
-        result: [
-          {
-            user_id: '1',
-            user_email: 'test@example.com',
-          },
-        ],
+        result: {
+          user_id: '1',
+          user_email: 'test@example.com',
+        },
       },
       status: 200,
     }
@@ -60,7 +71,6 @@ describe('Singin.tsx', () => {
       target: { value: 'Test12345!' },
     })
 
-    // `router.push` が呼び出されるかを確認
     await waitFor(() => {
       fireEvent.click(screen.getByRole('button', { name: 'SIGN IN' }))
       expect(mockPush).toHaveBeenCalledWith('/money_management')
@@ -69,68 +79,27 @@ describe('Singin.tsx', () => {
 
   it('Google サインインボタンをクリック', () => {
     render(<SignIn />)
+    mockedGoogleSignIn.mockImplementation(() => {})
     const googleButton = screen.getByText('Google')
-    Object.defineProperty(window, 'location', {
-      value: { href: '' },
-      writable: true,
-    })
-
     fireEvent.click(googleButton)
 
-    expect(window.location.href).toContain('auth/google/signin')
+    expect(mockedGoogleSignIn).toHaveBeenCalled()
   })
 
   it('LINE サインインボタンをクリック', () => {
     render(<SignIn />)
+    mockedLineSignIn.mockImplementation(() => {})
     const lineButton = screen.getByText('Line')
-    Object.defineProperty(window, 'location', {
-      value: { href: '' },
-      writable: true,
-    })
-
     fireEvent.click(lineButton)
 
-    expect(window.location.href).toContain('auth/line/signin')
-  })
-
-  it('クエリパラメータでサインイン成功時にリダイレクト', () => {
-    Object.defineProperty(window, 'location', {
-      value: {
-        href: 'http://localhost/money_management/signin?user_id=1&user_email=test@example.com&sign_type=external',
-      },
-      writable: true,
-    })
-
-    render(<SignIn />)
-
-    expect(localStorage.getItem('user_id')).toBe('1')
-    expect(localStorage.getItem('user_email')).toBe('test@example.com')
-    expect(mockPush).toHaveBeenCalledWith('/money_management')
-  })
-
-  it('クエリパラメータにエラーが含まれる場合', () => {
-    Object.defineProperty(window, 'location', {
-      value: {
-        href: 'http://localhost/money_management/signin?sign_type=external&error=認証エラー',
-      },
-      writable: true,
-    })
-
-    render(<SignIn />)
-
-    expect(
-      screen.getByText((content, element) => {
-        return content.includes('エラー内容：認証エラー')
-      })
-    ).toBeInTheDocument()
-    expect(mockPush).toHaveBeenCalledWith('/money_management/signin')
+    expect(mockedLineSignIn).toHaveBeenCalled()
   })
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      data: { error_msg: 'テスト エラー' },
-    } as Response<unknown>)
+      data: { result: 'テスト エラー' },
+    } as Response)
 
     render(<SignIn />)
 
@@ -150,13 +119,19 @@ describe('Singin.tsx', () => {
         })
       ).toBeInTheDocument()
     })
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
-      data: { error_msg: 'テスト エラー' },
-    } as Response<unknown>)
+      data: { result: 'テスト エラー' },
+    } as Response)
 
     render(<SignIn />)
 
@@ -176,6 +151,12 @@ describe('Singin.tsx', () => {
         })
       ).toBeInTheDocument()
     })
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
@@ -189,7 +170,7 @@ describe('Singin.tsx', () => {
           },
         ],
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<SignIn />)
 
@@ -214,5 +195,11 @@ describe('Singin.tsx', () => {
         })
       ).toBeInTheDocument()
     })
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 })

@@ -61,7 +61,7 @@ describe('SignUp.tsx コード再送信', () => {
           },
         ],
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<SignUp />)
 
@@ -91,9 +91,9 @@ describe('SignUp.tsx コード再送信', () => {
     mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
       status: 401,
       data: {
-        error_msg: '認証エラー',
+        result: '認証エラー',
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<SignUp />)
 
@@ -121,9 +121,9 @@ describe('SignUp.tsx コード再送信', () => {
     mockedApiClientCode.prototype.callApi.mockResolvedValueOnce({
       status: 500,
       data: {
-        error_msg: 'サーバーエラー',
+        result: 'サーバーエラー',
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<SignUp />)
 
@@ -212,12 +212,16 @@ describe('SignUp.tsx 認証コード', () => {
       Auth.RedisKey,
       '1234:7ef09a51-6dc2-48ba-a611-b89cbd563f1c'
     )
-    mockedApiClient.prototype.callApi.mockResolvedValueOnce({
-      status: 200,
+    const res: Response = {
       data: {
-        result: '認証に成功しました。',
+        result: {
+          user_id: '1',
+          user_email: 'test@example.com',
+        },
       },
-    } as OkResponse<string>)
+      status: 200,
+    }
+    mockedApiClient.prototype.callApi.mockResolvedValueOnce(res)
 
     render(<SignUp />)
 
@@ -226,19 +230,9 @@ describe('SignUp.tsx 認証コード', () => {
       fireEvent.change(input, { target: { value: String(index + 1) } })
     })
 
-    // サインインページへのリダイレクトを確認
     await waitFor(() => {
-      expect(
-        screen.getByText((content) => content.includes('認証に成功しました。'))
-      ).toBeInTheDocument()
+      expect(mockPush).toHaveBeenCalledWith('/money_management')
     })
-
-    // ボタンを取得してクリック
-    const closeButton = screen.getByRole('button', { name: 'Close' })
-    fireEvent.click(closeButton)
-
-    // ステートがリセットされていることを確認
-    expect(mockPush).toHaveBeenCalledWith('/money_management/signin')
   })
 
   it('登録処理APIでエラーになること バリデーションエラー', async () => {
@@ -257,7 +251,7 @@ describe('SignUp.tsx 認証コード', () => {
           },
         ],
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<SignUp />)
 
@@ -290,7 +284,7 @@ describe('SignUp.tsx 認証コード', () => {
     )
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 401,
-      data: { error_msg: 'Invalid Code' },
+      data: { result: 'Invalid Code' },
     })
 
     render(<SignUp />)
@@ -325,7 +319,7 @@ describe('SignUp.tsx 認証コード', () => {
     )
     mockedApiClient.prototype.callApi.mockResolvedValueOnce({
       status: 500,
-      data: { error_msg: 'サーバーエラー' },
+      data: { result: 'サーバーエラー' },
     })
 
     render(<SignUp />)

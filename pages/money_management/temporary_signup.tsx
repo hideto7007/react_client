@@ -16,17 +16,15 @@ import {
   TWExternalText,
 } from '@/src/common/component'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { AuthFormProps, TmpSignUpResProps } from '@/src/constants/entity'
+import { AuthFormProps, RequestTmpSignUpResProps } from '@/src/constants/entity'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { validationRules } from '@/src/common/vaildation'
 import { ApiClient } from '@/src/common/apiClient'
-import Common from '@/src/common/common'
+import { google, line } from '@/pages/money_management/auth/ExternalAuth'
 import { EmailAuthToken } from '@/src/constants/presenter'
-import { Message } from '@/src/config/message'
 import { Auth } from '@/src/constants/const'
 import { FcGoogle } from 'react-icons/fc'
 import { FaLine } from 'react-icons/fa6'
-import { GOOGLE_SIGN_UP, LINE_SIGN_UP } from '@/src/utils/redirectPath'
 import { Utils } from '@/src/utils/utils'
 
 /**
@@ -62,15 +60,14 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
   const onSubmit: SubmitHandler<AuthFormProps> = async (
     data: AuthFormProps
   ) => {
-    const dataRes: TmpSignUpResProps = {
-      data: [data],
+    const dataReq: RequestTmpSignUpResProps = {
+      user_email: data.user_email,
+      user_password: data.user_password,
+      confirm_password: data.confirm_password,
+      user_name: data.user_name,
     }
     setProgressOpen(true)
-    const res = await api.callApi<EmailAuthToken>(
-      '/api/temporay_signup',
-      'post',
-      dataRes
-    )
+    const res = await api.callApi('/api/temporary_signup', 'post', dataReq)
 
     if (res.status !== 200) {
       // エラーレスポンスの場合
@@ -97,31 +94,14 @@ const TemporarySignUp: React.FC = (): JSX.Element => {
   const googleHandler = async () => {
     setProgressOpen(true)
     // リダイレクト
-    window.location.href = GOOGLE_SIGN_UP
+    google.signUp()
   }
 
   const lineHandler = async () => {
     setProgressOpen(true)
     // リダイレクト
-    window.location.href = LINE_SIGN_UP
+    line.signUp()
   }
-
-  React.useEffect(() => {
-    const url = new URL(location.href)
-
-    const signType = url.searchParams.get(Auth.SignType)
-    const error = url.searchParams.get(Auth.Error)
-    localStorage.clear()
-
-    if (signType && error === null) {
-      setProgressOpen(false)
-      router.push('/money_management/signin')
-    } else if (error !== null && signType !== null) {
-      setErrorMsg(Common.ErrorMsgInfo(Message.ExternalAuthError, error))
-      setOpen(true)
-      setOverlayOpen(true)
-    }
-  }, [router])
 
   return (
     <div>

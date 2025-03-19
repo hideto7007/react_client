@@ -38,7 +38,7 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
       data: {
         result: '送信成功',
       },
-    } as OkResponse<string>)
+    } as OkResponse)
 
     render(<SignRegisterEmailCheckNotice />)
 
@@ -63,8 +63,8 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      data: { error_msg: 'サーバーエラー' },
-    } as Response<unknown>)
+      data: { result: 'サーバーエラー' },
+    } as Response)
 
     render(<SignRegisterEmailCheckNotice />)
 
@@ -99,7 +99,7 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
           },
         ],
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<SignRegisterEmailCheckNotice />)
 
@@ -131,8 +131,8 @@ describe('SignRegisterEmailCheckNotice.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
-      data: { error_msg: '認証エラー' },
-    } as Response<unknown>)
+      data: { result: '認証エラー' },
+    } as Response)
 
     render(<SignRegisterEmailCheckNotice />)
 

@@ -2,34 +2,23 @@ import { Utils } from '../../../src/utils/utils'
 import { Response } from '../../../src/constants/presenter'
 
 describe('Utils', () => {
-  test('typeAssertion アサーション失敗', async () => {
-    const response: Response<unknown> = {
-      status: 500,
-      data: { error_msg: 'テストエラー' },
-    }
-
-    expect(() => Utils.typeAssertion(response)).toThrow(
-      'アサーション失敗しました。'
-    )
-  })
-
-  test('typeAssertion アサーション成功', async () => {
-    const response: Response<string> = {
+  test('typeAssertion', async () => {
+    const response: Response = {
       status: 200,
       data: {
         result: 'success',
       },
     }
-    const result = Utils.typeAssertion(response)
+    const result = Utils.typeAssertion<string>(response)
 
     expect(result).toEqual('success')
   })
 
-  test('generateErrorMsg error_msg', async () => {
-    const response: Response<unknown> = {
+  test('generateErrorMsg result', async () => {
+    const response: Response = {
       status: 500,
       data: {
-        error_msg: 'エラー',
+        result: 'エラー',
       },
     }
     const result = Utils.generateErrorMsg(response)
@@ -38,10 +27,10 @@ describe('Utils', () => {
   })
 
   test('generateErrorMsg 予期せぬエラー', async () => {
-    const response: Response<unknown> = {
+    const response: Response = {
       status: 999,
       data: {
-        error_msg: 'error',
+        result: 'error',
       },
     }
     const result = Utils.generateErrorMsg(response)
@@ -50,7 +39,7 @@ describe('Utils', () => {
   })
 
   test('generateErrorMsg バリデーションエラー', async () => {
-    const response: Response<unknown> = {
+    const response: Response = {
       status: 400,
       data: {
         result: [

@@ -1,11 +1,23 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import TemporarySignUp from '../../../pages/money_management/temporary_signup'
 import { useRouter } from 'next/router'
 import { ApiClient } from '../../../src/common/apiClient'
-import { Response, OkResponse } from '../../../src/constants/presenter'
+import { Response } from '../../../src/constants/presenter'
+import { google, line } from '../../../pages/money_management/auth/ExternalAuth'
 
 // モックを定義
-jest.mock('../../../src/common/apiClient')
+jest.mock('@/src/common/apiClient')
+jest.mock('@/pages/money_management/auth/ExternalAuth', () => {
+  return {
+    google: {
+      signUp: jest.fn(),
+    },
+    line: {
+      signUp: jest.fn(),
+    },
+  }
+})
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }))
@@ -13,6 +25,8 @@ jest.mock('next/router', () => ({
 describe('TemporarySignUp.tsx', () => {
   const mockPush = jest.fn()
   const mockedApiClient = jest.mocked(ApiClient)
+  const mockedGoogleSignUp = google.signUp as jest.Mock
+  const mockedLineSignUp = line.signUp as jest.Mock
 
   beforeEach(() => {
     ;(useRouter as jest.Mock).mockReturnValue({ push: mockPush })
@@ -51,7 +65,7 @@ describe('TemporarySignUp.tsx', () => {
       data: {
         result: 'サインアップに成功',
       },
-    } as OkResponse<string>)
+    } as Response)
 
     render(<TemporarySignUp />)
 
@@ -71,73 +85,34 @@ describe('TemporarySignUp.tsx', () => {
     await waitFor(() => {
       fireEvent.click(screen.getByRole('button', { name: 'SIGN UP' }))
       expect(mockPush).toHaveBeenCalled()
-      // expect(mockPush).toHaveBeenCalledWith('/signin');
       const result: string[] = mockPush.mock.calls.map((call: any[]) => call[0])
       expect(result.every((r) => r === '/money_management/signup')).toBe(true)
     })
   })
 
-  it('Google サインインボタンをクリック', () => {
+  it('Google サインアップボタンをクリック', () => {
     render(<TemporarySignUp />)
+    mockedGoogleSignUp.mockImplementation(() => {})
     const googleButton = screen.getByText('Google')
-    Object.defineProperty(window, 'location', {
-      value: { href: '' },
-      writable: true,
-    })
-
     fireEvent.click(googleButton)
 
-    expect(window.location.href).toContain('auth/google/signup')
+    expect(mockedGoogleSignUp).toHaveBeenCalled()
   })
 
-  it('LINE サインインボタンをクリック', () => {
+  it('LINE サインアップボタンをクリック', () => {
     render(<TemporarySignUp />)
+    mockedLineSignUp.mockImplementation(() => {})
     const lineButton = screen.getByText('Line')
-    Object.defineProperty(window, 'location', {
-      value: { href: '' },
-      writable: true,
-    })
-
     fireEvent.click(lineButton)
 
-    expect(window.location.href).toContain('auth/line/signup')
-  })
-
-  it('クエリパラメータでサインイン成功時にリダイレクト', () => {
-    Object.defineProperty(window, 'location', {
-      value: {
-        href: 'http://localhost/money_management/temporary_signup?sign_type=external',
-      },
-      writable: true,
-    })
-
-    render(<TemporarySignUp />)
-
-    expect(mockPush).toHaveBeenCalledWith('/money_management/signin')
-  })
-
-  it('クエリパラメータにエラーが含まれる場合', () => {
-    Object.defineProperty(window, 'location', {
-      value: {
-        href: 'http://localhost/money_management/temporary_signup?sign_type=external&error=認証エラー',
-      },
-      writable: true,
-    })
-
-    render(<TemporarySignUp />)
-
-    expect(
-      screen.getByText((content, element) => {
-        return content.includes('認証エラー')
-      })
-    ).toBeInTheDocument()
+    expect(mockedLineSignUp).toHaveBeenCalled()
   })
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる コンフリクトエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 409,
-      data: { error_msg: '既に登録されたメールアドレスです。' },
-    } as Response<unknown>)
+      data: { result: '既に登録されたメールアドレスです。' },
+    } as Response)
 
     render(<TemporarySignUp />)
 
@@ -170,8 +145,8 @@ describe('TemporarySignUp.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      data: { error_msg: 'サーバーエラー' },
-    } as Response<unknown>)
+      data: { result: 'サーバーエラー' },
+    } as Response)
 
     render(<TemporarySignUp />)
 
@@ -197,6 +172,12 @@ describe('TemporarySignUp.tsx', () => {
         })
       ).toBeInTheDocument()
     })
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 
   it('ボタン押して失敗したら、エラーメッセージがセットされる バリデーションエラー', async () => {
@@ -210,7 +191,7 @@ describe('TemporarySignUp.tsx', () => {
           },
         ],
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<TemporarySignUp />)
 
@@ -241,5 +222,11 @@ describe('TemporarySignUp.tsx', () => {
         })
       ).toBeInTheDocument()
     })
+    // ボタンを取得してクリック
+    const closeButton = screen.getByRole('button', { name: 'Close' })
+    fireEvent.click(closeButton)
+
+    // ステートがリセットされていることを確認
+    expect(screen.queryByText('Error message')).not.toBeInTheDocument()
   })
 })

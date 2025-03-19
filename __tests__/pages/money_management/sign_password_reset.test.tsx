@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import SignPasswordReset from '../../../pages/money_management/sign_password_reset'
 import { useRouter } from 'next/router'
@@ -24,9 +25,6 @@ describe('SignPasswordReset.tsx', () => {
   it('入力フォームのレンダリングチェック', () => {
     render(<SignPasswordReset />)
 
-    const currentPassword = screen.getByLabelText('現在のパスワード')
-    expect(currentPassword).toBeInTheDocument()
-
     const newPassword = screen.getByLabelText('新しいパスワード')
     expect(newPassword).toBeInTheDocument()
 
@@ -44,13 +42,10 @@ describe('SignPasswordReset.tsx', () => {
       data: {
         result: 'パスワード更新成功',
       },
-    } as Response<string>)
+    } as Response)
 
     render(<SignPasswordReset />)
 
-    fireEvent.change(screen.getByLabelText('現在のパスワード'), {
-      target: { value: 'Test12345!' },
-    })
     fireEvent.change(screen.getByLabelText('新しいパスワード'), {
       target: { value: 'Test123456!' },
     })
@@ -69,14 +64,11 @@ describe('SignPasswordReset.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる サーバーエラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 500,
-      data: { error_msg: 'サーバーエラー' },
-    } as Response<unknown>)
+      data: { result: 'サーバーエラー' },
+    } as Response)
 
     render(<SignPasswordReset />)
 
-    fireEvent.change(screen.getByLabelText('現在のパスワード'), {
-      target: { value: 'Test12345!' },
-    })
     fireEvent.change(screen.getByLabelText('新しいパスワード'), {
       target: { value: 'Test123456!' },
     })
@@ -111,13 +103,10 @@ describe('SignPasswordReset.tsx', () => {
           },
         ],
       },
-    } as Response<unknown>)
+    } as Response)
 
     render(<SignPasswordReset />)
 
-    fireEvent.change(screen.getByLabelText('現在のパスワード'), {
-      target: { value: 'Test12345!' },
-    })
     fireEvent.change(screen.getByLabelText('新しいパスワード'), {
       target: { value: 'Test123456!' },
     })
@@ -149,14 +138,11 @@ describe('SignPasswordReset.tsx', () => {
   it('ボタン押して失敗したら、エラーメッセージがセットされる 認証エラー', async () => {
     mockedApiClient.prototype.callApi.mockResolvedValue({
       status: 401,
-      data: { error_msg: '認証エラー' },
-    } as Response<unknown>)
+      data: { result: '認証エラー' },
+    } as Response)
 
     render(<SignPasswordReset />)
 
-    fireEvent.change(screen.getByLabelText('現在のパスワード'), {
-      target: { value: 'Test12345!' },
-    })
     fireEvent.change(screen.getByLabelText('新しいパスワード'), {
       target: { value: 'Test123456!' },
     })

@@ -9,7 +9,7 @@ describe('common', () => {
   })
 
   test('ErrorMsgInfoArray recode_rowsあり', async () => {
-    const response: Response<unknown> = {
+    const response: Response = {
       status: 500,
       data: {
         recode_rows: 1,
@@ -29,7 +29,7 @@ describe('common', () => {
   })
 
   test('ErrorMsgInfoArray recode_rowsなし', async () => {
-    const response: Response<unknown> = {
+    const response: Response = {
       status: 500,
       data: {
         result: [
