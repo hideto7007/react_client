@@ -5,8 +5,8 @@ const MYPAGE = '/mypages'
 
 const money_management_classes: SideBarProps[] = [
   {
-    name: 'アバウト',
-    link: `${MONEY_MANAGEMENT}/about`,
+    name: '貯金額算出',
+    link: `${MONEY_MANAGEMENT}/deposit_calculation`,
   },
   {
     name: 'csvインポート',

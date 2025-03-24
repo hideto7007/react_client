@@ -28,6 +28,13 @@
 
 - npx prettier --write .
 
+### テストコマンド
+
+- npm test
+
+- 不安定な場合
+  - npm test -- --runInBand
+
 ```typescript
 // {/* <nav>
 //   <ul>
