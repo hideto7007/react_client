@@ -248,7 +248,7 @@ interface TextFormProps<T extends FieldValues> {
 }
 
 interface DepositCalculationFormProps {
-  name: RequestDepositCalculation;
+  name: keyof RequestDepositCalculation;
   label: string;
   control: Control<RequestDepositCalculation>;
   rules?:
